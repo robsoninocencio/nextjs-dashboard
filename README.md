@@ -11,3 +11,20 @@ pnpm i
 pnpm dev
 
 https://nextjs.org/learn/dashboard-app/optimizing-fonts-images
+
+https://www.prisma.io/docs/guides/nextjs
+npm install prisma tsx --save-dev
+pnpm add prisma tsx --save-dev
+
+npm install @prisma/client @prisma/extension-accelerate
+pnpm add @prisma/client @prisma/extension-accelerate
+
+npx prisma init --db --output ../app/generated/prisma
+
+npx prisma migrate dev --name init
+
+npx prisma db seed
+
+npx prisma studio
+
+mkdir -p lib && touch lib/prisma.ts
