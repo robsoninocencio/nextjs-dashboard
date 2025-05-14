@@ -1,3 +1,5 @@
+https://vercel.com/robson-inocncios-projects/nextjs-dashboard-bk6o
+
 ## Next.js App Router Course - Starter
 
 This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
@@ -28,3 +30,5 @@ npx prisma db seed
 npx prisma studio
 
 mkdir -p lib && touch lib/prisma.ts
+
+pnpm seed

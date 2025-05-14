@@ -1,26 +1,44 @@
-// import postgres from 'postgres';
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaClient } from "../generated/prisma";
 
-// const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+// Inicializa o cliente Prisma com a extensão Accelerate
+const prisma = new PrismaClient().$extends(withAccelerate());
 
-// async function listInvoices() {
-// 	const data = await sql`
-//     SELECT invoices.amount, customers.name
-//     FROM invoices
-//     JOIN customers ON invoices.customer_id = customers.id
-//     WHERE invoices.amount = 666;
-//   `;
+async function listInvoices() {
+  const data = await prisma.invoices.findMany({
+    where: {
+      amount: 666, // Filtra as faturas com o valor 666
+    },
+    select: {
+      amount: true,
+      customer: {
+        select: {
+          name: true, // Seleciona o nome do cliente relacionado
+        },
+      },
+    },
+  });
 
-// 	return data;
-// }
+  // Ajusta o formato dos dados para retornar apenas `amount` e `name`
+  return data.map((invoice) => ({
+    amount: invoice.amount,
+    name: invoice.customer?.name,
+  }));
+}
 
 export async function GET() {
-  return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  });
-  // try {
-  // 	return Response.json(await listInvoices());
-  // } catch (error) {
-  // 	return Response.json({ error }, { status: 500 });
-  // }
+  try {
+    const data = await listInvoices();
+    return new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Erro ao listar faturas:", error);
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  } finally {
+    await prisma.$disconnect(); // Certifique-se de desconectar o Prisma
+  }
 }

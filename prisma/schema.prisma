@@ -29,3 +29,36 @@ model Post {
   authorId  Int
   author    User    @relation(fields: [authorId], references: [id])
 }
+
+model users {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String @db.VarChar(255)
+  email    String @unique @db.Text
+  password String
+}
+
+model invoices {
+  id          String   @id @default(uuid()) @db.Uuid
+  customer_id String   @db.Uuid
+  amount      Int
+  status      String   @db.VarChar(255)
+  date        DateTime @db.Date
+
+  // Relacionamento com o modelo Customer (opcional, se existir)
+  customer customers @relation(fields: [customer_id], references: [id])
+}
+
+model customers {
+  id        String @id @default(uuid()) @db.Uuid
+  name      String @db.VarChar(255)
+  email     String @unique @db.VarChar(255)
+  image_url String @db.VarChar(255)
+
+  // Relacionamento com outras tabelas (opcional, se necessário)
+  invoices invoices[]
+}
+
+model revenue {
+  month   String @id @unique @db.VarChar(4)
+  revenue Int
+}
