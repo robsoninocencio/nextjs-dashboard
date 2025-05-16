@@ -2,7 +2,11 @@ import { lusitana } from "@/app/ui/fonts";
 import { Card } from "@/app/ui/dashboard/cards";
 import RevenueChart from "@/app/ui/dashboard/revenue-chart";
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
-import { fetchRevenue, fetchLatestInvoices, fetchCardData } from "../lib/data";
+import {
+  fetchRevenue,
+  fetchLatestInvoices,
+  fetchCardData,
+} from "../../lib/data";
 
 export default async function Page() {
   const revenue = await fetchRevenue();
@@ -13,13 +17,14 @@ export default async function Page() {
     totalPaidInvoices,
     totalPendingInvoices,
   } = await fetchCardData();
-  console.log("Dados das Receitas:", revenue);
-  console.log("Ultimas 5 faturas:", latestInvoices);
-  console.log();
-  console.log("Total de faturas:", numberOfInvoices);
-  console.log("Total de faturas pagas:", totalPaidInvoices);
-  console.log("Total de faturas Pendentes:", totalPendingInvoices);
-  console.log("Total de clientes:", numberOfCustomers);
+
+  // console.log("Dados das Receitas:", revenue);
+  // console.log("Ultimas 5 faturas:", latestInvoices);
+  // console.log();
+  // console.log("Total de faturas:", numberOfInvoices);
+  // console.log("Total de faturas pagas:", totalPaidInvoices);
+  // console.log("Total de faturas Pendentes:", totalPendingInvoices);
+  // console.log("Total de clientes:", numberOfCustomers);
 
   return (
     <main>
