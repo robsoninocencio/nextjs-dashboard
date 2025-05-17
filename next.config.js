@@ -1,9 +1,9 @@
-// next.config.js
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   experimental: {
-    serverActions: true, // Habilita Server Actions
+    serverActions: {}, // Mantido como objeto vazio
+    typedRoutes: true, // Mantido como experimento ativo
   },
 };
 
