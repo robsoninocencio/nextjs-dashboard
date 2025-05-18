@@ -42,7 +42,8 @@ model invoices {
   customer_id String   @db.Uuid
   amount      Int
   status      String   @db.VarChar(255)
-  date        DateTime @db.Date
+  // date        DateTime @db.Date
+  date        DateTime
 
   // Relacionamento com o modelo Customer (opcional, se existir)
   customer customers @relation(fields: [customer_id], references: [id])

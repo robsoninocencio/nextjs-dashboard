@@ -175,6 +175,7 @@ export async function fetchInvoiceById(id: string) {
         customer_id: true,
         amount: true,
         status: true,
+        date: true, // <-- Inclua ESTA LINHA
       },
     });
 
