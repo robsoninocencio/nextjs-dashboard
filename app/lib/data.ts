@@ -103,6 +103,10 @@ export async function fetchFilteredInvoices(
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
+  console.log("Query:", query);
+  console.log("Current Page:", currentPage);
+  console.log("Offset:", offset);
+
   try {
     const invoices = await prisma.invoices.findMany({
       where: {

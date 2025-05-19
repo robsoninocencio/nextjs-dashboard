@@ -2,6 +2,7 @@ import Form from "@/app/ui/invoices/edit-form";
 import Breadcrumbs from "@/app/ui/invoices/breadcrumbs";
 import { fetchCustomers, fetchInvoiceById } from "@/app/lib/data";
 import type { Invoice } from "@/app/lib/definitions";
+import { notFound } from "next/navigation";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -12,8 +13,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   ]);
 
   if (!invoice) {
-    // Lidar com o caso de erro:
-    return <div className="error-page">Fatura não encontrada</div>; // Ou redirecionar para /dashboard/invoices
+    notFound();
   }
 
   // Garantir que invoice.status tenha o tipo correto
