@@ -32,3 +32,5 @@ npx prisma studio
 mkdir -p lib && touch lib/prisma.ts
 
 pnpm seed
+
+openssl rand -base64 32
