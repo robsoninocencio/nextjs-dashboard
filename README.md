@@ -38,4 +38,21 @@ openssl rand -base64 32
 E -mail: user@nextmail.com
 Senha: 123456
 
-https://nextjs-dashboard-bk6o.vercel.app/:3000/api/auth
+https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/
+
+https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/login
+https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/api/auth
+
+vercel env add DATABASE_URL development
+vercel env add DATABASE_URL preview
+vercel env add DATABASE_URL production
+
+vercel env add AUTH_SECRET development
+vercel env add AUTH_SECRET preview
+vercel env add AUTH_SECRET production
+
+vercel env add AUTH_URL development
+vercel env add AUTH_URL preview
+vercel env add AUTH_URL production
+
+vercel --prod
