@@ -56,3 +56,14 @@ vercel env add AUTH_URL preview
 vercel env add AUTH_URL production
 
 vercel --prod
+
+# Copy from .env.local on the Vercel dashboard
+
+# https://nextjs.org/learn/dashboard-app/setting-up-your-database#create-a-postgres-database
+
+DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZGVjYmM4YTAtMzljYS00ZGQ4LTliNTMtMjQwMmNlYzBhYzhhIiwidGVuYW50X2lkIjoiZGRkOWM2ZGJiNDNmZDdkNmNlOWI4NTg3ZWQ5YmExNWM5ZjVlOTFhZDA4YmM0NjJjMThlYjMyNTYyZmU5MWJiMSIsImludGVybmFsX3NlY3JldCI6ImUyNTAyZmZiLTcwYWYtNDkzNi1iYjIyLWU1YTdmMjMyOGNhMiJ9.nCtM3XE0fXL6rSl9JVKWuwFX6zp6E0Q6tswikYJGSUU"
+
+# `openssl rand -base64 32`
+
+AUTH_SECRET=GeWiFqAe+VQIooe6pIEVVoYhaOtvP6juMz3JHw9N6qE=
+AUTH_URL=http://localhost:3000/api/auth
