@@ -1,8 +1,4 @@
-import { withAccelerate } from "@prisma/extension-accelerate";
-import { PrismaClient } from "../generated/prisma";
-
-// Inicializa o cliente Prisma com a extensão Accelerate
-const prisma = new PrismaClient().$extends(withAccelerate());
+import prisma from "../../lib/prisma";
 
 async function listInvoices() {
   const data = await prisma.invoices.findMany({

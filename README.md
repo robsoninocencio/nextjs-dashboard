@@ -34,3 +34,8 @@ mkdir -p lib && touch lib/prisma.ts
 pnpm seed
 
 openssl rand -base64 32
+
+E -mail: user@nextmail.com
+Senha: 123456
+
+https://nextjs-dashboard-bk6o.vercel.app/:3000/api/auth
