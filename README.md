@@ -53,14 +53,23 @@ vercel env add AUTH_SECRET development
 vercel env add AUTH_SECRET preview
 vercel env add AUTH_SECRET production
 
+development
 AUTH_URL=http://localhost:3000/api/auth
-AUTH_URL=https://nextjs-dashboard-robson-inocncios-projects.vercel.app/api/auth
+
+preview
+AUTH_URL=https://nextjs-dashboard-bk6o-git-main-robson-inocncios-projects.vercel.app/api/auth
+
+production
 AUTH_URL=https://nextjs-dashboard-bk6o.vercel.app/api/auth
 
-AUTH_URL=https://nextjs-dashboard-bk6o.vercel.app/api/auth
 vercel env add AUTH_URL development
+http://localhost:3000/api/auth
+
 vercel env add AUTH_URL preview
+https://nextjs-dashboard-bk6o-git-main-robson-inocncios-projects.vercel.app/api/auth
+
 vercel env add AUTH_URL production
+https://nextjs-dashboard-bk6o.vercel.app/api/auth
 
 vercel --prod
 
