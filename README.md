@@ -41,7 +41,6 @@ Senha: 123456
 https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/
 
 https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/login
-https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/api/auth
 
 DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZGVjYmM4YTAtMzljYS00ZGQ4LTliNTMtMjQwMmNlYzBhYzhhIiwidGVuYW50X2lkIjoiZGRkOWM2ZGJiNDNmZDdkNmNlOWI4NTg3ZWQ5YmExNWM5ZjVlOTFhZDA4YmM0NjJjMThlYjMyNTYyZmU5MWJiMSIsImludGVybmFsX3NlY3JldCI6ImUyNTAyZmZiLTcwYWYtNDkzNi1iYjIyLWU1YTdmMjMyOGNhMiJ9.nCtM3XE0fXL6rSl9JVKWuwFX6zp6E0Q6tswikYJGSUU"
 vercel env add DATABASE_URL development
@@ -54,32 +53,27 @@ vercel env add AUTH_SECRET preview
 vercel env add AUTH_SECRET production
 
 development
-AUTH_URL=http://localhost:3000/api/auth
+AUTH_URL=http://localhost:3000
 
 preview
-AUTH_URL=https://nextjs-dashboard-bk6o-git-main-robson-inocncios-projects.vercel.app/api/auth
+AUTH_URL=https://nextjs-dashboard-bk6o-git-main-robson-inocncios-projects.vercel.app
 
 production
-AUTH_URL=https://nextjs-dashboard-bk6o.vercel.app/api/auth
+AUTH_URL=https://nextjs-dashboard-bk6o.vercel.app
+
+Não deve adicinar "/api/auth" ao final das rotas a vercel completa.
 
 vercel env add AUTH_URL development
-http://localhost:3000/api/auth
+http://localhost:3000
 
 vercel env add AUTH_URL preview
-https://nextjs-dashboard-bk6o-git-main-robson-inocncios-projects.vercel.app/api/auth
+https://nextjs-dashboard-bk6o-git-main-robson-inocncios-projects.vercel.app
 
 vercel env add AUTH_URL production
-https://nextjs-dashboard-bk6o.vercel.app/api/auth
+https://nextjs-dashboard-bk6o.vercel.app
 
 vercel --prod
 
-# Copy from .env.local on the Vercel dashboard
-
-# https://nextjs.org/learn/dashboard-app/setting-up-your-database#create-a-postgres-database
-
-DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZGVjYmM4YTAtMzljYS00ZGQ4LTliNTMtMjQwMmNlYzBhYzhhIiwidGVuYW50X2lkIjoiZGRkOWM2ZGJiNDNmZDdkNmNlOWI4NTg3ZWQ5YmExNWM5ZjVlOTFhZDA4YmM0NjJjMThlYjMyNTYyZmU5MWJiMSIsImludGVybmFsX3NlY3JldCI6ImUyNTAyZmZiLTcwYWYtNDkzNi1iYjIyLWU1YTdmMjMyOGNhMiJ9.nCtM3XE0fXL6rSl9JVKWuwFX6zp6E0Q6tswikYJGSUU"
-
 # `openssl rand -base64 32`
 
-AUTH_SECRET=GeWiFqAe+VQIooe6pIEVVoYhaOtvP6juMz3JHw9N6qE=
-AUTH_URL=http://localhost:3000/api/auth
+vercel dev
