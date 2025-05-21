@@ -21,7 +21,7 @@ pnpm add prisma tsx --save-dev
 npm install @prisma/client @prisma/extension-accelerate
 pnpm add @prisma/client @prisma/extension-accelerate
 
-npx prisma init --db --output ../app/generated/prisma
+npx prisma init --db --output ../generated/prisma
 
 npx prisma migrate dev --name init
 
