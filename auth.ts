@@ -1,5 +1,3 @@
-// import { PrismaClient } from "./app/generated/prisma";
-// import { withAccelerate } from "@prisma/extension-accelerate";
 import prisma from "@/lib/prisma";
 
 import NextAuth from "next-auth";
@@ -8,9 +6,6 @@ import { authConfig } from "./auth.config";
 import { z } from "zod";
 import type { User } from "@/app/lib/definitions";
 import bcrypt from "bcryptjs";
-import postgres from "postgres";
-
-// const prisma = new PrismaClient().$extends(withAccelerate());
 
 async function getUser(email: string): Promise<User | undefined> {
   try {

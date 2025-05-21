@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+import prisma from "@/lib/prisma";
 import {
   UserData,
   usersData,
@@ -5,12 +7,6 @@ import {
   invoicesData,
   revenueData,
 } from "@/app/lib/placeholder-data";
-import { PrismaClient, Prisma } from "../app/generated/prisma";
-import { withAccelerate } from "@prisma/extension-accelerate";
-import bcrypt from "bcrypt";
-
-// Inicializa o cliente Prisma com a extensão Accelerate
-const prisma = new PrismaClient().$extends(withAccelerate());
 
 /**
  * Função para semear a tabela 'User'.
