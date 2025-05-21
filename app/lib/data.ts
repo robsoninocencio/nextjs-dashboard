@@ -1,6 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
-
-import { withAccelerate } from "@prisma/extension-accelerate";
+import prisma from "@/lib/prisma";
 
 import {
   CustomerField,
@@ -10,23 +8,12 @@ import {
   LatestInvoiceRaw,
   Revenue,
 } from "./definitions";
-import { formatCurrency } from "./utils";
 
-// Inicializa o cliente Prisma com a extensão Accelerate
-const prisma = new PrismaClient().$extends(withAccelerate());
+import { formatCurrency } from "./utils";
 
 export async function fetchRevenue() {
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-
-    // console.log("Fetching revenue data...");
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const data = await prisma.revenue.findMany();
-
-    // console.log("Data fetch completed after 3 seconds.");
-
     return data;
   } catch (error) {
     console.error("Erro ao buscar dados de receita:", error);

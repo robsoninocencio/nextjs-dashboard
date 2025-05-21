@@ -1,11 +1,12 @@
-import prisma from "@/lib/prisma";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
 
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
-import { z } from "zod";
+
+import prisma from "@/lib/prisma";
 import type { User } from "@/app/lib/definitions";
-import bcrypt from "bcryptjs";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {

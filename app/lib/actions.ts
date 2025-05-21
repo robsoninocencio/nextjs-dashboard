@@ -1,15 +1,14 @@
 "use server";
 
-import { PrismaClient } from "../generated/prisma";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import { z } from "zod";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { signIn } from "auth";
 import { AuthError } from "next-auth";
 
-const prisma = new PrismaClient().$extends(withAccelerate());
+import prisma from "@/lib/prisma";
 
 const FormSchema = z.object({
   id: z.string(),
