@@ -10,9 +10,21 @@ const usersData = [
     email: "user@nextmail.com",
     password: "123456",
   },
+  {
+    id: uuidv4(),
+    name: "Robson Inocencio",
+    email: "robson.inocencio@gmail.com",
+    password: "123456",
+  },
 ];
 
 const customersData = [
+  {
+    id: uuidv4(),
+    name: "Yasmin",
+    email: "yasmin@gmail.com",
+    image_url: "/customers/yasmin.png",
+  },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
     name: "Evil Rabbit",

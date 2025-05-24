@@ -197,7 +197,12 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredCustomers(
+  query: string,
+  currentPage: number
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
   try {
     const customers = await prisma.customers.findMany({
       where: {
@@ -215,28 +220,31 @@ export async function fetchFilteredCustomers(query: string) {
         },
       },
       orderBy: { name: "asc" },
+      skip: offset,
+      take: ITEMS_PER_PAGE,
     });
 
-    return customers.map((customer) => {
-      const totalPending = customer.invoices
-        .filter((invoice) => invoice.status === "pending")
-        .reduce((sum, invoice) => sum + invoice.amount, 0);
-
-      const totalPaid = customer.invoices
-        .filter((invoice) => invoice.status === "paid")
-        .reduce((sum, invoice) => sum + invoice.amount, 0);
-
-      return {
-        id: customer.id,
-        name: customer.name,
-        email: customer.email,
-        image_url: customer.image_url,
-        total_pending: formatCurrency(totalPending),
-        total_paid: formatCurrency(totalPaid),
-      };
-    });
+    return customers;
   } catch (error) {
     console.error("Erro ao buscar clientes filtrados:", error);
     throw new Error("Erro ao buscar clientes filtrados.");
+  }
+}
+
+export async function fetchCustomersPages(query: string) {
+  try {
+    const count = await prisma.customers.count({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { email: { contains: query, mode: "insensitive" } },
+        ],
+      },
+    });
+
+    return Math.ceil(count / ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Erro ao buscar o número total de páginas:", error);
+    throw new Error("Erro ao buscar o número total de páginas.");
   }
 }
