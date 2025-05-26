@@ -1,16 +1,20 @@
 "use client";
 
-import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
+import { useActionState } from "react";
+import Link from "next/link";
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import { Button } from "@/app/ui/button";
-import { updateInvoice, State } from "@/app/lib/actions";
-import { useActionState } from "react";
+
+import { InvoiceForm } from "@/app/lib/invoices/definitions";
+import { CustomerField } from "@/app/lib/customers/definitions";
+
+import { Button } from "@/app/ui/shared/button";
+
+import { updateInvoice, State } from "@/app/lib/invoices/actions";
 
 export default function EditInvoiceForm({
   invoice,

@@ -1,8 +1,14 @@
-import Form from "@/app/ui/invoices/edit-form";
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
-import { fetchCustomers, fetchInvoiceById } from "@/app/lib/data";
-import type { Invoice } from "@/app/lib/definitions";
 import { notFound } from "next/navigation";
+
+import type { Invoice } from "@/app/lib/invoices/definitions";
+
+import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+
+import Form from "@/app/ui/invoices/edit-form";
+
+import { fetchCustomers } from "@/app/lib/customers/data";
+import { fetchInvoiceById } from "@/app/lib/invoices/data";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

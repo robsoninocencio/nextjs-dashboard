@@ -144,54 +144,44 @@ export async function createCustomer(prevState: State, formData: FormData) {
   redirect("/dashboard/customers");
 }
 
-// export async function updateInvoice(
-//   id: string,
-//   prevState: State,
-//   formData: FormData
-// ) {
-//   const validatedFields = UpdateCustomer.safeParse({
-//     name: formData.get("name"),
-//     amount: formData.get("amount"),
-//     status: formData.get("status"),
-//   });
-
-//   if (!validatedFields.success) {
-//     return {
-//       errors: validatedFields.error.flatten().fieldErrors,
-//       message: "Missing Fields. Failed to Update Invoice.",
-//     };
-//   }
-
-//   const { name, amount, status } = validatedFields.data;
-//   const amountInCents = amount * 100;
-
-//   try {
-//     await prisma.invoices.update({
-//       where: { id: id },
-//       data: {
-//         customer_id: name,
-//         amount: amountInCents,
-//         status: status,
-//       },
-//     });
-//   } catch (error) {
-//     return { message: "Database Error: Failed to Update Invoice." };
-//   }
-
-//   revalidatePath("/dashboard/invoices");
-//   redirect("/dashboard/invoices");
-// }
-
-// export async function deleteInvoice(id: string) {
-//   await prisma.invoices.delete({
-//     where: { id: id },
-//   });
-//   revalidatePath("/dashboard/invoices");
-// }
-
 export async function deleteCustomer(id: string) {
-  await prisma.customers.delete({
-    where: { id: id },
-  });
+  console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`); // Log do ID recebido
+  console.log(`Attempting to delete customer with ID: ${id}`); // Log do ID recebido
+
+  if (!id) {
+    console.error("Error: deleteCustomer called with undefined or empty ID.");
+    // Considerar como tratar este caso. Lançar um erro específico ou retornar um objeto de erro.
+    throw new Error("Customer ID for deletion is invalid.");
+  }
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      // Primeiro, exclua todas as faturas associadas a este cliente
+      const deletedInvoices = await tx.invoices.deleteMany({
+        where: { customer_id: id },
+      });
+      console.log(
+        `Deleted ${deletedInvoices.count} invoices for customer ID: ${id}`
+      );
+
+      // Depois, exclua o cliente
+      await tx.customers.delete({
+        where: { id: id },
+      });
+      console.log(`Successfully deleted customer ID: ${id}`);
+    });
+  } catch (error) {
+    console.error(
+      `Database Error: Failed to Delete Customer ID ${id} and their Invoices.`,
+      error
+    );
+    // Opcionalmente, você pode querer retornar um objeto de erro aqui
+    // para informar a UI, similar ao que você faz em createCustomer.
+    // Por exemplo: return { message: "Database Error: Failed to Delete Customer." };
+    // No entanto, a função deleteCustomer atualmente não tem um tipo de retorno para isso.
+    // Se for uma ação chamada via formulário com useActionState, você precisaria ajustar.
+    // Se for chamada de outra forma (ex: botão simples), o tratamento de erro pode ser diferente.
+    throw new Error("Failed to delete customer and their invoices."); // Lança o erro para ser tratado pelo chamador
+  }
   revalidatePath("/dashboard/customers");
 }

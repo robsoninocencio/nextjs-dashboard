@@ -1,10 +1,10 @@
-import { lusitana } from "@/app/ui/fonts";
+import { lusitana } from "@/app/ui/shared/fonts";
 
 import { CalendarIcon } from "@heroicons/react/24/outline";
-
-import { fetchRevenue } from "@/app/lib/data";
 import { generateYAxis } from "@/app/lib/utils";
-import { Revenue } from "@/app/lib/definitions";
+
+import { fetchRevenue } from "@/app/lib/dashboard/data";
+import { Revenue } from "@/app/lib/dashboard/definitions";
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -46,7 +46,11 @@ export default async function RevenueChart() {
                 style={{
                   height: `${(chartHeight / topLabel) * month.revenue}px`,
                 }}
-              ></div>
+              >
+                <div className="text-sm text-center text-zinc-500 sm:rotate-0">
+                  {month.revenue}
+                </div>
+              </div>
               <p className="-rotate-90 text-sm text-gray-400 sm:rotate-0">
                 {month.month}
               </p>

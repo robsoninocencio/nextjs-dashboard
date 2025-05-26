@@ -4,8 +4,9 @@ import { signOut } from "@/auth";
 
 import Link from "next/link";
 
+import AcmeLogo from "@/app/ui/shared/acme-logo";
+
 import NavLinks from "@/app/ui/dashboard/nav-links";
-import AcmeLogo from "@/app/ui/acme-logo";
 
 export default function SideNav() {
   return (

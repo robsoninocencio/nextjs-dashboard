@@ -10,8 +10,8 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 
-import { Button } from "app/ui/button";
-import { lusitana } from "app/ui/fonts";
+import { Button } from "@/app/ui/shared/button";
+import { lusitana } from "@/app/ui/shared/fonts";
 import { authenticate } from "app/lib/actions";
 
 export default function LoginForm() {

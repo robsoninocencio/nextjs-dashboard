@@ -8,7 +8,7 @@ import {
   UserCircleIcon,
   EnvelopeIcon,
 } from "@heroicons/react/24/outline";
-import { Button } from "@/app/ui/button";
+import { Button } from "@/app/ui/shared/button";
 import { createCustomer, State } from "@/app/lib/customers/actions";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";

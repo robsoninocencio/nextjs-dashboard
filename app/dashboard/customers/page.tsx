@@ -1,11 +1,16 @@
-import Pagination from "@/app/ui/invoices/pagination";
-import Search from "@/app/ui/search";
+import { Suspense } from "react";
+
+import Search from "@/app/ui/shared/search";
+import { lusitana } from "@/app/ui/shared/fonts";
+import Pagination from "@/app/ui/shared/pagination";
+
 import Table from "@/app/ui/customers/table";
 import { CreateCustomer } from "@/app/ui/customers/buttons";
-import { lusitana } from "@/app/ui/fonts";
-import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
-import { Suspense } from "react";
-import { fetchCustomersPages } from "@/app/lib/data";
+
+import { InvoicesTableSkeleton } from "@/app/ui/invoices/skeletons";
+
+import { fetchCustomersPages } from "@/app/lib/customers/data";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

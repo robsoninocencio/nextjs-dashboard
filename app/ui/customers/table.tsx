@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { DeleteCustomer, UpdateCustomer } from "@/app/ui/customers/buttons";
-import { fetchFilteredCustomers } from "@/app/lib/data";
+import { fetchFilteredCustomers } from "@/app/lib/customers/data";
 
 export default async function CustomersTable({
   query,

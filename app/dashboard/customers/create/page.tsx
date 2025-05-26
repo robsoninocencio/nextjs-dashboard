@@ -1,6 +1,6 @@
 import Form from "@/app/ui/customers/create-form";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
-import { fetchCustomers } from "@/app/lib/data";
+import { fetchCustomers } from "@/app/lib/customers/data";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
