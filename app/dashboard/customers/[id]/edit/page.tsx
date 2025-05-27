@@ -1,57 +1,52 @@
 import { notFound } from "next/navigation";
 
-import type { Invoice } from "@/app/lib/invoices/definitions";
-
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
-import Form from "@/app/ui/invoices/edit-form";
-
 import { fetchCustomers } from "@/app/lib/customers/data";
-import { fetchInvoiceById } from "@/app/lib/invoices/data";
+
+import Form from "@/app/ui/customers/edit-form";
+
+import { fetchCustomerById } from "@/app/lib/customers/data";
+import type { Customer } from "@/app/lib/customers/definitions";
 
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Invoices",
+  title: "Customers",
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [invoice, customers] = await Promise.all([
-    fetchInvoiceById(id),
+  const [customer, customers] = await Promise.all([
+    fetchCustomerById(id),
     fetchCustomers(),
   ]);
 
-  if (!invoice) {
+  if (!customer) {
     notFound();
   }
 
-  // Garantir que invoice.status tenha o tipo correto
-  const typedInvoice: Invoice = {
-    id: invoice.id,
-    customer_id: invoice.customer_id,
-    amount: invoice.amount,
-    date: invoice.date.toISOString(), // Converte a data para string ISO
-    status:
-      invoice.status === "pending" || invoice.status === "paid"
-        ? invoice.status
-        : "pending",
+  const typedInvoice: Customer = {
+    id: customer.id,
+    name: customer.name,
+    email: customer.email,
+    image_url: customer.image_url,
   };
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Invoices", href: "/dashboard/invoices" },
+          { label: "Customers", href: "/dashboard/customers" },
           {
-            label: "Edit Invoice",
-            href: `/dashboard/invoices/${id}/edit`,
+            label: "Edit Customer",
+            href: `/dashboard/customers/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form invoice={typedInvoice} customers={customers} />
+      <Form customer={typedInvoice} customers={customers} />
     </main>
   );
 }

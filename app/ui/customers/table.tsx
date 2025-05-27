@@ -1,4 +1,7 @@
 import Image from "next/image";
+
+import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
+
 import { DeleteCustomer, UpdateCustomer } from "@/app/ui/customers/buttons";
 import { fetchFilteredCustomers } from "@/app/lib/customers/data";
 
@@ -38,7 +41,11 @@ export default async function CustomersTable({
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div className="flex justify-end gap-2">
-                    <UpdateCustomer id={customer.id} />
+                    <ButtonLinkUpdate
+                      href={{
+                        pathname: `/dashboard/customers/${customer.id}/edit`,
+                      }}
+                    />
                     <DeleteCustomer id={customer.id} />
                   </div>
                 </div>

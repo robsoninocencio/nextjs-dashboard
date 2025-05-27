@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Search from "@/app/ui/shared/search";
 import { lusitana } from "@/app/ui/shared/fonts";
 import Pagination from "@/app/ui/shared/pagination";
-import { ButtonLinkCreate } from "@/app/ui/shared/buttonsLink";
+import { ButtonLinkCreate } from "@/app/ui/shared/buttonsLinkCreate";
 
 import Table from "@/app/ui/invoices/table";
 import { InvoicesTableSkeleton } from "@/app/ui/invoices/skeletons";

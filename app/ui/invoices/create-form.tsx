@@ -8,12 +8,23 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { Button } from "@/app/ui/shared/button";
 
+import { createInvoice, State } from "@/app/lib/invoices/actions";
+
 import { CustomerField } from "@/app/lib/customers/definitions";
 
-import { createInvoice, State } from "@/app/lib/invoices/actions";
+function SubmitInvoiceButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" aria-disabled={pending} disabled={pending}>
+      {pending ? "Creating Invoice..." : "Create Invoice"}
+    </Button>
+  );
+}
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
   const initialState: State = { message: null, errors: {} };
@@ -149,7 +160,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
         >
           Cancel
         </Link>
-        <Button type="submit">Create Invoice</Button>
+        <SubmitInvoiceButton />
       </div>
     </form>
   );

@@ -2,20 +2,21 @@ import prisma from "@/lib/prisma";
 
 const ITEMS_PER_PAGE = 6;
 
-export async function fetchCustomers() {
+export async function fetchCustomersPages(query: string) {
   try {
-    const customers = await prisma.customers.findMany({
-      select: {
-        id: true,
-        name: true,
+    const count = await prisma.customers.count({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { email: { contains: query, mode: "insensitive" } },
+        ],
       },
-      orderBy: { name: "asc" },
     });
 
-    return customers;
+    return Math.ceil(count / ITEMS_PER_PAGE);
   } catch (error) {
-    console.error("Erro ao buscar clientes:", error);
-    throw new Error("Não foi possível buscar os clientes.");
+    console.error("Erro ao buscar o número total de páginas:", error);
+    throw new Error("Erro ao buscar o número total de páginas.");
   }
 }
 
@@ -53,20 +54,48 @@ export async function fetchFilteredCustomers(
   }
 }
 
-export async function fetchCustomersPages(query: string) {
+export async function fetchCustomers() {
   try {
-    const count = await prisma.customers.count({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { email: { contains: query, mode: "insensitive" } },
-        ],
+    const customers = await prisma.customers.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image_url: true,
+      },
+      orderBy: { name: "asc" },
+    });
+
+    return customers;
+  } catch (error) {
+    console.error("Erro ao buscar clientes:", error);
+    throw new Error("Não foi possível buscar os clientes.");
+  }
+}
+
+export async function fetchCustomerById(id: string) {
+  if (!id) {
+    throw new Error("O ID do cliente é obrigatório.");
+  }
+
+  try {
+    const customer = await prisma.customers.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image_url: true,
       },
     });
 
-    return Math.ceil(count / ITEMS_PER_PAGE);
+    if (!customer) {
+      throw new Error("Cliente não encontrado.");
+    }
+
+    return customer;
   } catch (error) {
-    console.error("Erro ao buscar o número total de páginas:", error);
-    throw new Error("Erro ao buscar o número total de páginas.");
+    console.error(`Erro ao buscar cliente com ID ${id}:`, error);
+    throw new Error("Erro ao buscar a cliente.");
   }
 }

@@ -17,7 +17,7 @@ const FormSchema = z.object({
     .string({
       invalid_type_error: "Por favor, insira um nome.",
     })
-    .min(5, "O nome deve ter pelo menos 3 caracteres.")
+    .min(3, "O nome deve ter pelo menos 3 caracteres.")
     .max(255, "O nome deve ter no máximo 255 caracteres."),
   email: z
     .string({
@@ -43,7 +43,7 @@ const FormSchema = z.object({
 });
 
 const CreateCustomer = FormSchema.omit({ id: true });
-const UpdateCustomer = FormSchema.omit({ id: true });
+const UpdateCustomer = FormSchema.omit({ id: true, image: true });
 
 export type State = {
   errors?: Partial<
@@ -58,7 +58,31 @@ export type State = {
   };
 };
 
-export async function createCustomer(prevState: State, formData: FormData) {
+export type CreateCustomerState = {
+  errors?: Partial<
+    Record<keyof Omit<customers, "id" | "image_url">, string[]> & {
+      image?: string[];
+    }
+  >;
+  message?: string;
+  submittedData?: {
+    name?: string;
+    email?: string;
+  };
+};
+
+export type UpdateCustomerState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+  };
+  message: string; // Garante que message seja sempre uma string
+};
+
+export async function createCustomer(
+  prevState: CreateCustomerState,
+  formData: FormData
+) {
   // Validate form fields using Zod
   const validatedFields = CreateCustomer.safeParse({
     name: formData.get("name"),
@@ -140,6 +164,41 @@ export async function createCustomer(prevState: State, formData: FormData) {
   }
 
   // Revalidate the cache for the customers page and redirect the user.
+  revalidatePath("/dashboard/customers");
+  redirect("/dashboard/customers");
+}
+
+export async function updateCustomer(
+  id: string,
+  prevState: UpdateCustomerState,
+  formData: FormData
+) {
+  const validatedFields = UpdateCustomer.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Update Customer.",
+    };
+  }
+
+  const { name, email } = validatedFields.data;
+
+  try {
+    await prisma.customers.update({
+      where: { id: id },
+      data: {
+        name: name,
+        email: email,
+      },
+    });
+  } catch (error) {
+    return { message: "Database Error: Failed to Update Customer." };
+  }
+
   revalidatePath("/dashboard/customers");
   redirect("/dashboard/customers");
 }

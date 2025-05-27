@@ -59,7 +59,6 @@ export default async function InvoicesTable({
                         pathname: `/dashboard/invoices/${invoice.id}/edit`,
                       }}
                     />
-                    {/* <UpdateInvoice id={invoice.id} /> */}
                     <ButtonLinkDelete id={invoice.id} />
                   </div>
                 </div>
