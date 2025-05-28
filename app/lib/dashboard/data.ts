@@ -9,11 +9,11 @@ export async function fetchCardData() {
         prisma.customers.count(),
         prisma.invoices.aggregate({
           _sum: { amount: true },
-          where: { status: "paid" },
+          where: { status: "pago" },
         }),
         prisma.invoices.aggregate({
           _sum: { amount: true },
-          where: { status: "pending" },
+          where: { status: "pendente" },
         }),
       ]);
 
@@ -60,6 +60,7 @@ export async function fetchLatestInvoices() {
     const latestInvoices = data.map((invoice) => ({
       id: invoice.id,
       amount: formatCurrency(invoice.amount),
+      status: invoice.status,
       name: invoice.customer?.name,
       image_url: invoice.customer?.image_url,
       email: invoice.customer?.email,

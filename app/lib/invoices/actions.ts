@@ -15,7 +15,7 @@ const InvoiceFormSchema = z.object({
   amount: z.coerce
     .number()
     .gt(0, { message: "Please enter an amount greater than $0." }),
-  status: z.enum(["pending", "paid"], {
+  status: z.enum(["pendente", "pago"], {
     invalid_type_error: "Please select an invoice status.",
   }),
 });

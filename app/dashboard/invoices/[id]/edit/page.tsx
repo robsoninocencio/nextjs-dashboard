@@ -12,7 +12,7 @@ import type { Invoice } from "@/app/lib/invoices/definitions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Invoices",
+  title: "Faturas",
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
@@ -34,18 +34,18 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     amount: invoice.amount,
     date: invoice.date.toISOString(), // Converte a data para string ISO
     status:
-      invoice.status === "pending" || invoice.status === "paid"
+      invoice.status === "pendente" || invoice.status === "pago"
         ? invoice.status
-        : "pending",
+        : "pendente",
   };
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Invoices", href: "/dashboard/invoices" },
+          { label: "Faturas", href: "/dashboard/invoices" },
           {
-            label: "Edit Invoice",
+            label: "Atualizar Fatura",
             href: `/dashboard/invoices/${id}/edit`,
             active: true,
           },

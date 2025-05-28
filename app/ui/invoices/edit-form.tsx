@@ -117,34 +117,34 @@ export default function EditInvoiceForm({
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
-                  id="pending"
+                  id="pendente"
                   name="status"
                   type="radio"
-                  value="pending"
-                  defaultChecked={invoice.status === "pending"}
+                  value="pendente"
+                  defaultChecked={invoice.status === "pendente"}
                   className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
-                  htmlFor="pending"
+                  htmlFor="pendente"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  Pending <ClockIcon className="h-4 w-4" />
+                  Pendente <ClockIcon className="h-4 w-4" />
                 </label>
               </div>
               <div className="flex items-center">
                 <input
-                  id="paid"
+                  id="pago"
                   name="status"
                   type="radio"
-                  value="paid"
-                  defaultChecked={invoice.status === "paid"}
+                  value="pago"
+                  defaultChecked={invoice.status === "pago"}
                   className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
-                  htmlFor="paid"
+                  htmlFor="pago"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
-                  Paid <CheckIcon className="h-4 w-4" />
+                  Pago <CheckIcon className="h-4 w-4" />
                 </label>
               </div>
             </div>

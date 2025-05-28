@@ -75,6 +75,7 @@ export function InvoiceSkeleton() {
         </div>
       </div>
       <div className="mt-2 h-4 w-12 rounded-md bg-gray-200" />
+      <div className="mt-2 h-4 w-12 rounded-md bg-gray-200" />
     </div>
   );
 }

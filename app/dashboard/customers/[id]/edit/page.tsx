@@ -12,7 +12,7 @@ import type { Customer } from "@/app/lib/customers/definitions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Customers",
+  title: "Clientes",
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
@@ -38,9 +38,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Customers", href: "/dashboard/customers" },
+          { label: "Clientes", href: "/dashboard/customers" },
           {
-            label: "Edit Customer",
+            label: "Atualizar cliente",
             href: `/dashboard/customers/${id}/edit`,
             active: true,
           },

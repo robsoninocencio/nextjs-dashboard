@@ -39,7 +39,7 @@ export default function EditCustomerForm({
         {/* Customer Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Enter a name
+            Cliente
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -48,7 +48,7 @@ export default function EditCustomerForm({
                 name="name"
                 type="text"
                 defaultValue={customer.name}
-                placeholder="Enter a name"
+                placeholder="Digite o nome do cliente"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="name-error"
               />
@@ -69,7 +69,7 @@ export default function EditCustomerForm({
         {/* Invoice Email */}
         <div className="mb-4">
           <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Choose an email
+            Email
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -78,7 +78,7 @@ export default function EditCustomerForm({
                 name="email"
                 type="email"
                 defaultValue={customer.email}
-                placeholder="Enter an email"
+                placeholder="Digite o email"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="email-error"
               />
@@ -104,12 +104,12 @@ export default function EditCustomerForm({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/invoices"
+          href="/dashboard/customers"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Cancelar
         </Link>
-        <Button type="submit">Edit Invoice</Button>
+        <Button type="submit">Atualizar Cliente</Button>
       </div>
     </form>
   );
