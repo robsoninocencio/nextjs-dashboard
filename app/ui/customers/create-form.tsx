@@ -26,16 +26,18 @@ function SubmitCustomerButton() {
   );
 }
 
-export default function Form() {
+export default function CustomerCreateForm() {
+  // Estado inicial - mesmo formato do retorno da action createCustomer
   const initialState: CreateCustomerState = {
-    errors: { name: [], email: [] },
-    // submittedData será undefined inicialmente, preenchido por useActionState no retorno da action
+    errors: { name: [], email: [], image: [] },
     message: "",
   };
+
+  // useActionState associa o estado ao resultado da action createCustomer
   const [state, formAction] = useActionState(createCustomer, initialState);
 
   return (
-    <form action={formAction}>
+    <form action={formAction} encType="multipart/form-data" noValidate>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Image */}
         <div className="mb-4">
@@ -43,26 +45,22 @@ export default function Form() {
             Choose an avatar
           </label>
           <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="image"
-                name="image"
-                type="file"
-                placeholder="Enter a image"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="image-error"
-              />
-              <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="image-error"
+            />
+            <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-
           <div id="image-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.image &&
-              state.errors?.image.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            {state.errors?.image?.map((error) => (
+              <p className="mt-2 text-sm text-red-500" key={error}>
+                {error}
+              </p>
+            ))}
           </div>
         </div>
 
@@ -72,27 +70,23 @@ export default function Form() {
             Choose a name
           </label>
           <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Enter a name"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="name-error"
-                defaultValue={state.submittedData?.name}
-              />
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Enter a name"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="name-error"
+              defaultValue={state.submittedData?.name}
+            />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-
           <div id="name-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.name &&
-              state.errors.name.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            {state.errors?.name?.map((error) => (
+              <p className="mt-2 text-sm text-red-500" key={error}>
+                {error}
+              </p>
+            ))}
           </div>
         </div>
 
@@ -102,38 +96,39 @@ export default function Form() {
             Choose an email
           </label>
           <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter a email"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="email-error"
-                defaultValue={state.submittedData?.email}
-              />
-              <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter an email"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="email-error"
+              defaultValue={state.submittedData?.email}
+            />
+            <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-
           <div id="email-error" aria-live="polite" aria-atomic="true">
-            {state?.errors?.email &&
-              state.errors.email.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            {state.errors?.email?.map((error) => (
+              <p className="mt-2 text-sm text-red-500" key={error}>
+                {error}
+              </p>
+            ))}
           </div>
         </div>
 
-        {/* Invoice Status */}
-
-        <div aria-live="polite" aria-atomic="true">
-          {state.message ? (
-            <p className="mt-6 text-sm text-red-700">{state.message}</p>
-          ) : null}
-        </div>
+        {/* Form message */}
+        {state.message && (
+          <div
+            aria-live="polite"
+            aria-atomic="true"
+            className="mt-6 text-sm text-red-700"
+          >
+            {state.message}
+          </div>
+        )}
       </div>
+
+      {/* Buttons */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/customers"
