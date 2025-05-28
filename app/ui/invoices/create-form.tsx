@@ -12,10 +12,11 @@ import { useFormStatus } from "react-dom";
 
 import { Button } from "@/app/ui/shared/button";
 
-import { createInvoice, State } from "@/app/lib/invoices/actions";
+import { createInvoice, InvoiceFormState } from "@/app/lib/invoices/actions";
 
 import { CustomerField } from "@/app/lib/customers/definitions";
 
+// Botão com estado pendente (loading)
 function SubmitInvoiceButton() {
   const { pending } = useFormStatus();
 
@@ -26,8 +27,26 @@ function SubmitInvoiceButton() {
   );
 }
 
+function InputError({ errors }: { errors?: string[] }) {
+  if (!errors) return null;
+  return (
+    <>
+      {errors.map((error) => (
+        <p className="mt-2 text-sm text-red-500" key={error}>
+          {error}
+        </p>
+      ))}
+    </>
+  );
+}
+
+// Formulário principal
 export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: InvoiceFormState = {
+    errors: {},
+    message: "",
+    submittedData: {},
+  };
   const [state, formAction] = useActionState(createInvoice, initialState);
 
   return (
@@ -35,16 +54,24 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="customerId"
+            className="mb-2 block text-sm font-medium"
+          >
             Choose customer
           </label>
           <div className="relative">
             <select
-              id="customer"
+              id="customerId"
               name="customerId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
-              aria-describedby="customer-error"
+              // className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className={`peer block w-full cursor-pointer rounded-md border ${
+                state.errors?.customerId?.length
+                  ? "border-red-500"
+                  : "border-gray-200"
+              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              defaultValue={state.submittedData?.customerId ?? ""}
+              aria-describedby="customerId-error"
             >
               <option value="" disabled>
                 Select a customer
@@ -57,14 +84,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
+          {/* <p>{state.submittedData?.customerId}</p> */}
 
-          <div id="customer-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+          <div id="customerId-error" aria-live="polite" aria-atomic="true">
+            <InputError errors={state.errors?.customerId} />
           </div>
         </div>
 
@@ -81,20 +104,21 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 type="number"
                 step="0.01"
                 placeholder="Enter USD amount"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                // className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className={`peer block w-full rounded-md border ${
+                  state.errors?.amount?.length
+                    ? "border-red-500"
+                    : "border-gray-200"
+                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
                 aria-describedby="amount-error"
+                defaultValue={state.submittedData?.amount}
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
 
           <div id="amount-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.amount &&
-              state.errors.amount.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            <InputError errors={state.errors?.amount} />
           </div>
         </div>
 
@@ -111,7 +135,14 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   name="status"
                   type="radio"
                   value="pending"
-                  className="text-white-600 h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 focus:ring-2"
+                  // className="text-white-600 h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 focus:ring-2"
+                  className={`text-white-600 h-4 w-4 cursor-pointer border ${
+                    state.errors?.status?.length
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } bg-gray-100 focus:ring-2`}
+                  aria-describedby="status-error"
+                  defaultChecked={state.submittedData?.status === "pending"}
                 />
                 <label
                   htmlFor="pending"
@@ -126,7 +157,14 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   name="status"
                   type="radio"
                   value="paid"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  // className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  className={`h-4 w-4 cursor-pointer border ${
+                    state.errors?.status?.length
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } bg-gray-100 text-gray-600 focus:ring-2`}
+                  aria-describedby="status-error"
+                  defaultChecked={state.submittedData?.status === "paid"}
                 />
                 <label
                   htmlFor="paid"
@@ -137,22 +175,21 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               </div>
             </div>
           </div>
+
           <div id="status-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.status &&
-              state.errors.status.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            <InputError errors={state.errors?.status} />
           </div>
         </fieldset>
 
-        <div aria-live="polite" aria-atomic="true">
-          {state.message ? (
-            <p className="mt-6 text-sm text-red-700">{state.message}</p>
-          ) : null}
-        </div>
+        {/* Mensagem de erro geral */}
+        {state.message && (
+          <div className="mt-6">
+            <p className="text-sm text-red-700">{state.message}</p>
+          </div>
+        )}
       </div>
+
+      {/* Botões */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/invoices"
