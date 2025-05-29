@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import prisma from "lib/prisma";
+import prisma from "@/prisma/lib/prisma";
 import path from "path";
 import fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";

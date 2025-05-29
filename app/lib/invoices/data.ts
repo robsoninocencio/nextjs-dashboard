@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/prisma/lib/prisma";
 
 const ITEMS_PER_PAGE = 6;
 
