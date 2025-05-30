@@ -6,7 +6,7 @@ import {
   customersData,
   invoicesData,
   revenueData,
-} from "@/app/lib/placeholder-data";
+} from "@/lib/placeholder-data";
 
 /**
  * Função para semear a tabela 'User'.
@@ -90,7 +90,6 @@ async function seedcustomers(): Promise<any[]> {
           id: u.id,
           name: u.name,
           email: u.email,
-          image_url: u.image_url,
         },
       });
       createdCustomers.push(result); // Adiciona o cliente criado ao array

@@ -12,7 +12,7 @@ import {
 
 import { Button } from "@/app/ui/shared/button";
 import { lusitana } from "@/app/ui/shared/fonts";
-import { authenticate } from "app/lib/actions";
+import { authenticate } from "@/lib/actions";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();

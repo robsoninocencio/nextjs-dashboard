@@ -9,7 +9,7 @@ import Table from "@/app/ui/customers/table";
 
 import { InvoicesTableSkeleton } from "@/app/ui/invoices/skeletons";
 
-import { fetchCustomersPages } from "@/app/lib/customers/data";
+import { fetchCustomersPages } from "@/lib/customers/data";
 
 import { Metadata } from "next";
 

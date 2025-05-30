@@ -188,6 +188,10 @@ export async function updateInvoice(
 }
 
 export async function deleteInvoice(id: string) {
+  if (!id) {
+    throw new Error("Invoice ID for deletion is invalid.");
+  }
+
   try {
     const invoice = await prisma.invoices.findUnique({ where: { id } });
     if (!invoice) {

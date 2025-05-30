@@ -51,7 +51,6 @@ export async function fetchFilteredInvoices(
           select: {
             name: true,
             email: true,
-            image_url: true,
           },
         },
       },

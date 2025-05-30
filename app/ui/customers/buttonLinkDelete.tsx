@@ -1,6 +1,6 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-import { deleteInvoice } from "@/app/lib/invoices/actions";
+import { deleteInvoice } from "@/lib/invoices/actions";
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const deleteInvoiceWithId = deleteInvoice.bind(null, id);

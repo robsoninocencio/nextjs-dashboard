@@ -50,10 +50,9 @@ model invoices {
 }
 
 model customers {
-  id        String @id @default(uuid()) @db.Uuid
-  name      String @db.VarChar(255)
-  email     String @unique @db.VarChar(255)
-  image_url String @db.VarChar(255)
+  id    String @id @default(uuid()) @db.Uuid
+  name  String @db.VarChar(255)
+  email String @unique @db.VarChar(255)
 
   // Relacionamento com outras tabelas (opcional, se necessário)
   invoices invoices[]

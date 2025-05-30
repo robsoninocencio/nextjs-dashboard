@@ -9,13 +9,13 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
-import { InvoiceForm } from "@/app/lib/invoices/definitions";
-import { CustomerField } from "@/app/lib/customers/definitions";
+import { InvoiceForm } from "@/lib/invoices/definitions";
+import { CustomerField } from "@/lib/customers/definitions";
 
 import { Button } from "@/app/ui/shared/button";
 
 // import { updateInvoice, State } from "@/app/lib/invoices/actions";
-import { updateInvoice, InvoiceFormState } from "@/app/lib/invoices/actions";
+import { updateInvoice, InvoiceFormState } from "@/lib/invoices/actions";
 
 export default function EditInvoiceForm({
   invoice,
@@ -170,9 +170,9 @@ export default function EditInvoiceForm({
           href="/dashboard/invoices"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Cancelar
         </Link>
-        <Button type="submit">Edit Invoice</Button>
+        <Button type="submit">Atualizar Fatura</Button>
       </div>
     </form>
   );

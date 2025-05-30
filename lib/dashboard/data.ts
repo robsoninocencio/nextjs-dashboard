@@ -50,7 +50,6 @@ export async function fetchLatestInvoices() {
         customer: {
           select: {
             name: true,
-            image_url: true,
             email: true,
           },
         },
@@ -62,7 +61,6 @@ export async function fetchLatestInvoices() {
       amount: formatCurrency(invoice.amount),
       status: invoice.status,
       name: invoice.customer?.name,
-      image_url: invoice.customer?.image_url,
       email: invoice.customer?.email,
     }));
 

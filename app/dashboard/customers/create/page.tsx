@@ -1,6 +1,6 @@
 import Form from "@/app/ui/customers/create-form";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
-import { fetchCustomers } from "@/app/lib/customers/data";
+import { fetchCustomers } from "@/lib/customers/data";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default async function Page() {
           { label: "Clientes", href: "/dashboard/customers" },
           {
             label: "Cadastro de Cliente",
-            href: "/dashboard/customer/create",
+            href: "/dashboard/customers/create",
             active: true,
           },
         ]}

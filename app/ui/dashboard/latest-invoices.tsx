@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { lusitana } from "@/app/ui/shared/fonts";
 
-import { fetchLatestInvoices } from "@/app/lib/dashboard/data";
+import { fetchLatestInvoices } from "@/lib/dashboard/data";
 import InvoiceStatus from "../invoices/status";
 
 export default async function LatestInvoices() {
@@ -27,13 +27,6 @@ export default async function LatestInvoices() {
                 )}
               >
                 <div className="flex items-center">
-                  <Image
-                    src={invoice.image_url}
-                    alt={`${invoice.name}'s profile picture`}
-                    className="mr-4 rounded-full"
-                    width={32}
-                    height={32}
-                  />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
                       {invoice.name}

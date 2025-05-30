@@ -61,7 +61,6 @@ export async function fetchCustomers() {
         id: true,
         name: true,
         email: true,
-        image_url: true,
       },
       orderBy: { name: "asc" },
     });
@@ -85,7 +84,6 @@ export async function fetchCustomerById(id: string) {
         id: true,
         name: true,
         email: true,
-        image_url: true,
       },
     });
 

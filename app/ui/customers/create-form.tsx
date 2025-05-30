@@ -1,20 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+
 import {
   PhotoIcon,
   UserCircleIcon,
   EnvelopeIcon,
 } from "@heroicons/react/24/outline";
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
 
 import { Button } from "@/app/ui/shared/button";
 
 import {
   createCustomer,
-  CreateCustomerState,
-} from "@/app/lib/customers/actions";
+  CreateCustomerFormState,
+} from "@/lib/customers/actions";
 
 function SubmitCustomerButton() {
   const { pending } = useFormStatus();
@@ -26,10 +27,23 @@ function SubmitCustomerButton() {
   );
 }
 
+function InputError({ errors }: { errors?: string[] }) {
+  if (!errors) return null;
+  return (
+    <>
+      {errors.map((error) => (
+        <p key={error} className="mt-2 text-sm text-red-500">
+          {error}
+        </p>
+      ))}
+    </>
+  );
+}
+
 export default function CustomerCreateForm() {
   // Estado inicial - mesmo formato do retorno da action createCustomer
-  const initialState: CreateCustomerState = {
-    errors: { name: [], email: [], image: [] },
+  const initialState: CreateCustomerFormState = {
+    errors: { name: [], email: [] },
     message: "",
   };
 
@@ -37,82 +51,63 @@ export default function CustomerCreateForm() {
   const [state, formAction] = useActionState(createCustomer, initialState);
 
   return (
-    <form action={formAction} encType="multipart/form-data" noValidate>
+    <form action={formAction} noValidate>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Image */}
-        <div className="mb-4">
-          <label htmlFor="image" className="mb-2 block text-sm font-medium">
-            Escolha sua imagem
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="image-error"
-            />
-            <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="image-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.image?.map((error) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
-            ))}
-          </div>
-        </div>
-
         {/* Customer Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Cliente:
+            Cliente
           </label>
           <div className="relative mt-2 rounded-md">
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Nome do cliente"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="name-error"
-              defaultValue={state.submittedData?.name}
-            />
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <div className="relative">
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Nome do cliente"
+                defaultValue={state.submittedData?.name}
+                aria-describedby="name-error"
+                className={`peer block w-full rounded-md border ${
+                  state.errors?.name?.length
+                    ? "border-red-500"
+                    : "border-gray-200"
+                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              />
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
           </div>
-          <div id="name-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.name?.map((error) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
-            ))}
+
+          <div id="name-errorr" aria-live="polite" aria-atomic="true">
+            <InputError errors={state.errors?.name} />
           </div>
         </div>
 
         {/* Customer Email */}
         <div className="mb-4">
           <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Email:
+            Email
           </label>
           <div className="relative mt-2 rounded-md">
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Email do cliente"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="email-error"
-              defaultValue={state.submittedData?.email}
-            />
-            <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <div className="relative">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Email do cliente"
+                defaultValue={state.submittedData?.email}
+                aria-describedby="email-error"
+                className={`peer block w-full rounded-md border ${
+                  state.errors?.email?.length
+                    ? "border-red-500"
+                    : "border-gray-200"
+                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              />
+              <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
           </div>
+
           <div id="email-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.email?.map((error) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
-            ))}
+            <InputError errors={state.errors?.email} />
           </div>
         </div>
 

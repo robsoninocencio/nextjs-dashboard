@@ -13,9 +13,9 @@ import {
 
 import { Button } from "@/app/ui/shared/button";
 
-import { createInvoice, InvoiceFormState } from "@/app/lib/invoices/actions";
+import { createInvoice, InvoiceFormState } from "@/lib/invoices/actions";
 
-import { CustomerField } from "@/app/lib/customers/definitions";
+import { CustomerField } from "@/lib/customers/definitions";
 
 // Botão com estado pendente (loading)
 function SubmitInvoiceButton() {
@@ -181,8 +181,12 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
         {/* Mensagem de erro geral */}
         {state.message && (
-          <div className="mt-6">
-            <p className="text-sm text-red-700">{state.message}</p>
+          <div
+            aria-live="polite"
+            aria-atomic="true"
+            className="mt-6 text-sm text-red-700"
+          >
+            {state.message}
           </div>
         )}
       </div>

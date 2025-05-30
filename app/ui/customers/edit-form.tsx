@@ -9,15 +9,14 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
-import { CustomerForm } from "@/app/lib/customers/definitions";
-import { CustomerField } from "@/app/lib/customers/definitions";
+import { CustomerForm } from "@/lib/customers/definitions";
+import { CustomerField } from "@/lib/customers/definitions";
 
 import { Button } from "@/app/ui/shared/button";
-
 import {
   updateCustomer,
-  UpdateCustomerState,
-} from "@/app/lib/customers/actions";
+  UpdateCustomerFormState,
+} from "@/lib/customers/actions";
 
 export default function EditCustomerForm({
   customer,
@@ -26,7 +25,7 @@ export default function EditCustomerForm({
   customer: CustomerForm;
   customers: CustomerField[];
 }) {
-  const initialState: UpdateCustomerState = { message: "", errors: {} };
+  const initialState: UpdateCustomerFormState = { message: "", errors: {} };
   const updateCustomerWithId = updateCustomer.bind(null, customer.id);
   const [state, formAction] = useActionState(
     updateCustomerWithId,
