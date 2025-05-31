@@ -15,7 +15,7 @@ import { Button } from "@/app/ui/shared/button";
 
 import { createInvoice, InvoiceFormState } from "@/lib/invoices/actions";
 
-import { CustomerField } from "@/lib/customers/definitions";
+import { ClienteField } from "@/lib/clientes/definitions";
 
 // Botão com estado pendente (loading)
 function SubmitInvoiceButton() {
@@ -42,7 +42,7 @@ function InputError({ errors }: { errors?: string[] }) {
 }
 
 // Formulário principal de criação de fatura
-export default function Form({ customers }: { customers: CustomerField[] }) {
+export default function Form({ clientes }: { clientes: ClienteField[] }) {
   const initialState: InvoiceFormState = {
     errors: {},
     message: "",
@@ -54,22 +54,19 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        {/* Cliente Name */}
         <div className="mb-4">
-          <label
-            htmlFor="customerId"
-            className="mb-2 block text-sm font-medium"
-          >
+          <label htmlFor="clienteId" className="mb-2 block text-sm font-medium">
             Cliente
           </label>
           <div className="relative">
             <select
-              id="customerId"
-              name="customerId"
-              defaultValue={state.submittedData?.customerId ?? ""}
-              aria-describedby="customerId-error"
+              id="clienteId"
+              name="clienteId"
+              defaultValue={state.submittedData?.clienteId ?? ""}
+              aria-describedby="clienteId-error"
               className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.customerId?.length
+                state.errors?.clienteId?.length
                   ? "border-red-500"
                   : "border-gray-200"
               } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
@@ -77,18 +74,18 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               <option value="" disabled>
                 Selecione o cliente
               </option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
+              {clientes.map((cliente) => (
+                <option key={cliente.id} value={cliente.id}>
+                  {cliente.name}
                 </option>
               ))}
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          {/* <p>{state.submittedData?.customerId}</p> */}
+          {/* <p>{state.submittedData?.clienteId}</p> */}
 
-          <div id="customerId-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.customerId} />
+          <div id="clienteId-error" aria-live="polite" aria-atomic="true">
+            <InputError errors={state.errors?.clienteId} />
           </div>
         </div>
 

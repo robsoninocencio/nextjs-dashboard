@@ -12,12 +12,9 @@ import {
 
 import { Button } from "@/app/ui/shared/button";
 
-import {
-  createCustomer,
-  CreateCustomerFormState,
-} from "@/lib/customers/actions";
+import { createCliente, CreateClienteFormState } from "@/lib/clientes/actions";
 
-function SubmitCustomerButton() {
+function SubmitClienteButton() {
   const { pending } = useFormStatus();
 
   return (
@@ -40,20 +37,20 @@ function InputError({ errors }: { errors?: string[] }) {
   );
 }
 
-export default function CustomerCreateForm() {
-  // Estado inicial - mesmo formato do retorno da action createCustomer
-  const initialState: CreateCustomerFormState = {
+export default function ClienteCreateForm() {
+  // Estado inicial - mesmo formato do retorno da action createCliente
+  const initialState: CreateClienteFormState = {
     errors: { name: [], email: [] },
     message: "",
   };
 
-  // useActionState associa o estado ao resultado da action createCustomer
-  const [state, formAction] = useActionState(createCustomer, initialState);
+  // useActionState associa o estado ao resultado da action createCliente
+  const [state, formAction] = useActionState(createCliente, initialState);
 
   return (
     <form action={formAction} noValidate>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        {/* Cliente Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
             Cliente
@@ -82,7 +79,7 @@ export default function CustomerCreateForm() {
           </div>
         </div>
 
-        {/* Customer Email */}
+        {/* Cliente Email */}
         <div className="mb-4">
           <label htmlFor="email" className="mb-2 block text-sm font-medium">
             Email
@@ -126,12 +123,12 @@ export default function CustomerCreateForm() {
       {/* Buttons */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/customers"
+          href={{ pathname: "/dashboard/clientes" }}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancelar
         </Link>
-        <SubmitCustomerButton />
+        <SubmitClienteButton />
       </div>
     </form>
   );

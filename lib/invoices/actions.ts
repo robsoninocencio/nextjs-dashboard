@@ -9,8 +9,8 @@ import prisma from "@/prisma/lib/prisma";
 
 // Schema
 const InvoiceFormSchema = z.object({
-  customerId: z.string({
-    invalid_type_error: "Please select a customer.",
+  clienteId: z.string({
+    invalid_type_error: "Please select a cliente.",
   }),
   amount: z.coerce
     .number()
@@ -26,13 +26,13 @@ type InvoiceData = z.infer<typeof InvoiceFormSchema>;
 // Types
 export type InvoiceFormState = {
   errors?: {
-    customerId?: string[];
+    clienteId?: string[];
     amount?: string[];
     status?: string[];
   };
   message?: string | null;
   submittedData?: {
-    customerId?: string;
+    clienteId?: string;
     amount?: string;
     status?: string;
   };
@@ -47,7 +47,7 @@ function getFormValue(formData: FormData, key: string): string | undefined {
 // Utils - Função para validar os campos do formulário usando Zod
 function parseInvoiceForm(formData: FormData) {
   return InvoiceFormSchema.safeParse({
-    customerId: getFormValue(formData, "customerId"),
+    clienteId: getFormValue(formData, "clienteId"),
     amount: getFormValue(formData, "amount"),
     status: getFormValue(formData, "status"),
   });
@@ -62,7 +62,7 @@ function handleValidationError(
     errors: validatedFields.error?.flatten().fieldErrors,
     message: "Missing Fields. Failed to Create or Update Invoice.",
     submittedData: {
-      customerId: getFormValue(formData, "customerId"),
+      clienteId: getFormValue(formData, "clienteId"),
       amount: getFormValue(formData, "amount"),
       status: getFormValue(formData, "status"),
     },
@@ -93,7 +93,7 @@ async function saveInvoiceToDatabase(
     await prisma.invoices.update({
       where: { id },
       data: {
-        customer_id: data.customerId,
+        cliente_id: data.clienteId,
         amount: amountInCents,
         status: data.status,
       },
@@ -102,7 +102,7 @@ async function saveInvoiceToDatabase(
     // Cria uma nova fatura
     await prisma.invoices.create({
       data: {
-        customer_id: data.customerId,
+        cliente_id: data.clienteId,
         amount: amountInCents,
         status: data.status,
         date,

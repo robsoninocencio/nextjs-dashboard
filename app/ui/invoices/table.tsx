@@ -31,10 +31,10 @@ export default async function InvoicesTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p>{invoice.customer.name}</p>
+                      <p>{invoice.cliente.name}</p>
                     </div>
                     <p className="text-sm text-gray-500">
-                      {invoice.customer.email}
+                      {invoice.cliente.email}
                     </p>
                   </div>
                   <InvoiceStatus status={invoice.status} />
@@ -48,9 +48,7 @@ export default async function InvoicesTable({
                   </div>
                   <div className="flex justify-end gap-2">
                     <ButtonLinkUpdate
-                      href={{
-                        pathname: `/dashboard/invoices/${invoice.id}/edit`,
-                      }}
+                      href={`/dashboard/invoices/${invoice.id}/edit`}
                     />
                     <ButtonLinkDelete id={invoice.id} />
                   </div>
@@ -89,11 +87,11 @@ export default async function InvoicesTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <p>{invoice.customer.name}</p>
+                      <p>{invoice.cliente.name}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.customer.email}
+                    {invoice.cliente.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatCurrency(invoice.amount)}
@@ -107,9 +105,7 @@ export default async function InvoicesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <ButtonLinkUpdate
-                        href={{
-                          pathname: `/dashboard/invoices/${invoice.id}/edit`,
-                        }}
+                        href={`/dashboard/invoices/${invoice.id}/edit`}
                       />
                       <ButtonLinkDelete id={invoice.id} />
                     </div>

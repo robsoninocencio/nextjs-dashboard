@@ -3,7 +3,7 @@ import prisma from "@/prisma/lib/prisma";
 import {
   UserData,
   usersData,
-  customersData,
+  clientesData,
   invoicesData,
   revenueData,
 } from "@/lib/placeholder-data";
@@ -73,17 +73,17 @@ async function seedusers() {
 }
 
 /**
- * Função para semear a tabela 'Customers'.
+ * Função para semear a tabela 'Clientes'.
  */
-async function seedcustomers(): Promise<any[]> {
+async function seedclientes(): Promise<any[]> {
   // Define o tipo de retorno como Promise<any[]>
-  console.log("Iniciando o seeding da tabela 'Customers'...");
+  console.log("Iniciando o seeding da tabela 'Clientes'...");
   try {
     let createdCount = 0;
     let updatedCount = 0;
-    const createdCustomers = []; // Array para armazenar os clientes criados com seus IDs
-    for (const u of customersData) {
-      const result = await prisma.customers.upsert({
+    const createdClientes = []; // Array para armazenar os clientes criados com seus IDs
+    for (const u of clientesData) {
+      const result = await prisma.clientes.upsert({
         where: { email: u.email },
         update: {},
         create: {
@@ -92,7 +92,7 @@ async function seedcustomers(): Promise<any[]> {
           email: u.email,
         },
       });
-      createdCustomers.push(result); // Adiciona o cliente criado ao array
+      createdClientes.push(result); // Adiciona o cliente criado ao array
       if ((result as any).createdAt === (result as any).updatedAt) {
         createdCount++;
       } else {
@@ -100,11 +100,11 @@ async function seedcustomers(): Promise<any[]> {
       }
     }
     console.log(
-      `Seeding da tabela 'Customers' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
+      `Seeding da tabela 'Clientes' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
     );
-    return createdCustomers; // Retorna os clientes criados
+    return createdClientes; // Retorna os clientes criados
   } catch (error) {
-    console.error("Erro ao semear a tabela 'Customers':", error);
+    console.error("Erro ao semear a tabela 'Clientes':", error);
     console.error(error);
     throw error;
   }
@@ -124,7 +124,7 @@ async function seedinvoices() {
         update: {},
         create: {
           id: i.id,
-          customer_id: i.customer_id, // Usando diretamente o customer_id dos dados
+          cliente_id: i.cliente_id, // Usando diretamente o cliente_id dos dados
           amount: i.amount,
           status: i.status,
           date: new Date(i.date),
@@ -185,7 +185,7 @@ async function seedrevenue() {
 export async function main() {
   console.log("Iniciando o processo de seeding...");
   try {
-    await seedcustomers();
+    await seedclientes();
     await seedUser();
     await seedusers();
     await seedinvoices(); // Chamada sem argumentos

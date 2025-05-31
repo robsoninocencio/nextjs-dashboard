@@ -9,33 +9,27 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
-import { CustomerForm } from "@/lib/customers/definitions";
-import { CustomerField } from "@/lib/customers/definitions";
+import { ClienteForm } from "@/lib/clientes/definitions";
+import { ClienteField } from "@/lib/clientes/definitions";
 
 import { Button } from "@/app/ui/shared/button";
-import {
-  updateCustomer,
-  UpdateCustomerFormState,
-} from "@/lib/customers/actions";
+import { updateCliente, UpdateClienteFormState } from "@/lib/clientes/actions";
 
-export default function EditCustomerForm({
-  customer,
-  customers,
+export default function EditClienteForm({
+  cliente,
+  clientes,
 }: {
-  customer: CustomerForm;
-  customers: CustomerField[];
+  cliente: ClienteForm;
+  clientes: ClienteField[];
 }) {
-  const initialState: UpdateCustomerFormState = { message: "", errors: {} };
-  const updateCustomerWithId = updateCustomer.bind(null, customer.id);
-  const [state, formAction] = useActionState(
-    updateCustomerWithId,
-    initialState
-  );
+  const initialState: UpdateClienteFormState = { message: "", errors: {} };
+  const updateClienteWithId = updateCliente.bind(null, cliente.id);
+  const [state, formAction] = useActionState(updateClienteWithId, initialState);
 
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        {/* Cliente Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
             Cliente
@@ -46,7 +40,7 @@ export default function EditCustomerForm({
                 id="name"
                 name="name"
                 type="text"
-                defaultValue={customer.name}
+                defaultValue={cliente.name}
                 placeholder="Digite o nome do cliente"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="name-error"
@@ -76,7 +70,7 @@ export default function EditCustomerForm({
                 id="email"
                 name="email"
                 type="email"
-                defaultValue={customer.email}
+                defaultValue={cliente.email}
                 placeholder="Digite o email"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="email-error"
@@ -103,7 +97,7 @@ export default function EditCustomerForm({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/customers"
+          href={{ pathname: "/dashboard/clientes" }}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancelar

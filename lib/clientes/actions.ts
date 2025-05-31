@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import prisma from "@/prisma/lib/prisma";
 
 // Schemas
-const CustomerFormSchema = z.object({
+const ClienteFormSchema = z.object({
   name: z
     .string({ invalid_type_error: "Por favor, insira um nome." })
     .min(3, "O nome deve ter pelo menos 3 caracteres.")
@@ -21,16 +21,16 @@ const CustomerFormSchema = z.object({
 });
 
 // tipar explicitamente validatedFields.data
-type CustomerData = z.infer<typeof CustomerFormSchema>;
+type ClienteData = z.infer<typeof ClienteFormSchema>;
 
 // Types
-export type CreateCustomerFormState = {
+export type CreateClienteFormState = {
   errors?: Partial<{ name: string[]; email: string[] }>;
   message?: string | null;
   submittedData?: { name?: string; email?: string };
 };
 
-export type UpdateCustomerFormState = {
+export type UpdateClienteFormState = {
   errors?: Partial<{ name: string[]; email: string[] }>;
   message?: string | null;
   submittedData?: { name?: string; email?: string };
@@ -43,8 +43,8 @@ function getFormValue(formData: FormData, key: string): string | undefined {
 }
 
 // Utils - Função para validar os campos do formulário usando Zod
-function parseCustomerForm(formData: FormData) {
-  return CustomerFormSchema.safeParse({
+function parseClienteForm(formData: FormData) {
+  return ClienteFormSchema.safeParse({
     name: getFormValue(formData, "name"),
     email: getFormValue(formData, "email"),
   });
@@ -54,7 +54,7 @@ function parseCustomerForm(formData: FormData) {
 function handleValidationError(
   formData: FormData,
   validatedFields: { success: false; error: z.ZodError }
-): CreateCustomerFormState | UpdateCustomerFormState {
+): CreateClienteFormState | UpdateClienteFormState {
   return {
     errors: validatedFields.error?.flatten().fieldErrors,
     message: "Missing Fields. Failed to Create or Update Invoice.",
@@ -67,16 +67,16 @@ function handleValidationError(
 
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
 function getDatabaseErrorMessage(action: "create" | "update") {
-  return `Database Error: Failed to ${action} customer.`;
+  return `Database Error: Failed to ${action} cliente.`;
 }
 
-async function saveCustomerToDatabase(
-  data: CustomerData,
+async function saveClienteToDatabase(
+  data: ClienteData,
   id?: string
 ): Promise<void> {
   if (id) {
     // Atualiza a cliente
-    await prisma.customers.update({
+    await prisma.clientes.update({
       where: { id },
       data: {
         name: data.name,
@@ -85,7 +85,7 @@ async function saveCustomerToDatabase(
     });
   } else {
     // Cria um novo cliente
-    await prisma.customers.create({
+    await prisma.clientes.create({
       data: {
         name: data.name,
         email: data.email,
@@ -95,16 +95,16 @@ async function saveCustomerToDatabase(
 }
 
 // Actions  - Ação de criação de cliente
-export async function createCustomer(
-  prevState: CreateCustomerFormState,
+export async function createCliente(
+  prevState: CreateClienteFormState,
   formData: FormData
-): Promise<CreateCustomerFormState | never> {
+): Promise<CreateClienteFormState | never> {
   if (process.env.NODE_ENV === "development") {
     console.log("Received FormData:", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
-  const validatedFields = parseCustomerForm(formData);
+  const validatedFields = parseClienteForm(formData);
   if (process.env.NODE_ENV === "development") {
     console.log("validatedFields.error:", validatedFields.error);
   }
@@ -116,29 +116,29 @@ export async function createCustomer(
 
   // Cria cliente no banco de dados
   try {
-    await saveCustomerToDatabase(validatedFields.data);
+    await saveClienteToDatabase(validatedFields.data);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Create Customer Error:", error);
+      console.error("Create Cliente Error:", error);
     }
     return { message: getDatabaseErrorMessage("create") };
   }
 
-  revalidatePath("/dashboard/customers");
-  redirect("/dashboard/customers");
+  revalidatePath("/dashboard/clientes");
+  redirect("/dashboard/clientes");
 }
 
-export async function updateCustomer(
+export async function updateCliente(
   id: string,
-  prevState: UpdateCustomerFormState,
+  prevState: UpdateClienteFormState,
   formData: FormData
-): Promise<UpdateCustomerFormState | never> {
+): Promise<UpdateClienteFormState | never> {
   if (process.env.NODE_ENV === "development") {
     console.log("Received FormData:", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
-  const validatedFields = parseCustomerForm(formData);
+  const validatedFields = parseClienteForm(formData);
   if (process.env.NODE_ENV === "development") {
     console.log("validatedFields.error:", validatedFields.error);
   }
@@ -149,58 +149,58 @@ export async function updateCustomer(
   }
 
   // Verifica se o cliente existe antes de tentar atualizar
-  const existing = await prisma.customers.findUnique({ where: { id } });
+  const existing = await prisma.clientes.findUnique({ where: { id } });
   if (!existing) {
-    return { message: "Customer not found. Cannot update." };
+    return { message: "Cliente not found. Cannot update." };
   }
 
   // Atualiza cliente no banco de dados
   try {
-    await saveCustomerToDatabase(validatedFields.data, id);
+    await saveClienteToDatabase(validatedFields.data, id);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Update Customer Error:", error);
+      console.error("Update Cliente Error:", error);
     }
     return { message: getDatabaseErrorMessage("update") };
   }
 
-  revalidatePath("/dashboard/customers");
-  redirect("/dashboard/customers");
+  revalidatePath("/dashboard/clientes");
+  redirect("/dashboard/clientes");
 }
 
-export async function deleteCustomer(id: string) {
+export async function deleteCliente(id: string) {
   if (!id) {
-    throw new Error("Customer ID for deletion is invalid.");
+    throw new Error("Cliente ID for deletion is invalid.");
   }
 
   try {
     await prisma.$transaction(async (tx) => {
-      // Primeiro, pegar o customer para obter a URL da imagem
-      const customer = await tx.customers.findUnique({
+      // Primeiro, pegar o cliente para obter a URL da imagem
+      const cliente = await tx.clientes.findUnique({
         where: { id },
       });
 
-      if (!customer) {
-        throw new Error("Customer not found.");
+      if (!cliente) {
+        throw new Error("Cliente not found.");
       }
 
-      // Apagar as faturas associadas ao customer
+      // Apagar as faturas associadas ao cliente
       await tx.invoices.deleteMany({
-        where: { customer_id: id },
+        where: { cliente_id: id },
       });
 
-      // Apagar o customer
-      await tx.customers.delete({
+      // Apagar o cliente
+      await tx.clientes.delete({
         where: { id },
       });
     });
   } catch (error) {
     console.error(
-      `Database Error: Failed to Delete Customer ID ${id} and their Invoices.`,
+      `Database Error: Failed to Delete Cliente ID ${id} and their Invoices.`,
       error
     );
-    throw new Error("Failed to delete customer and their invoices.");
+    throw new Error("Failed to delete cliente and their invoices.");
   }
 
-  revalidatePath("/dashboard/customers");
+  revalidatePath("/dashboard/clientes");
 }

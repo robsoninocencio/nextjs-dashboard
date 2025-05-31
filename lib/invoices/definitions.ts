@@ -1,6 +1,6 @@
 export type Invoice = {
   id: string;
-  customer_id: string;
+  cliente_id: string;
   amount: number;
   date: string;
   // In TypeScript, this is called a string union type.
@@ -22,7 +22,7 @@ export type LatestInvoiceRaw = Omit<LatestInvoice, "amount"> & {
 
 export type InvoicesTable = {
   id: string;
-  customer_id: string;
+  cliente_id: string;
   name: string;
   email: string;
   date: string;
@@ -32,7 +32,7 @@ export type InvoicesTable = {
 
 export type InvoiceForm = {
   id: string;
-  customer_id: string;
+  cliente_id: string;
   amount: number;
   status: "pendente" | "pago";
 };

@@ -1,11 +1,11 @@
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { deleteCustomer } from "@/lib/customers/actions";
+import { deleteCliente } from "@/lib/clientes/actions";
 
-export function UpdateCustomer({ id }: { id: string }) {
+export function UpdateCliente({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/customers/${id}/edit`}
+      href={{ pathname: `/dashboard/clientes/${id}/edit` }}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
@@ -13,11 +13,11 @@ export function UpdateCustomer({ id }: { id: string }) {
   );
 }
 
-export function DeleteCustomer({ id }: { id: string }) {
-  const deleteCustomerWithId = deleteCustomer.bind(null, id);
+export function DeleteCliente({ id }: { id: string }) {
+  const deleteClienteWithId = deleteCliente.bind(null, id);
 
   return (
-    <form action={deleteCustomerWithId}>
+    <form action={deleteClienteWithId}>
       <button type="submit" className="rounded-md border p-2 hover:bg-gray-100">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />

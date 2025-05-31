@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "invoices" ALTER COLUMN "date" SET DATA TYPE TIMESTAMP(3);

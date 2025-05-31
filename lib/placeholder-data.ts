@@ -18,7 +18,7 @@ const usersData = [
   },
 ];
 
-const customersData = [
+const clientesData = [
   {
     id: uuidv4(),
     name: "Yasmin",
@@ -59,91 +59,91 @@ const customersData = [
 const invoicesData = [
   {
     id: uuidv4(),
-    customer_id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
+    cliente_id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
     amount: 15795,
     status: "pendente",
     date: "2022-12-06",
   }, // Evil Rabbit 1
   {
     id: uuidv4(),
-    customer_id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
+    cliente_id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
     amount: 20348,
     status: "pendente",
     date: "2022-11-14",
   }, // Delba de Oliveira 2
   {
     id: uuidv4(),
-    customer_id: "CC27C14A-0ACF-4F4A-A6C9-D45682C144B9",
+    cliente_id: "CC27C14A-0ACF-4F4A-A6C9-D45682C144B9",
     amount: 3040,
     status: "pago",
     date: "2022-10-29",
   }, // Amy Burns 3
   {
     id: uuidv4(),
-    customer_id: "76d65c26-f784-44a2-ac19-586678f7c2f2",
+    cliente_id: "76d65c26-f784-44a2-ac19-586678f7c2f2",
     amount: 44800,
     status: "pago",
     date: "2023-09-10",
   }, // Michael Novotny 4
   {
     id: uuidv4(),
-    customer_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
+    cliente_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
     amount: 34577,
     status: "pendente",
     date: "2023-08-05",
   }, // Balazs Orban 5
   {
     id: uuidv4(),
-    customer_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
+    cliente_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
     amount: 54246,
     status: "pendente",
     date: "2023-07-16",
   }, // Lee Robinson 6
   {
     id: uuidv4(),
-    customer_id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
+    cliente_id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
     amount: 666,
     status: "pendente",
     date: "2023-06-27",
   }, // Evil Rabbit 7
   {
     id: uuidv4(),
-    customer_id: "76d65c26-f784-44a2-ac19-586678f7c2f2",
+    cliente_id: "76d65c26-f784-44a2-ac19-586678f7c2f2",
     amount: 32545,
     status: "pago",
     date: "2023-06-09",
   }, // Michael Novotny 8
   {
     id: uuidv4(),
-    customer_id: "CC27C14A-0ACF-4F4A-A6C9-D45682C144B9",
+    cliente_id: "CC27C14A-0ACF-4F4A-A6C9-D45682C144B9",
     amount: 1250,
     status: "pago",
     date: "2023-06-17",
   }, // Amy Burns 9
   {
     id: uuidv4(),
-    customer_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
+    cliente_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
     amount: 8546,
     status: "pago",
     date: "2023-06-07",
   }, // Balazs Orban 10
   {
     id: uuidv4(),
-    customer_id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
+    cliente_id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
     amount: 500,
     status: "pago",
     date: "2023-08-19",
   }, // Delba de Oliveira 11
   {
     id: uuidv4(),
-    customer_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
+    cliente_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
     amount: 8945,
     status: "pago",
     date: "2023-06-03",
   }, // Balazs Orban 12
   {
     id: uuidv4(),
-    customer_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
+    cliente_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
     amount: 1000,
     status: "pago",
     date: "2022-06-05",
@@ -211,4 +211,4 @@ const UserData = [
   },
 ];
 
-export { usersData, customersData, invoicesData, revenueData, UserData };
+export { usersData, clientesData, invoicesData, revenueData, UserData };

@@ -7,8 +7,8 @@ export async function fetchInvoicesPages(query: string) {
     const count = await prisma.invoices.count({
       where: {
         OR: [
-          { customer: { name: { contains: query, mode: "insensitive" } } },
-          { customer: { email: { contains: query, mode: "insensitive" } } },
+          { cliente: { name: { contains: query, mode: "insensitive" } } },
+          { cliente: { email: { contains: query, mode: "insensitive" } } },
           {
             amount: isNaN(Number(query))
               ? undefined
@@ -36,8 +36,8 @@ export async function fetchFilteredInvoices(
     const invoices = await prisma.invoices.findMany({
       where: {
         OR: [
-          { customer: { name: { contains: query, mode: "insensitive" } } },
-          { customer: { email: { contains: query, mode: "insensitive" } } },
+          { cliente: { name: { contains: query, mode: "insensitive" } } },
+          { cliente: { email: { contains: query, mode: "insensitive" } } },
           {
             amount: isNaN(Number(query))
               ? undefined
@@ -47,7 +47,7 @@ export async function fetchFilteredInvoices(
         ],
       },
       include: {
-        customer: {
+        cliente: {
           select: {
             name: true,
             email: true,
@@ -76,7 +76,7 @@ export async function fetchInvoiceById(id: string) {
       where: { id },
       select: {
         id: true,
-        customer_id: true,
+        cliente_id: true,
         amount: true,
         status: true,
         date: true, // <-- Inclua ESTA LINHA

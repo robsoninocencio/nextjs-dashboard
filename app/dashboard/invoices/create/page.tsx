@@ -2,7 +2,7 @@ import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
 import Form from "@/app/ui/invoices/create-form";
 
-import { fetchCustomers } from "@/lib/customers/data";
+import { fetchClientes } from "@/lib/clientes/data";
 
 import { Metadata } from "next";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const customers = await fetchCustomers();
+  const clientes = await fetchClientes();
 
   return (
     <main>
@@ -25,7 +25,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form clientes={clientes} />
     </main>
   );
 }

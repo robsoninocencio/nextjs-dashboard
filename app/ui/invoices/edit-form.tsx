@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { InvoiceForm } from "@/lib/invoices/definitions";
-import { CustomerField } from "@/lib/customers/definitions";
+import { ClienteField } from "@/lib/clientes/definitions";
 
 import { Button } from "@/app/ui/shared/button";
 
@@ -19,10 +19,10 @@ import { updateInvoice, InvoiceFormState } from "@/lib/invoices/actions";
 
 export default function EditInvoiceForm({
   invoice,
-  customers,
+  clientes,
 }: {
   invoice: InvoiceForm;
-  customers: CustomerField[];
+  clientes: ClienteField[];
 }) {
   const initialState: InvoiceFormState = { message: "", errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
@@ -31,39 +31,39 @@ export default function EditInvoiceForm({
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        {/* Cliente Name */}
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
-            Choose customer
+          <label htmlFor="cliente" className="mb-2 block text-sm font-medium">
+            Choose cliente
           </label>
           <div className="relative">
             <select
-              id="customer"
-              name="customerId"
+              id="cliente"
+              name="clienteId"
               // className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.customerId?.length
+                state.errors?.clienteId?.length
                   ? "border-red-500"
                   : "border-gray-200"
               } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-              defaultValue={invoice.customer_id}
-              aria-describedby="customerId-error"
+              defaultValue={invoice.cliente_id}
+              aria-describedby="clienteId-error"
             >
               <option value="" disabled>
-                Select a customer
+                Select a cliente
               </option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
+              {clientes.map((cliente) => (
+                <option key={cliente.id} value={cliente.id}>
+                  {cliente.name}
                 </option>
               ))}
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
 
-          <div id="customerId-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.customerId &&
-              state.errors.customerId.map((error: string) => (
+          <div id="clienteId-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.clienteId &&
+              state.errors.clienteId.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>

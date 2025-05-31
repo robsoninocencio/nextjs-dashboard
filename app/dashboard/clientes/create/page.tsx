@@ -1,6 +1,6 @@
-import Form from "@/app/ui/customers/create-form";
+import Form from "@/app/ui/clientes/create-form";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
-import { fetchCustomers } from "@/lib/customers/data";
+import { fetchClientes } from "@/lib/clientes/data";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,16 +8,16 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const customers = await fetchCustomers();
+  const clientes = await fetchClientes();
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Clientes", href: "/dashboard/customers" },
+          { label: "Clientes", href: "/dashboard/clientes" },
           {
             label: "Cadastro de Cliente",
-            href: "/dashboard/customers/create",
+            href: "/dashboard/clientes/create",
             active: true,
           },
         ]}

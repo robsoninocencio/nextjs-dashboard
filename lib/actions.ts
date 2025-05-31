@@ -7,11 +7,11 @@ import { AuthError } from "next-auth";
 
 import prisma from "@/prisma/lib/prisma";
 
-export async function deleteCustomer(id: string) {
-  await prisma.customers.delete({
+export async function deleteCliente(id: string) {
+  await prisma.clientes.delete({
     where: { id: id },
   });
-  revalidatePath("/dashboard/customers");
+  revalidatePath("/dashboard/clientes");
 }
 
 export async function authenticate(

@@ -7,7 +7,7 @@ async function listInvoices() {
     },
     select: {
       amount: true,
-      customer: {
+      cliente: {
         select: {
           name: true, // Seleciona o nome do cliente relacionado
         },
@@ -18,7 +18,7 @@ async function listInvoices() {
   // Ajusta o formato dos dados para retornar apenas `amount` e `name`
   return data.map((invoice) => ({
     amount: invoice.amount,
-    name: invoice.customer?.name,
+    name: invoice.cliente?.name,
   }));
 }
 

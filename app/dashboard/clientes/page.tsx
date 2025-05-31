@@ -5,16 +5,16 @@ import { lusitana } from "@/app/ui/shared/fonts";
 import Pagination from "@/app/ui/shared/pagination";
 import { ButtonLinkCreate } from "@/app/ui/shared/buttonsLinkCreate";
 
-import Table from "@/app/ui/customers/table";
+import Table from "@/app/ui/clientes/table";
 
 import { InvoicesTableSkeleton } from "@/app/ui/invoices/skeletons";
 
-import { fetchCustomersPages } from "@/lib/customers/data";
+import { fetchClientesPages } from "@/lib/clientes/data";
 
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Customers",
+  title: "Clientes",
 };
 
 export default async function Page(props: {
@@ -27,7 +27,7 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const totalPages = await fetchCustomersPages(query);
+  const totalPages = await fetchClientesPages(query);
 
   return (
     <div className="w-full">
@@ -36,7 +36,7 @@ export default async function Page(props: {
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Pesquisar clientes..." />
-        <ButtonLinkCreate href="/dashboard/customers/create">
+        <ButtonLinkCreate href="/dashboard/clientes/create">
           Cadastrar Cliente
         </ButtonLinkCreate>
       </div>

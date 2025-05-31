@@ -2,9 +2,9 @@ import prisma from "@/prisma/lib/prisma";
 
 const ITEMS_PER_PAGE = 6;
 
-export async function fetchCustomersPages(query: string) {
+export async function fetchClientesPages(query: string) {
   try {
-    const count = await prisma.customers.count({
+    const count = await prisma.clientes.count({
       where: {
         OR: [
           { name: { contains: query, mode: "insensitive" } },
@@ -20,14 +20,14 @@ export async function fetchCustomersPages(query: string) {
   }
 }
 
-export async function fetchFilteredCustomers(
+export async function fetchFilteredClientes(
   query: string,
   currentPage: number
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const customers = await prisma.customers.findMany({
+    const clientes = await prisma.clientes.findMany({
       where: {
         OR: [
           { name: { contains: query, mode: "insensitive" } },
@@ -47,16 +47,16 @@ export async function fetchFilteredCustomers(
       take: ITEMS_PER_PAGE,
     });
 
-    return customers;
+    return clientes;
   } catch (error) {
     console.error("Erro ao buscar clientes filtrados:", error);
     throw new Error("Erro ao buscar clientes filtrados.");
   }
 }
 
-export async function fetchCustomers() {
+export async function fetchClientes() {
   try {
-    const customers = await prisma.customers.findMany({
+    const clientes = await prisma.clientes.findMany({
       select: {
         id: true,
         name: true,
@@ -65,20 +65,20 @@ export async function fetchCustomers() {
       orderBy: { name: "asc" },
     });
 
-    return customers;
+    return clientes;
   } catch (error) {
     console.error("Erro ao buscar clientes:", error);
     throw new Error("Não foi possível buscar os clientes.");
   }
 }
 
-export async function fetchCustomerById(id: string) {
+export async function fetchClienteById(id: string) {
   if (!id) {
     throw new Error("O ID do cliente é obrigatório.");
   }
 
   try {
-    const customer = await prisma.customers.findUnique({
+    const cliente = await prisma.clientes.findUnique({
       where: { id },
       select: {
         id: true,
@@ -87,11 +87,11 @@ export async function fetchCustomerById(id: string) {
       },
     });
 
-    if (!customer) {
+    if (!cliente) {
       throw new Error("Cliente não encontrado.");
     }
 
-    return customer;
+    return cliente;
   } catch (error) {
     console.error(`Erro ao buscar cliente com ID ${id}:`, error);
     throw new Error("Erro ao buscar a cliente.");

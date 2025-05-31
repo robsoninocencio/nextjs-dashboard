@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
-import { fetchCustomers } from "@/lib/customers/data";
+import { fetchClientes } from "@/lib/clientes/data";
 
 import Form from "@/app/ui/invoices/edit-form";
 
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [invoice, customers] = await Promise.all([
+  const [invoice, clientes] = await Promise.all([
     fetchInvoiceById(id),
-    fetchCustomers(),
+    fetchClientes(),
   ]);
 
   if (!invoice) {
@@ -30,7 +30,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   // Garantir que invoice.status tenha o tipo correto
   const typedInvoice: Invoice = {
     id: invoice.id,
-    customer_id: invoice.customer_id,
+    cliente_id: invoice.cliente_id,
     amount: invoice.amount,
     date: invoice.date.toISOString(), // Converte a data para string ISO
     status:
@@ -51,7 +51,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           },
         ]}
       />
-      <Form invoice={typedInvoice} customers={customers} />
+      <Form invoice={typedInvoice} clientes={clientes} />
     </main>
   );
 }

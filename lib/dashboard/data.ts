@@ -3,10 +3,10 @@ import { formatCurrency } from "../utils";
 
 export async function fetchCardData() {
   try {
-    const [invoiceCount, customerCount, paidSum, pendingSum] =
-      await Promise.all([
+    const [invoiceCount, clienteCount, paidSum, pendingSum] = await Promise.all(
+      [
         prisma.invoices.count(),
-        prisma.customers.count(),
+        prisma.clientes.count(),
         prisma.invoices.aggregate({
           _sum: { amount: true },
           where: { status: "pago" },
@@ -15,11 +15,12 @@ export async function fetchCardData() {
           _sum: { amount: true },
           where: { status: "pendente" },
         }),
-      ]);
+      ]
+    );
 
     return {
       numberOfInvoices: invoiceCount,
-      numberOfCustomers: customerCount,
+      numberOfClientes: clienteCount,
       totalPaidInvoices: formatCurrency(paidSum._sum.amount || 0),
       totalPendingInvoices: formatCurrency(pendingSum._sum.amount || 0),
     };
@@ -47,7 +48,7 @@ export async function fetchLatestInvoices() {
       orderBy: { date: "desc" },
       take: 5,
       include: {
-        customer: {
+        cliente: {
           select: {
             name: true,
             email: true,
@@ -60,8 +61,8 @@ export async function fetchLatestInvoices() {
       id: invoice.id,
       amount: formatCurrency(invoice.amount),
       status: invoice.status,
-      name: invoice.customer?.name,
-      email: invoice.customer?.email,
+      name: invoice.cliente?.name,
+      email: invoice.cliente?.email,
     }));
 
     return latestInvoices;

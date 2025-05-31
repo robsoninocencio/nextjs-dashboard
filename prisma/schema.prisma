@@ -38,18 +38,18 @@ model users {
 }
 
 model invoices {
-  id          String   @id @default(uuid()) @db.Uuid
-  customer_id String   @db.Uuid
-  amount      Int
-  status      String   @db.VarChar(255)
+  id         String   @id @default(uuid()) @db.Uuid
+  cliente_id String   @db.Uuid
+  amount     Int
+  status     String   @db.VarChar(255)
   // date        DateTime @db.Date
-  date        DateTime
+  date       DateTime
 
-  // Relacionamento com o modelo Customer (opcional, se existir)
-  customer customers @relation(fields: [customer_id], references: [id])
+  // Relacionamento com o modelo Cliente (opcional, se existir)
+  cliente clientes @relation(fields: [cliente_id], references: [id])
 }
 
-model customers {
+model clientes {
   id    String @id @default(uuid()) @db.Uuid
   name  String @db.VarChar(255)
   email String @unique @db.VarChar(255)
