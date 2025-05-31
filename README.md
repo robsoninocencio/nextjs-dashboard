@@ -65,6 +65,7 @@ production
 AUTH_URL=https://nextjs-dashboard-bk6o.vercel.app
 
 Não deve adicinar "/api/auth" ao final das rotas a vercel completa.
+link para colocar essas variáveis no vercel em produção https://vercel.com/robson-inocncios-projects/nextjs-dashboard-bk6o/settings/environment-variables
 
 vercel env add AUTH_URL development
 http://localhost:3000
