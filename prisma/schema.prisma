@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -14,39 +8,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+// Enum's
+enum Indexador {
+  CDI
+  IPCA
+  SELIC
+  PREFIXADO
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  authorId  Int
-  author    User    @relation(fields: [authorId], references: [id])
-}
-
+// Models
 model users {
   id       String @id @default(uuid()) @db.Uuid
   name     String @db.VarChar(255)
   email    String @unique @db.Text
   password String
-}
 
-model invoices {
-  id         String   @id @default(uuid()) @db.Uuid
-  cliente_id String   @db.Uuid
-  amount     Int
-  status     String   @db.VarChar(255)
-  // date        DateTime @db.Date
-  date       DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Relacionamento com o modelo Cliente (opcional, se existir)
-  cliente clientes @relation(fields: [cliente_id], references: [id])
+  invoices      invoices[]
+  clientes      clientes[]
+  investimentos investimentos[]
+
+  @@index([email]) // Índice para buscas por email
 }
 
 model clientes {
@@ -54,11 +38,143 @@ model clientes {
   name  String @db.VarChar(255)
   email String @unique @db.VarChar(255)
 
-  // Relacionamento com outras tabelas (opcional, se necessário)
-  invoices invoices[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users  users?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @db.Uuid
+
+  invoices      invoices[]
+  investimentos investimentos[]
+
+  @@index([email])
+  @@index([userId])
+}
+
+model invoices {
+  id        String   @id @default(uuid()) @db.Uuid
+  amount    Int
+  status    String   @db.VarChar(255)
+  // date        DateTime @db.Date
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com o modelo Cliente (opcional, se existir)
+  cliente    clientes @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
+  cliente_id String   @db.Uuid
+  users      users?   @relation(fields: [usersId], references: [id])
+  usersId    String?  @db.Uuid
+
+  @@index([cliente_id]) // Índice para buscas por cliente
+  @@index([cliente_id, date]) // Índice composto para buscas por cliente e data
+}
+
+model investimentos {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  clientes  clientes @relation(fields: [clienteId], references: [id])
+  clienteId String   @db.Uuid
+
+  bancos  bancos @relation(fields: [bancoId], references: [id])
+  bancoId String @db.Uuid
+
+  taxas  taxas?  @relation(fields: [taxaId], references: [id])
+  taxaId String? @db.Uuid
+
+  users  users?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @db.Uuid
+
+  ativos     ativos[]
+  resgates   resgates[]
+  aplicacoes aplicacoes[]
+  impostos   impostos[]
+
+  @@index([clienteId])
+  @@index([bancoId])
+  @@index([userId])
+}
+
+model ativos {
+  id        String   @id @default(uuid()) @db.Uuid
+  nome      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
+  investimentosId String?        @db.Uuid
+
+  tipos  tipos?  @relation(fields: [tipoId], references: [id])
+  tipoId String? @db.Uuid
+}
+
+model tipos {
+  id        String   @id @default(uuid()) @db.Uuid
+  nome      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  ativos ativos[]
+}
+
+model resgates {
+  id        String   @id @default(uuid()) @db.Uuid
+  data      DateTime @db.Date
+  valor     Int
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
+  investimentosId String?        @db.Uuid
+}
+
+model aplicacoes {
+  id        String   @id @default(uuid()) @db.Uuid
+  data      DateTime @db.Date
+  valor     Int
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
+  investimentosId String?        @db.Uuid
+}
+
+model impostos {
+  id        String   @id @default(uuid()) @db.Uuid
+  data      DateTime @db.Date
+  valor     Int
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
+  investimentosId String?        @db.Uuid
+}
+
+model taxas {
+  id         String   @id @default(uuid()) @db.Uuid
+  indexador  String   @db.VarChar(255)
+  percentual Decimal
+  taxaAnual  Decimal
+  createdAt  DateTime @default(now()) @db.Date
+  updatedAt  DateTime @updatedAt
+
+  investimentos investimentos[]
+}
+
+model bancos {
+  id        String   @id @default(uuid()) @db.Uuid
+  nome      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt
+
+  investimentos investimentos[]
 }
 
 model revenue {
-  month   String @id @unique @db.VarChar(4)
-  revenue Int
+  month     String   @id @unique @db.VarChar(4)
+  revenue   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

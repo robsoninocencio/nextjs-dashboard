@@ -1,43 +1,13 @@
 import bcrypt from "bcryptjs";
 import prisma from "@/prisma/lib/prisma";
+import { z } from "zod";
 import {
-  UserData,
   usersData,
   clientesData,
+  bancosData,
   invoicesData,
   revenueData,
 } from "@/lib/placeholder-data";
-
-/**
- * Função para semear a tabela 'User'.
- * Utiliza upsert para evitar duplicatas e cria registros se não existirem.
- */
-async function seedUser() {
-  console.log("Iniciando o seeding da tabela 'User'...");
-  try {
-    let createdCount = 0;
-    let updatedCount = 0;
-    for (const u of UserData) {
-      const result = await prisma.user.upsert({
-        where: { email: u.email },
-        update: {},
-        create: u,
-      });
-      if ((result as any).createdAt === (result as any).updatedAt) {
-        createdCount++;
-      } else {
-        updatedCount++;
-      }
-    }
-    console.log(
-      `Seeding da tabela 'User' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
-    );
-  } catch (error) {
-    console.error("Erro ao semear a tabela 'User':", error);
-    console.error(error);
-    throw error;
-  }
-}
 
 /**
  * Função para semear a tabela 'users'.
@@ -48,7 +18,18 @@ async function seedusers() {
   try {
     let createdCount = 0;
     let updatedCount = 0;
+    const createdUsers = []; // Array para armazenar os users criados com seus IDs
     for (const u of usersData) {
+      const users = await prisma.users.findUnique({
+        where: { id: u.id },
+      });
+
+      if (!users) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
       const hashedPassword = await bcrypt.hash(u.password, 10);
       const userWithHashedPassword = { ...u, password: hashedPassword };
       const result = await prisma.users.upsert({
@@ -56,15 +37,12 @@ async function seedusers() {
         update: {},
         create: userWithHashedPassword,
       });
-      if ((result as any).createdAt === (result as any).updatedAt) {
-        createdCount++;
-      } else {
-        updatedCount++;
-      }
+      createdUsers.push(result); // Adiciona o cliente criado ao array
     }
     console.log(
       `Seeding da tabela 'Users' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
     );
+    return createdUsers; // Retorna os clientes criados
   } catch (error) {
     console.error("Erro ao semear a tabela 'Users':", error);
     console.error(error);
@@ -76,13 +54,22 @@ async function seedusers() {
  * Função para semear a tabela 'Clientes'.
  */
 async function seedclientes(): Promise<any[]> {
-  // Define o tipo de retorno como Promise<any[]>
   console.log("Iniciando o seeding da tabela 'Clientes'...");
   try {
     let createdCount = 0;
     let updatedCount = 0;
     const createdClientes = []; // Array para armazenar os clientes criados com seus IDs
     for (const u of clientesData) {
+      const clientes = await prisma.clientes.findUnique({
+        where: { email: u.email },
+      });
+
+      if (!clientes) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
       const result = await prisma.clientes.upsert({
         where: { email: u.email },
         update: {},
@@ -93,11 +80,6 @@ async function seedclientes(): Promise<any[]> {
         },
       });
       createdClientes.push(result); // Adiciona o cliente criado ao array
-      if ((result as any).createdAt === (result as any).updatedAt) {
-        createdCount++;
-      } else {
-        updatedCount++;
-      }
     }
     console.log(
       `Seeding da tabela 'Clientes' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
@@ -119,6 +101,16 @@ async function seedinvoices() {
     let createdCount = 0;
     let updatedCount = 0;
     for (const i of invoicesData) {
+      const invoices = await prisma.invoices.findFirst({
+        where: { cliente_id: i.cliente_id, amount: i.amount, status: i.status },
+      });
+
+      if (!invoices) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
       const result = await prisma.invoices.upsert({
         where: { id: i.id },
         update: {},
@@ -130,11 +122,6 @@ async function seedinvoices() {
           date: new Date(i.date),
         },
       });
-      if ((result as any).createdAt === (result as any).updatedAt) {
-        createdCount++;
-      } else {
-        updatedCount++;
-      }
     }
     console.log(
       `Seeding da tabela 'Invoices' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
@@ -155,6 +142,16 @@ async function seedrevenue() {
     let createdCount = 0;
     let updatedCount = 0;
     for (const u of revenueData) {
+      const revenue = await prisma.revenue.findUnique({
+        where: { month: u.month },
+      });
+
+      if (!revenue) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
       const result = await prisma.revenue.upsert({
         where: { month: u.month },
         update: { revenue: u.revenue },
@@ -163,11 +160,6 @@ async function seedrevenue() {
           revenue: u.revenue,
         },
       });
-      if ((result as any).createdAt === (result as any).updatedAt) {
-        createdCount++;
-      } else {
-        updatedCount++;
-      }
     }
     console.log(
       `Seeding da tabela 'Revenue' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
@@ -180,16 +172,57 @@ async function seedrevenue() {
 }
 
 /**
+ * Função para semear a tabela 'Bancos'.
+ */
+async function seedbancos(): Promise<any[]> {
+  console.log("Iniciando o seeding da tabela 'Bancos'...");
+  try {
+    let createdCount = 0;
+    let updatedCount = 0;
+    const createdBancos = []; // Array para armazenar os bancos criados com seus IDs
+    for (const u of bancosData) {
+      const bancos = await prisma.bancos.findUnique({
+        where: { id: u.id },
+      });
+
+      if (!bancos) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
+      const result = await prisma.bancos.upsert({
+        where: { id: u.id },
+        update: {},
+        create: {
+          id: u.id,
+          nome: u.nome,
+        },
+      });
+      createdBancos.push(result); // Adiciona o cliente criado ao array
+    }
+    console.log(
+      `Seeding da tabela 'Bancos' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
+    );
+    return createdBancos; // Retorna os clientes criados
+  } catch (error) {
+    console.error("Erro ao semear a tabela 'Bancos':", error);
+    console.error(error);
+    throw error;
+  }
+}
+
+/**
  * Função principal para executar todos os processos de seeding.
  */
 export async function main() {
   console.log("Iniciando o processo de seeding...");
   try {
-    await seedclientes();
-    await seedUser();
     await seedusers();
-    await seedinvoices(); // Chamada sem argumentos
+    await seedclientes();
+    await seedinvoices();
     await seedrevenue();
+    await seedbancos();
     console.log("Todos os processos de seeding concluídos com sucesso!");
   } catch (error) {
     console.error("Erro durante o processo de seeding:", error);

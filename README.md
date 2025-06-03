@@ -81,3 +81,15 @@ vercel --prod
 # `openssl rand -base64 32`
 
 vercel dev
+
+Quando quer começar do Zero
+Apagar as migrate do diretorio
+npx prisma migrate reset --force
+npx prisma migrate dev --name init
+npx prisma generate --no-engine
+pnpm seed
+
+Quando alteracoes sem apagar o banco
+npx prisma migrate dev --name init // init para primeira migrate ou descreva a alteração
+
+https://console.prisma.io/cm92du7tm010j20ttnxtixomg/overview

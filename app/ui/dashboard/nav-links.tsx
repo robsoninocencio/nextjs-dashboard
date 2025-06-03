@@ -4,6 +4,7 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 
 import clsx from "clsx";
@@ -11,16 +12,17 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
+// Lista de links exibidos na navegação lateral.
+// Dependendo do tamanho da aplicação, isso poderia estar em um banco de dados.
 const links = [
-  { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
+  { nome: "Dashboard", href: "/dashboard", icone: HomeIcon },
   {
-    name: "Faturas",
+    nome: "Faturas",
     href: "/dashboard/invoices",
-    icon: DocumentDuplicateIcon,
+    icone: DocumentDuplicateIcon,
   },
-  { name: "Clientes", href: "/dashboard/clientes", icon: UserGroupIcon },
+  { nome: "Clientes", href: "/dashboard/clientes", icone: UserGroupIcon },
+  { nome: "Bancos", href: "/dashboard/bancos", icone: BanknotesIcon },
 ];
 
 export default function NavLinks() {
@@ -28,20 +30,23 @@ export default function NavLinks() {
   return (
     <>
       {links.map((link) => {
-        const LinkIcon = link.icon;
+        const IconeLink = link.icone;
+        const ativo = pathname === link.href;
+
         return (
           <Link
-            key={link.name}
+            key={link.nome}
             href={{ pathname: link.href }}
+            aria-current={ativo ? "page" : undefined}
             className={clsx(
               "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
               {
-                "bg-sky-100 text-blue-600": pathname === link.href,
+                "bg-sky-100 text-blue-600": ativo,
               }
             )}
           >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
+            <IconeLink className="w-6" />
+            <p className="hidden md:block">{link.nome}</p>
           </Link>
         );
       })}
