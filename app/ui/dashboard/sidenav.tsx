@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import AcmeLogo from "@/app/ui/shared/acme-logo";
 
-import NavLinks from "@/app/ui/dashboard/nav-links";
+import NavLinks from "./nav-links";
 
 export default function SideNav() {
   return (

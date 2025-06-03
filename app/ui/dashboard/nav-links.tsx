@@ -1,55 +1,75 @@
 "use client";
 
-import {
-  UserGroupIcon,
-  HomeIcon,
-  DocumentDuplicateIcon,
-  BanknotesIcon,
-} from "@heroicons/react/24/outline";
-
+import React from "react";
 import clsx from "clsx";
-
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-// Lista de links exibidos na navegação lateral.
-// Dependendo do tamanho da aplicação, isso poderia estar em um banco de dados.
-const links = [
-  { nome: "Dashboard", href: "/dashboard", icone: HomeIcon },
-  {
-    nome: "Faturas",
-    href: "/dashboard/invoices",
-    icone: DocumentDuplicateIcon,
-  },
-  { nome: "Clientes", href: "/dashboard/clientes", icone: UserGroupIcon },
-  { nome: "Bancos", href: "/dashboard/bancos", icone: BanknotesIcon },
-];
+import { navLinksMenu } from "./nav-links.constants";
+
+// 🔧 Verifica se o link está ativo (ignora barra no final)
+const isActive = (currentPath: string, linkPath: string) => {
+  const normalize = (path: string) => path.replace(/\/$/, "");
+
+  const current = normalize(currentPath);
+  const link = normalize(linkPath);
+
+  return current === link || (link !== "" && current.startsWith(link + "/"));
+};
+
+type NavLinkProps = {
+  link: (typeof navLinksMenu)[number];
+  ativo: boolean;
+};
+
+const NavLink = React.memo(function NavLink({ link, ativo }: NavLinkProps) {
+  const Icon = link.icon;
+
+  const baseClassNames =
+    "relative flex h-12 grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium transition-colors duration-200 hover:bg-sky-100 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 md:flex-none md:justify-start md:p-2 md:px-3";
+  const activeClassNames = "bg-sky-100 text-blue-600";
+
+  return (
+    <Link
+      href={link.path}
+      aria-current={ativo ? "page" : undefined}
+      aria-label={link.label}
+      className={clsx(baseClassNames, ativo && activeClassNames)}
+    >
+      {ativo && (
+        <span
+          className="absolute left-0 h-full w-1 rounded-r bg-blue-600 transition-all duration-300 ease-in-out"
+          aria-hidden="true"
+        />
+      )}
+      <Icon
+        className={clsx("w-6 transition-colors duration-200", {
+          "text-blue-600": ativo,
+        })}
+      />
+      <p
+        className={clsx("hidden md:block transition-colors duration-200", {
+          "text-blue-600 font-semibold": ativo,
+        })}
+      >
+        {link.label}
+      </p>
+    </Link>
+  );
+});
 
 export default function NavLinks() {
   const pathname = usePathname();
+
   return (
     <>
-      {links.map((link) => {
-        const IconeLink = link.icone;
-        const ativo = pathname === link.href;
-
-        return (
-          <Link
-            key={link.nome}
-            href={{ pathname: link.href }}
-            aria-current={ativo ? "page" : undefined}
-            className={clsx(
-              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
-              {
-                "bg-sky-100 text-blue-600": ativo,
-              }
-            )}
-          >
-            <IconeLink className="w-6" />
-            <p className="hidden md:block">{link.nome}</p>
-          </Link>
-        );
-      })}
+      {navLinksMenu.map((link) => (
+        <NavLink
+          key={link.path}
+          link={link}
+          ativo={isActive(pathname, link.path)}
+        />
+      ))}
     </>
   );
 }
