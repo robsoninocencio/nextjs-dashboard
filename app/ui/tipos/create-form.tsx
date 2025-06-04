@@ -8,14 +8,14 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "@/app/ui/shared/button";
 
-import { createBanco, CreateBancoFormState } from "@/lib/bancos/actions";
+import { createTipo, CreateTipoFormState } from "@/lib/tipos/actions";
 
-function SubmitBancoButton() {
+function SubmitTipoButton() {
   const { pending } = useFormStatus();
 
   return (
     <Button type="submit" aria-disabled={pending} disabled={pending}>
-      {pending ? "Cadastrando..." : "Cadastrar Banco"}
+      {pending ? "Cadastrando..." : "Cadastrar Tipo"}
     </Button>
   );
 }
@@ -33,23 +33,23 @@ function InputError({ errors }: { errors?: string[] }) {
   );
 }
 
-export default function BancoCreateForm() {
-  // Estado inicial - mesmo formato do retorno da action createBanco
-  const initialState: CreateBancoFormState = {
+export default function TipoCreateForm() {
+  // Estado inicial - mesmo formato do retorno da action createTipo
+  const initialState: CreateTipoFormState = {
     errors: { nome: [] },
     message: "",
   };
 
-  // useActionState associa o estado ao resultado da action createBanco
-  const [state, formAction] = useActionState(createBanco, initialState);
+  // useActionState associa o estado ao resultado da action createTipo
+  const [state, formAction] = useActionState(createTipo, initialState);
 
   return (
     <form action={formAction} noValidate>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Banco Name */}
+        {/* Tipo Name */}
         <div className="mb-4">
           <label htmlFor="nome" className="mb-2 block text-sm font-medium">
-            Banco
+            Tipo
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -57,7 +57,7 @@ export default function BancoCreateForm() {
                 id="nome"
                 name="nome"
                 type="text"
-                placeholder="Nome do banco"
+                placeholder="Nome do tipo"
                 defaultValue={state.submittedData?.nome}
                 aria-describedby="nome-error"
                 className={`peer block w-full rounded-md border ${
@@ -90,12 +90,12 @@ export default function BancoCreateForm() {
       {/* Buttons */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href={{ pathname: "/dashboard/bancos" }}
+          href={{ pathname: "/dashboard/tipos" }}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancelar
         </Link>
-        <SubmitBancoButton />
+        <SubmitTipoButton />
       </div>
     </form>
   );

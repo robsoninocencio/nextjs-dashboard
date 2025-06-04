@@ -1,9 +1,9 @@
-export type Banco = {
+export type Tipo = {
   id: string;
   nome: string;
 };
 
-export type BancosTableType = {
+export type TiposTableType = {
   id: string;
   nome: string;
   total_invoices: number;
@@ -11,19 +11,19 @@ export type BancosTableType = {
   total_paid: number;
 };
 
-export type FormattedBancosTable = {
+export type FormattedTiposTable = {
   id: string;
   nome: string;
   total_pending: string;
   total_paid: string;
 };
 
-export type BancoField = {
+export type TipoField = {
   id: string;
   nome: string;
 };
 
-export type BancoForm = {
+export type TipoForm = {
   id: string;
   nome: string;
 };

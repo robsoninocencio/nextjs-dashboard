@@ -4,30 +4,30 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { EnvelopeIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
-import { BancoForm } from "@/lib/bancos/definitions";
-import { BancoField } from "@/lib/bancos/definitions";
+import { TipoForm } from "@/lib/tipos/definitions";
+import { TipoField } from "@/lib/tipos/definitions";
 
 import { Button } from "@/app/ui/shared/button";
-import { updateBanco, UpdateBancoFormState } from "@/lib/bancos/actions";
+import { updateTipo, UpdateTipoFormState } from "@/lib/tipos/actions";
 
-export default function EditBancoForm({
-  banco,
-  bancos,
+export default function EditTipoForm({
+  tipo,
+  tipos,
 }: {
-  banco: BancoForm;
-  bancos: BancoField[];
+  tipo: TipoForm;
+  tipos: TipoField[];
 }) {
-  const initialState: UpdateBancoFormState = { message: "", errors: {} };
-  const updateBancoWithId = updateBanco.bind(null, banco.id);
-  const [state, formAction] = useActionState(updateBancoWithId, initialState);
+  const initialState: UpdateTipoFormState = { message: "", errors: {} };
+  const updateTipoWithId = updateTipo.bind(null, tipo.id);
+  const [state, formAction] = useActionState(updateTipoWithId, initialState);
 
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Banco Name */}
+        {/* Tipo Name */}
         <div className="mb-4">
           <label htmlFor="nome" className="mb-2 block text-sm font-medium">
-            Banco
+            Tipo
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -35,8 +35,8 @@ export default function EditBancoForm({
                 id="nome"
                 name="nome"
                 type="text"
-                defaultValue={banco.nome}
-                placeholder="Digite o nome do banco"
+                defaultValue={tipo.nome}
+                placeholder="Digite o nome do tipo"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="nome-error"
               />
@@ -62,12 +62,12 @@ export default function EditBancoForm({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href={{ pathname: "/dashboard/bancos" }}
+          href={{ pathname: "/dashboard/tipos" }}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancelar
         </Link>
-        <Button type="submit">Atualizar Banco</Button>
+        <Button type="submit">Atualizar Tipo</Button>
       </div>
     </form>
   );

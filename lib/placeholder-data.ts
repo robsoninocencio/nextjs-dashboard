@@ -34,6 +34,25 @@ const bancosData = [
   },
 ];
 
+const tiposData = [
+  {
+    id: "0348832b-8e22-4413-a503-dd518883b401",
+    nome: "Renda Fixa",
+  },
+  {
+    id: "057909d7-7901-4a0a-99b1-732c97aa4086",
+    nome: "Renda Variável",
+  },
+  {
+    id: "0b66393b-c796-48f9-b841-c1145afa9f4b",
+    nome: "Curto Prazo",
+  },
+  {
+    id: "17564b20-b032-487e-a5e7-6badfc9d591e",
+    nome: "Conta Corrente",
+  },
+];
+
 const clientesData = [
   {
     id: uuidv4(),
@@ -181,4 +200,11 @@ const revenueData = [
   { month: "Dec", revenue: 4800 },
 ];
 
-export { usersData, clientesData, invoicesData, revenueData, bancosData };
+export {
+  usersData,
+  clientesData,
+  invoicesData,
+  revenueData,
+  bancosData,
+  tiposData,
+};

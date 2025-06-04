@@ -5,6 +5,7 @@ import {
   usersData,
   clientesData,
   bancosData,
+  tiposData,
   invoicesData,
   revenueData,
 } from "@/lib/placeholder-data";
@@ -179,7 +180,7 @@ async function seedbancos(): Promise<any[]> {
   try {
     let createdCount = 0;
     let updatedCount = 0;
-    const createdBancos = []; // Array para armazenar os bancos criados com seus IDs
+    const createdTipos = []; // Array para armazenar os bancos criados com seus IDs
     for (const u of bancosData) {
       const bancos = await prisma.bancos.findUnique({
         where: { id: u.id },
@@ -199,14 +200,55 @@ async function seedbancos(): Promise<any[]> {
           nome: u.nome,
         },
       });
-      createdBancos.push(result); // Adiciona o cliente criado ao array
+      createdTipos.push(result); // Adiciona o cliente criado ao array
     }
     console.log(
       `Seeding da tabela 'Bancos' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
     );
-    return createdBancos; // Retorna os clientes criados
+    return createdTipos; // Retorna os clientes criados
   } catch (error) {
     console.error("Erro ao semear a tabela 'Bancos':", error);
+    console.error(error);
+    throw error;
+  }
+}
+
+/**
+ * Função para semear a tabela 'Tipos'.
+ */
+async function seedtipos(): Promise<any[]> {
+  console.log("Iniciando o seeding da tabela 'Tipos'...");
+  try {
+    let createdCount = 0;
+    let updatedCount = 0;
+    const createdTipos = []; // Array para armazenar os tipos criados com seus IDs
+    for (const u of tiposData) {
+      const tipos = await prisma.tipos.findUnique({
+        where: { id: u.id },
+      });
+
+      if (!tipos) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
+      const result = await prisma.tipos.upsert({
+        where: { id: u.id },
+        update: {},
+        create: {
+          id: u.id,
+          nome: u.nome,
+        },
+      });
+      createdTipos.push(result); // Adiciona o tipo criado ao array
+    }
+    console.log(
+      `Seeding da tabela 'Tipos' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
+    );
+    return createdTipos; // Retorna os tipos criados
+  } catch (error) {
+    console.error("Erro ao semear a tabela 'Tipos':", error);
     console.error(error);
     throw error;
   }
@@ -223,6 +265,7 @@ export async function main() {
     await seedinvoices();
     await seedrevenue();
     await seedbancos();
+    await seedtipos();
     console.log("Todos os processos de seeding concluídos com sucesso!");
   } catch (error) {
     console.error("Erro durante o processo de seeding:", error);

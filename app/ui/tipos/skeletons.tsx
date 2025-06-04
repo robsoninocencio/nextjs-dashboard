@@ -34,8 +34,6 @@ export function TiposTableSkeleton() {
               <TableRowSkeleton />
               <TableRowSkeleton />
               <TableRowSkeleton />
-              <TableRowSkeleton />
-              <TableRowSkeleton />
             </tbody>
           </table>
         </div>

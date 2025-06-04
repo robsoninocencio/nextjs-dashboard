@@ -2,49 +2,46 @@ import { notFound } from "next/navigation";
 
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
-import { fetchBancos } from "@/lib/bancos/data";
+import { fetchTipos } from "@/lib/tipos/data";
 
-import Form from "@/app/ui/bancos/edit-form";
+import Form from "@/app/ui/tipos/edit-form";
 
-import { fetchBancoById } from "@/lib/bancos/data";
-import type { Banco } from "@/lib/bancos/definitions";
+import { fetchTipoById } from "@/lib/tipos/data";
+import type { Tipo } from "@/lib/tipos/definitions";
 
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Bancos",
+  title: "Tipos",
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const [banco, bancos] = await Promise.all([
-    fetchBancoById(id),
-    fetchBancos(),
-  ]);
+  const [tipo, tipos] = await Promise.all([fetchTipoById(id), fetchTipos()]);
 
-  if (!banco) {
+  if (!tipo) {
     notFound();
   }
 
-  const typedInvoice: Banco = {
-    id: banco.id,
-    nome: banco.nome,
+  const typedInvoice: Tipo = {
+    id: tipo.id,
+    nome: tipo.nome,
   };
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Bancos", href: "/dashboard/bancos" },
+          { label: "Tipos", href: "/dashboard/tipos" },
           {
-            label: "Atualizar banco",
-            href: `/dashboard/bancos/${id}/edit`,
+            label: "Atualizar Tipo",
+            href: `/dashboard/tipos/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form banco={typedInvoice} bancos={bancos} />
+      <Form tipo={typedInvoice} tipos={tipos} />
     </main>
   );
 }
