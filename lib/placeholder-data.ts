@@ -200,6 +200,23 @@ const revenueData = [
   { month: "Dec", revenue: 4800 },
 ];
 
+// const investimentosData = [
+//   {
+//     id: "e4b6a632-cc0a-44fb-be21-e1ff65c8d372",
+//     cliente_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
+//     amount: 8945,
+//     status: "pago",
+//     date: "2023-06-03",
+//   }, // Balazs Orban 12
+//   {
+//     id: "ef902a9f-efe1-4739-98fb-65931e1bc785",
+//     cliente_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
+//     amount: 1000,
+//     status: "pago",
+//     date: "2022-06-05",
+//   }, // Lee Robinson 13
+// ];
+
 export {
   usersData,
   clientesData,
