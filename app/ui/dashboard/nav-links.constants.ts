@@ -12,6 +12,7 @@ export enum Paths {
   Invoices = "/dashboard/invoices",
   Clientes = "/dashboard/clientes",
   Bancos = "/dashboard/bancos",
+  Tipos = "/dashboard/tipos",
 }
 
 // 🔤 Labels para suporte a internacionalização futura
@@ -20,6 +21,7 @@ export const labels = {
   [Paths.Invoices]: "Faturas",
   [Paths.Clientes]: "Clientes",
   [Paths.Bancos]: "Bancos",
+  [Paths.Tipos]: "Tipos",
 } as const;
 
 // 🔧 Tipagem dos ícones
@@ -28,7 +30,7 @@ export type Icon = ComponentType<SVGProps<SVGSVGElement>>;
 // 🧠 Tipo dos links de navegação
 export type NavLink = {
   label: string;
-  path: Paths;
+  path: string;
   icon: Icon;
 };
 
@@ -52,6 +54,11 @@ export const navLinksMenu: readonly NavLink[] = [
   {
     label: labels[Paths.Bancos],
     path: Paths.Bancos,
+    icon: BanknotesIcon,
+  },
+  {
+    label: labels[Paths.Tipos],
+    path: Paths.Tipos,
     icon: BanknotesIcon,
   },
 ] as const;

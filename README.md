@@ -38,7 +38,7 @@ pnpm seed
 
 openssl rand -base64 32
 
-E -mail: user@nextmail.com
+E-mail: user@nextmail.com
 Senha: 123456
 
 https://nextjs-dashboard-l263mjqo9-robson-inocncios-projects.vercel.app/

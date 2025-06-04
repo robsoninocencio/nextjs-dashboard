@@ -8,14 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Enum's
-enum Indexador {
-  CDI
-  IPCA
-  SELIC
-  PREFIXADO
-}
-
 // Models
 model users {
   id       String @id @default(uuid()) @db.Uuid
@@ -71,9 +63,14 @@ model invoices {
 }
 
 model investimentos {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(uuid()) @db.Uuid
+  saldo          Int
+  valorResgatado Int
+  valorAplicado  Int
+  valorDoImposto Int
+  data           DateTime @db.Date
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   clientes  clientes @relation(fields: [clienteId], references: [id])
   clienteId String   @db.Uuid
@@ -81,100 +78,73 @@ model investimentos {
   bancos  bancos @relation(fields: [bancoId], references: [id])
   bancoId String @db.Uuid
 
-  taxas  taxas?  @relation(fields: [taxaId], references: [id])
-  taxaId String? @db.Uuid
+  ativos  ativos @relation(fields: [ativoId], references: [id])
+  ativoId String @db.Uuid
 
   users  users?  @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId String? @db.Uuid
 
-  ativos     ativos[]
-  resgates   resgates[]
-  aplicacoes aplicacoes[]
-  impostos   impostos[]
-
   @@index([clienteId])
   @@index([bancoId])
   @@index([userId])
+  @@index([clienteId, bancoId])
 }
 
 model ativos {
   id        String   @id @default(uuid()) @db.Uuid
   nome      String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Date
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
-  investimentosId String?        @db.Uuid
 
   tipos  tipos?  @relation(fields: [tipoId], references: [id])
   tipoId String? @db.Uuid
+
+  // taxas  taxas?  @relation(fields: [taxaId], references: [id])
+  // taxaId String? @db.Uuid
+
+  investimentos investimentos[]
 }
 
 model tipos {
   id        String   @id @default(uuid()) @db.Uuid
   nome      String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Date
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   ativos ativos[]
 }
 
-model resgates {
-  id        String   @id @default(uuid()) @db.Uuid
-  data      DateTime @db.Date
-  valor     Int
-  createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @updatedAt
-
-  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
-  investimentosId String?        @db.Uuid
-}
-
-model aplicacoes {
-  id        String   @id @default(uuid()) @db.Uuid
-  data      DateTime @db.Date
-  valor     Int
-  createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @updatedAt
-
-  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
-  investimentosId String?        @db.Uuid
-}
-
-model impostos {
-  id        String   @id @default(uuid()) @db.Uuid
-  data      DateTime @db.Date
-  valor     Int
-  createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @updatedAt
-
-  investimentos   investimentos? @relation(fields: [investimentosId], references: [id])
-  investimentosId String?        @db.Uuid
-}
-
-model taxas {
-  id         String   @id @default(uuid()) @db.Uuid
-  indexador  String   @db.VarChar(255)
-  percentual Decimal
-  taxaAnual  Decimal
-  createdAt  DateTime @default(now()) @db.Date
-  updatedAt  DateTime @updatedAt
-
-  investimentos investimentos[]
-}
-
 model bancos {
   id        String   @id @default(uuid()) @db.Uuid
-  nome      String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Date
+  nome      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   investimentos investimentos[]
 }
 
 model revenue {
-  month     String   @id @unique @db.VarChar(4)
+  month     String   @id @db.VarChar(4)
   revenue   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// // Enum's
+// enum Indexador {
+//   CDI
+//   IPCA
+//   SELIC
+//   PREFIXADO
+// }
+
+// model taxas {
+//   id         String    @id @default(uuid()) @db.Uuid
+//   indexador  Indexador
+//   percentual Decimal
+//   taxaAnual  Decimal
+//   createdAt  DateTime  @default(now()) @db.Date
+//   updatedAt  DateTime  @updatedAt
+
+//   ativos ativos[]
+// }

@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "Indexador" AS ENUM ('CDI', 'IPCA', 'SELIC', 'PREFIXADO');
-
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
@@ -42,11 +39,16 @@ CREATE TABLE "invoices" (
 -- CreateTable
 CREATE TABLE "investimentos" (
     "id" UUID NOT NULL,
+    "saldo" INTEGER NOT NULL,
+    "valorResgatado" INTEGER NOT NULL,
+    "valorAplicado" INTEGER NOT NULL,
+    "valorDoImposto" INTEGER NOT NULL,
+    "data" DATE NOT NULL,
     "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "clienteId" UUID NOT NULL,
     "bancoId" UUID NOT NULL,
-    "taxaId" UUID,
+    "ativoId" UUID NOT NULL,
     "userId" UUID,
 
     CONSTRAINT "investimentos_pkey" PRIMARY KEY ("id")
@@ -58,7 +60,6 @@ CREATE TABLE "ativos" (
     "nome" VARCHAR(255) NOT NULL,
     "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "investimentosId" UUID,
     "tipoId" UUID,
 
     CONSTRAINT "ativos_pkey" PRIMARY KEY ("id")
@@ -72,54 +73,6 @@ CREATE TABLE "tipos" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "tipos_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "resgates" (
-    "id" UUID NOT NULL,
-    "data" DATE NOT NULL,
-    "valor" INTEGER NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "investimentosId" UUID,
-
-    CONSTRAINT "resgates_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "aplicacoes" (
-    "id" UUID NOT NULL,
-    "data" DATE NOT NULL,
-    "valor" INTEGER NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "investimentosId" UUID,
-
-    CONSTRAINT "aplicacoes_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "impostos" (
-    "id" UUID NOT NULL,
-    "data" DATE NOT NULL,
-    "valor" INTEGER NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "investimentosId" UUID,
-
-    CONSTRAINT "impostos_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "taxas" (
-    "id" UUID NOT NULL,
-    "indexador" VARCHAR(255) NOT NULL,
-    "percentual" DECIMAL(65,30) NOT NULL,
-    "taxaAnual" DECIMAL(65,30) NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "taxas_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -173,7 +126,10 @@ CREATE INDEX "investimentos_bancoId_idx" ON "investimentos"("bancoId");
 CREATE INDEX "investimentos_userId_idx" ON "investimentos"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "revenue_month_key" ON "revenue"("month");
+CREATE INDEX "investimentos_clienteId_bancoId_idx" ON "investimentos"("clienteId", "bancoId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bancos_nome_key" ON "bancos"("nome");
 
 -- AddForeignKey
 ALTER TABLE "clientes" ADD CONSTRAINT "clientes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -191,22 +147,10 @@ ALTER TABLE "investimentos" ADD CONSTRAINT "investimentos_clienteId_fkey" FOREIG
 ALTER TABLE "investimentos" ADD CONSTRAINT "investimentos_bancoId_fkey" FOREIGN KEY ("bancoId") REFERENCES "bancos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "investimentos" ADD CONSTRAINT "investimentos_taxaId_fkey" FOREIGN KEY ("taxaId") REFERENCES "taxas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "investimentos" ADD CONSTRAINT "investimentos_ativoId_fkey" FOREIGN KEY ("ativoId") REFERENCES "ativos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "investimentos" ADD CONSTRAINT "investimentos_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ativos" ADD CONSTRAINT "ativos_investimentosId_fkey" FOREIGN KEY ("investimentosId") REFERENCES "investimentos"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "ativos" ADD CONSTRAINT "ativos_tipoId_fkey" FOREIGN KEY ("tipoId") REFERENCES "tipos"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "resgates" ADD CONSTRAINT "resgates_investimentosId_fkey" FOREIGN KEY ("investimentosId") REFERENCES "investimentos"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "aplicacoes" ADD CONSTRAINT "aplicacoes_investimentosId_fkey" FOREIGN KEY ("investimentosId") REFERENCES "investimentos"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "impostos" ADD CONSTRAINT "impostos_investimentosId_fkey" FOREIGN KEY ("investimentosId") REFERENCES "investimentos"("id") ON DELETE SET NULL ON UPDATE CASCADE;

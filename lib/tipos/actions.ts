@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import prisma from "@/prisma/lib/prisma";
 
 // Schemas
-const BancoFormSchema = z.object({
+const TipoFormSchema = z.object({
   nome: z
     .string({ invalid_type_error: "Por favor, insira um nome." })
     .min(3, "O nome deve ter pelo menos 3 caracteres.")
@@ -16,16 +16,16 @@ const BancoFormSchema = z.object({
 });
 
 // tipar explicitamente validatedFields.data
-type BancoData = z.infer<typeof BancoFormSchema>;
+type TipoData = z.infer<typeof TipoFormSchema>;
 
 // Types
-export type CreateBancoFormState = {
+export type CreateTipoFormState = {
   errors?: Partial<{ nome: string[] }>;
   message?: string | null;
   submittedData?: { nome?: string };
 };
 
-export type UpdateBancoFormState = {
+export type UpdateTipoFormState = {
   errors?: Partial<{ nome: string[] }>;
   message?: string | null;
   submittedData?: { nome?: string };
@@ -38,8 +38,8 @@ function getFormValue(formData: FormData, key: string): string | undefined {
 }
 
 // Utils - Função para validar os campos do formulário usando Zod
-function parseBancoForm(formData: FormData) {
-  return BancoFormSchema.safeParse({
+function parseTipoForm(formData: FormData) {
+  return TipoFormSchema.safeParse({
     nome: getFormValue(formData, "nome"),
   });
 }
@@ -48,37 +48,34 @@ function parseBancoForm(formData: FormData) {
 function handleValidationError(
   formData: FormData,
   validatedFields: { success: false; error: z.ZodError }
-): CreateBancoFormState | UpdateBancoFormState {
+): CreateTipoFormState | UpdateTipoFormState {
   return {
     errors: validatedFields.error?.flatten().fieldErrors,
     message:
-      "Campos obrigatórios ausentes. Falha ao Criar ou Atualizar o Banco.",
+      "Campos obrigatórios ausentes. Falha ao Criar ou Atualizar o Tipo.",
     submittedData: {
       nome: getFormValue(formData, "nome"),
     },
   };
 }
 
-// Utils - Função que retorna mensagem de erro padrão do Banco de Dados
+// Utils - Função que retorna mensagem de erro padrão do Tipo de Dados
 function getDatabaseErrorMessage(action: "create" | "update") {
-  return `Erro no Banco de Dados: Falha ao ${action} o banco.`;
+  return `Erro no Tipo de Dados: Falha ao ${action} o tipo.`;
 }
 
-async function saveBancoToDatabase(
-  data: BancoData,
-  id?: string
-): Promise<void> {
+async function saveTipoToDatabase(data: TipoData, id?: string): Promise<void> {
   if (id) {
-    // Atualiza a banco
-    await prisma.bancos.update({
+    // Atualiza a tipo
+    await prisma.tipos.update({
       where: { id },
       data: {
         nome: data.nome,
       },
     });
   } else {
-    // Cria um novo banco
-    await prisma.bancos.create({
+    // Cria um novo tipo
+    await prisma.tipos.create({
       data: {
         nome: data.nome,
       },
@@ -86,17 +83,17 @@ async function saveBancoToDatabase(
   }
 }
 
-// Actions  - Ação de criação de banco
-export async function createBanco(
-  prevState: CreateBancoFormState,
+// Actions  - Ação de criação de tipo
+export async function createTipo(
+  prevState: CreateTipoFormState,
   formData: FormData
-): Promise<CreateBancoFormState | never> {
+): Promise<CreateTipoFormState | never> {
   if (process.env.NODE_ENV === "development") {
     console.log("Received FormData:", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
-  const validatedFields = parseBancoForm(formData);
+  const validatedFields = parseTipoForm(formData);
   if (process.env.NODE_ENV === "development") {
     console.log("validatedFields.error:", validatedFields.error);
   }
@@ -106,38 +103,38 @@ export async function createBanco(
     return handleValidationError(formData, validatedFields);
   }
 
-  // Cria banco no banco de dados
+  // Cria tipo no tipo de dados
   try {
-    await saveBancoToDatabase(validatedFields.data);
+    await saveTipoToDatabase(validatedFields.data);
   } catch (error: any) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Create Banco Error:", error);
+      console.error("Create Tipo Error:", error);
     }
     // Tratamento de erro de violação de unicidade do Prisma (código P2002)
     if (error.code === "P2002" && error.meta?.target?.includes("nome")) {
       return {
-        errors: { nome: ["Nome do banco já existe."] },
-        message: "Nome do banco já existe.",
+        errors: { nome: ["Nome do tipo já existe."] },
+        message: "Nome do tipo já existe.",
       };
     }
     return { message: getDatabaseErrorMessage("create") };
   }
 
-  revalidatePath("/dashboard/bancos");
-  redirect("/dashboard/bancos");
+  revalidatePath("/dashboard/tipos");
+  redirect("/dashboard/tipos");
 }
 
-export async function updateBanco(
+export async function updateTipo(
   id: string,
-  prevState: UpdateBancoFormState,
+  prevState: UpdateTipoFormState,
   formData: FormData
-): Promise<UpdateBancoFormState | never> {
+): Promise<UpdateTipoFormState | never> {
   if (process.env.NODE_ENV === "development") {
     console.log("Received FormData:", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
-  const validatedFields = parseBancoForm(formData);
+  const validatedFields = parseTipoForm(formData);
   if (process.env.NODE_ENV === "development") {
     console.log("validatedFields.error:", validatedFields.error);
   }
@@ -147,61 +144,61 @@ export async function updateBanco(
     return handleValidationError(formData, validatedFields);
   }
 
-  // Verifica se o banco existe antes de tentar atualizar
-  const existing = await prisma.bancos.findUnique({ where: { id } });
+  // Verifica se o tipo existe antes de tentar atualizar
+  const existing = await prisma.tipos.findUnique({ where: { id } });
   if (!existing) {
-    return { message: "Banco not found. Cannot update." };
+    return { message: "Tipo not found. Cannot update." };
   }
 
-  // Atualiza banco no banco de dados
+  // Atualiza tipo no tipo de dados
   try {
-    await saveBancoToDatabase(validatedFields.data, id);
+    await saveTipoToDatabase(validatedFields.data, id);
   } catch (error: any) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Update Banco Error:", error);
+      console.error("Update Tipo Error:", error);
     }
     // Tratamento de erro de violação de unicidade do Prisma (código P2002)
     if (error.code === "P2002" && error.meta?.target?.includes("nome")) {
       return {
-        errors: { nome: ["Nome do banco já existe."] },
-        message: "Nome do banco já existe.",
+        errors: { nome: ["Nome do tipo já existe."] },
+        message: "Nome do tipo já existe.",
       };
     }
     return { message: getDatabaseErrorMessage("update") };
   }
 
-  revalidatePath("/dashboard/bancos");
-  redirect("/dashboard/bancos");
+  revalidatePath("/dashboard/tipos");
+  redirect("/dashboard/tipos");
 }
 
-export async function deleteBanco(id: string) {
+export async function deleteTipo(id: string) {
   if (!id) {
-    throw new Error("Banco ID for deletion is invalid.");
+    throw new Error("Tipo ID for deletion is invalid.");
   }
 
   try {
     await prisma.$transaction(async (tx) => {
-      // Verifica se o banco existe antes de deletar
-      const banco = await tx.bancos.findUnique({
+      // Verifica se o tipo existe antes de deletar
+      const tipo = await tx.tipos.findUnique({
         where: { id },
       });
 
-      if (!banco) {
-        throw new Error("Banco not found.");
+      if (!tipo) {
+        throw new Error("Tipo not found.");
       }
 
-      // Apagar o banco
-      await tx.bancos.delete({
+      // Apagar o tipo
+      await tx.tipos.delete({
         where: { id },
       });
     });
   } catch (error) {
     console.error(
-      `Erro no Banco de Dados: Falha ao Deletar o Banco com ID ${id}.`,
+      `Erro no Tipo de Dados: Falha ao Deletar o Tipo com ID ${id}.`,
       error
     );
-    throw new Error("Falha ao deletar o banco.");
+    throw new Error("Falha ao deletar o tipo.");
   }
 
-  revalidatePath("/dashboard/bancos");
+  revalidatePath("/dashboard/tipos");
 }

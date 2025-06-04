@@ -31,7 +31,7 @@ const NavLink = React.memo(function NavLink({ link, ativo }: NavLinkProps) {
 
   return (
     <Link
-      href={link.path}
+      href={{ pathname: link.path }}
       aria-current={ativo ? "page" : undefined}
       aria-label={link.label}
       className={clsx(baseClassNames, ativo && activeClassNames)}
