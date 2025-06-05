@@ -4,17 +4,19 @@ import { z } from "zod";
 import {
   usersData,
   clientesData,
-  bancosData,
-  tiposData,
   invoicesData,
   revenueData,
+  bancosData,
+  tiposData,
+  ativosData,
+  investimentosData,
 } from "@/lib/placeholder-data";
 
 /**
  * Função para semear a tabela 'users'.
  * Inclui hash de senha antes de criar/atualizar o registro.
  */
-async function seedusers() {
+async function seedUsers() {
   console.log("Iniciando o seeding da tabela 'Users'...");
   try {
     let createdCount = 0;
@@ -54,7 +56,7 @@ async function seedusers() {
 /**
  * Função para semear a tabela 'Clientes'.
  */
-async function seedclientes(): Promise<any[]> {
+async function seedClientes(): Promise<any[]> {
   console.log("Iniciando o seeding da tabela 'Clientes'...");
   try {
     let createdCount = 0;
@@ -96,7 +98,7 @@ async function seedclientes(): Promise<any[]> {
 /**
  * Função para semear a tabela 'Invoices'.
  */
-async function seedinvoices() {
+async function seedInvoices() {
   console.log("Iniciando o seeding da tabela 'Invoices'...");
   try {
     let createdCount = 0;
@@ -137,7 +139,7 @@ async function seedinvoices() {
 /**
  * Função para semear a tabela 'Revenue'.
  */
-async function seedrevenue() {
+async function seedRevenue() {
   console.log("Iniciando o seeding da tabela 'Revenue'...");
   try {
     let createdCount = 0;
@@ -175,7 +177,7 @@ async function seedrevenue() {
 /**
  * Função para semear a tabela 'Bancos'.
  */
-async function seedbancos(): Promise<any[]> {
+async function seedBancos(): Promise<any[]> {
   console.log("Iniciando o seeding da tabela 'Bancos'...");
   try {
     let createdCount = 0;
@@ -216,7 +218,7 @@ async function seedbancos(): Promise<any[]> {
 /**
  * Função para semear a tabela 'Tipos'.
  */
-async function seedtipos(): Promise<any[]> {
+async function seedTipos(): Promise<any[]> {
   console.log("Iniciando o seeding da tabela 'Tipos'...");
   try {
     let createdCount = 0;
@@ -254,18 +256,58 @@ async function seedtipos(): Promise<any[]> {
   }
 }
 
+async function seedAtivos() {
+  console.log("Iniciando o seeding da tabela 'Ativos'...");
+  try {
+    let createdCount = 0;
+    let updatedCount = 0;
+    const createdAtivos = []; // Array para armazenar os ativos criados com seus IDs
+    for (const i of ativosData) {
+      const ativos = await prisma.ativos.findFirst({
+        where: { id: i.id },
+      });
+
+      if (!ativos) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
+      const result = await prisma.ativos.upsert({
+        where: { id: i.id },
+        update: {},
+        create: {
+          id: i.id,
+          nome: i.nome,
+          tipoId: i.tipoId,
+        },
+      });
+      createdAtivos.push(result); // Adiciona o ativo criado ao array
+    }
+    console.log(
+      `Seeding da tabela 'Ativos' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
+    );
+    return createdAtivos; // Retorna os ativos criados
+  } catch (error) {
+    console.error("Erro ao semear a tabela 'Ativos':", error);
+    console.error(error);
+    throw error;
+  }
+}
+
 /**
  * Função principal para executar todos os processos de seeding.
  */
 export async function main() {
   console.log("Iniciando o processo de seeding...");
   try {
-    await seedusers();
-    await seedclientes();
-    await seedinvoices();
-    await seedrevenue();
-    await seedbancos();
-    await seedtipos();
+    await seedUsers();
+    await seedClientes();
+    await seedInvoices();
+    await seedRevenue();
+    await seedBancos();
+    await seedTipos();
+    await seedAtivos();
     console.log("Todos os processos de seeding concluídos com sucesso!");
   } catch (error) {
     console.error("Erro durante o processo de seeding:", error);

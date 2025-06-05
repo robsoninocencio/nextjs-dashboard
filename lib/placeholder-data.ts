@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+// id: uuidv4(),
 
 const usersData = [
   {
@@ -55,9 +56,24 @@ const tiposData = [
 
 const clientesData = [
   {
-    id: uuidv4(),
-    name: "Yasmin",
-    email: "yasmin@gmail.com",
+    id: "6d5771be-fa50-4ed0-8997-68b4c8a42499",
+    name: "Yasmin Inocencio",
+    email: "ya.inocencio@gmail.com",
+  },
+  {
+    id: "d4af0403-3fb5-4393-bbd5-2d2f85877021",
+    name: "Janaina Inocencio",
+    email: "janaina.cs.inocencio@gmail.com",
+  },
+  {
+    id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    name: "Robson Inocencio",
+    email: "robson.inocencio@gmail.com",
+  },
+  {
+    id: "0d3831d2-1156-4867-bdbd-57d3675685d9",
+    name: "Elsa Inocencio",
+    email: "elsacrente@gmailcom",
   },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
@@ -200,22 +216,163 @@ const revenueData = [
   { month: "Dec", revenue: 4800 },
 ];
 
-// const investimentosData = [
-//   {
-//     id: "e4b6a632-cc0a-44fb-be21-e1ff65c8d372",
-//     cliente_id: "13D07535-C59E-4157-A011-F8D2EF4E0CBB",
-//     amount: 8945,
-//     status: "pago",
-//     date: "2023-06-03",
-//   }, // Balazs Orban 12
-//   {
-//     id: "ef902a9f-efe1-4739-98fb-65931e1bc785",
-//     cliente_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
-//     amount: 1000,
-//     status: "pago",
-//     date: "2022-06-05",
-//   }, // Lee Robinson 13
-// ];
+const ativosData = [
+  {
+    id: "6229b420-f771-4393-ab9f-af895af38fa8",
+    nome: "CRA Emissão Terceiros CDI",
+    tipoId: "0348832b-8e22-4413-a503-dd518883b401",
+  }, // Renda Fixa
+  {
+    id: "8eb06c98-3d67-406b-9677-755bced18e54",
+    nome: "LETRA CRED.AGNG",
+    tipoId: "0348832b-8e22-4413-a503-dd518883b401",
+  }, // Renda Fixa
+  {
+    id: "ca43b39a-58a7-45d1-b5a2-fd4df2745851",
+    nome: "LTN PRE-Tesouro Jan/2026",
+    tipoId: "0348832b-8e22-4413-a503-dd518883b401",
+  }, // Renda Fixa
+  {
+    id: "148a953e-4dea-4b0c-8009-9bba6730efa5",
+    nome: "NTN-F-Tesouro Jan/2031",
+    tipoId: "0348832b-8e22-4413-a503-dd518883b401",
+  }, // Renda Fixa
+  {
+    id: "f36e1c9a-86e8-40be-8815-c94df3780d35",
+    nome: "SAF AGILITE FI RF CP",
+    tipoId: "0348832b-8e22-4413-a503-dd518883b401",
+  }, // Renda Fixa
+  {
+    id: "32be0c4a-76b5-4aa4-a659-acf531d4e811",
+    nome: "SAF SOB SPECIAL FICFI RF SIMPL",
+    tipoId: "0348832b-8e22-4413-a503-dd518883b401",
+  }, // Renda Fixa
+  {
+    id: "ef902a9f-efe1-4739-98fb-65931e1bc785",
+    nome: "CDB Automático",
+    tipoId: "0b66393b-c796-48f9-b841-c1145afa9f4b",
+  }, // Curto Prazo
+  {
+    id: "210819a3-8858-440f-a11b-d41ec4aaaf00",
+    nome: "CONTA CORRENTE",
+    tipoId: "17564b20-b032-487e-a5e7-6badfc9d591e",
+  }, // Conta Corrente",
+];
+
+const investimentosData = [
+  {
+    id: "9a4151fa-1022-4b46-88c4-fa7332430686",
+    saldoBruto: 2470794,
+    saldoLiquido: 2470794,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: null,
+    rendimentoDoMes: 21745,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "6229b420-f771-4393-ab9f-af895af38fa8",
+  }, // Robson Inocencio - Safra - CRA Emissão Terceiros CDI
+  {
+    id: "ca3c3c85-48d5-4d4e-8af4-fa72fd21b434",
+    saldoBruto: 2668740,
+    saldoLiquido: 2668740,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: null,
+    rendimentoDoMes: 23295,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "8eb06c98-3d67-406b-9677-755bced18e54",
+  }, // Robson Inocencio - Safra - LETRA CRED.AGNG
+  {
+    id: "f926df16-024e-469c-b2e8-a75578a7576e",
+    saldoBruto: 6431424,
+    saldoLiquido: 6217418,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: 214006,
+    rendimentoDoMes: 85673,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "ca43b39a-58a7-45d1-b5a2-fd4df2745851",
+  }, // Robson Inocencio - Safra - LTN PRE-Tesouro Jan/2026
+  {
+    id: "f926df16-024e-469c-b2e8-bdad2ec3-57a6-4f88-a02b-220b245552be",
+    saldoBruto: 2330697,
+    saldoLiquido: 2330697,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: null,
+    rendimentoDoMes: 106814,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "148a953e-4dea-4b0c-8009-9bba6730efa5",
+  }, // Robson Inocencio - Safra - NTN-F-Tesouro Jan/2031
+  {
+    id: "904b5d2a-3644-4f8f-9774-ec942647fe52",
+    saldoBruto: 12536646,
+    saldoLiquido: 12392941,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: 143705,
+    rendimentoDoMes: 130463,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "f36e1c9a-86e8-40be-8815-c94df3780d35",
+  }, // Robson Inocencio - Safra - SAF AGILITE FI RF CP
+  {
+    id: "6ad1afc8-6a5d-4a84-835b-714a6c21090b",
+    saldoBruto: 7901293,
+    saldoLiquido: 7824001,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: 77292,
+    rendimentoDoMes: 76981,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "32be0c4a-76b5-4aa4-a659-acf531d4e811",
+  }, // Robson Inocencio - Safra - SAF SOB SPECIAL FICFI RF SIMPL
+  {
+    id: "d5e79b9e-7b57-48f9-8ae2-0c1a720dae35",
+    saldoBruto: 50035,
+    saldoLiquido: 50028,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: 7,
+    rendimentoDoMes: null,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "ef902a9f-efe1-4739-98fb-65931e1bc785",
+  }, // Robson Inocencio - Safra - CDB Automático
+  {
+    id: "d5e79b9e-7b57-48f9-8ae2-0c1a720dae35",
+    saldoBruto: 9,
+    saldoLiquido: 9,
+    valorResgatado: null,
+    valorAplicado: null,
+    impostoIncorrido: null,
+    impostoPrevisto: null,
+    rendimentoDoMes: null,
+    data: "2025-04-30",
+    cliente_id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
+    bancoId: "e95a1482-ae01-4338-b228-00050be58cf0",
+    ativoId: "210819a3-8858-440f-a11b-d41ec4aaaf00",
+  }, // Robson Inocencio - Safra - CONTA CORRENTE
+];
 
 export {
   usersData,
@@ -224,4 +381,6 @@ export {
   revenueData,
   bancosData,
   tiposData,
+  ativosData,
+  investimentosData,
 };
