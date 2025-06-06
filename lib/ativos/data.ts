@@ -2,20 +2,11 @@ import prisma from "@/prisma/lib/prisma";
 
 const ITEMS_PER_PAGE = 6;
 
-export async function fetchInvoicesPages(query: string) {
+export async function fetchAtivosPages(query: string) {
   try {
-    const count = await prisma.invoices.count({
+    const count = await prisma.ativos.count({
       where: {
-        OR: [
-          { cliente: { name: { contains: query, mode: "insensitive" } } },
-          { cliente: { email: { contains: query, mode: "insensitive" } } },
-          {
-            amount: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          { status: { contains: query, mode: "insensitive" } },
-        ],
+        OR: [{ tipos: { nome: { contains: query, mode: "insensitive" } } }],
       },
     });
 
@@ -26,73 +17,58 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
-export async function fetchFilteredInvoices(
-  query: string,
-  currentPage: number
-) {
+export async function fetchFilteredAtivos(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const invoices = await prisma.invoices.findMany({
+    const ativos = await prisma.ativos.findMany({
       where: {
         OR: [
-          { cliente: { name: { contains: query, mode: "insensitive" } } },
-          { cliente: { email: { contains: query, mode: "insensitive" } } },
-          {
-            amount: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          { status: { contains: query, mode: "insensitive" } },
+          { tipos: { nome: { contains: query, mode: "insensitive" } } },
+          { nome: { contains: query, mode: "insensitive" } },
         ],
       },
       include: {
-        cliente: {
+        tipos: {
           select: {
-            name: true,
-            email: true,
+            nome: true,
           },
         },
       },
-      orderBy: { date: "desc" },
+      orderBy: { nome: "asc" },
       skip: offset,
       take: ITEMS_PER_PAGE,
     });
 
-    return invoices;
+    return ativos;
   } catch (error) {
-    console.error("Erro ao buscar faturas filtradas:", error);
-    throw new Error("Erro ao buscar faturas filtradas.");
+    console.error("Erro ao buscar ativos filtradas:", error);
+    throw new Error("Erro ao buscar ativos filtradas.");
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+export async function fetchAtivoById(id: string) {
   if (!id) {
-    throw new Error("O ID da fatura é obrigatório.");
+    throw new Error("O ID da ativo é obrigatório.");
   }
 
   try {
-    const invoice = await prisma.invoices.findUnique({
+    const ativo = await prisma.ativos.findUnique({
       where: { id },
       select: {
         id: true,
-        cliente_id: true,
-        amount: true,
-        status: true,
-        date: true, // <-- Inclua ESTA LINHA
+        tipoId: true,
+        nome: true,
       },
     });
 
-    if (!invoice) {
-      throw new Error("Fatura não encontrada.");
+    if (!ativo) {
+      throw new Error("Ativo não encontrada.");
     }
 
-    return {
-      ...invoice,
-      amount: invoice.amount / 100, // Converte de centavos para dólares
-    };
+    return ativo;
   } catch (error) {
-    console.error(`Erro ao buscar fatura com ID ${id}:`, error);
-    throw new Error("Erro ao buscar a fatura.");
+    console.error(`Erro ao buscar ativo com ID ${id}:`, error);
+    throw new Error("Erro ao buscar a ativo.");
   }
 }

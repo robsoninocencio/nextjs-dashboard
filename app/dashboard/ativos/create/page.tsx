@@ -1,31 +1,31 @@
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
-import Form from "@/app/ui/invoices/create-form";
+import Form from "@/app/ui/ativos/create-form";
 
-import { fetchClientes } from "@/lib/clientes/data";
+import { fetchTipos } from "@/lib/tipos/data";
 
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Faturas",
+  title: "Ativos",
 };
 
 export default async function Page() {
-  const clientes = await fetchClientes();
+  const tipos = await fetchTipos();
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Faturas", href: "/dashboard/invoices" },
+          { label: "Ativos", href: "/dashboard/ativos" },
           {
-            label: "Cadastro de Fatura",
-            href: "/dashboard/invoices/create",
+            label: "Cadastro de Ativo",
+            href: "/dashboard/ativos/create",
             active: true,
           },
         ]}
       />
-      <Form clientes={clientes} />
+      <Form tipos={tipos} />
     </main>
   );
 }

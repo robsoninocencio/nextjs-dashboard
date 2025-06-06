@@ -2,12 +2,12 @@ import { notFound } from "next/navigation";
 
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
-import { fetchClientes } from "@/lib/clientes/data";
+import { fetchTipos } from "@/lib/tipos/data";
 
-import Form from "@/app/ui/invoices/edit-form";
+import Form from "@/app/ui/ativos/edit-form";
 
-import { fetchInvoiceById } from "@/lib/invoices/data";
-import type { Invoice } from "@/lib/invoices/definitions";
+import { fetchAtivoById } from "@/lib/ativos/data";
+import type { Ativo } from "@/lib/ativos/definitions";
 
 import { Metadata } from "next";
 
@@ -15,43 +15,37 @@ export const metadata: Metadata = {
   title: "Faturas",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
-  const [invoice, clientes] = await Promise.all([
-    fetchInvoiceById(id),
-    fetchClientes(),
-  ]);
+export default async function Page(props: any) {
+  const id = props.params.id;
+  if (!id) {
+    notFound();
+  }
+  const [ativo, tipos] = await Promise.all([fetchAtivoById(id), fetchTipos()]);
 
-  if (!invoice) {
+  if (!ativo) {
     notFound();
   }
 
-  // Garantir que invoice.status tenha o tipo correto
-  const typedInvoice: Invoice = {
-    id: invoice.id,
-    cliente_id: invoice.cliente_id,
-    amount: invoice.amount,
-    date: invoice.date.toISOString(), // Converte a data para string ISO
-    status:
-      invoice.status === "pendente" || invoice.status === "pago"
-        ? invoice.status
-        : "pendente",
+  // Garantir que ativo.status tenha o tipo correto
+  const typedAtivo: Ativo = {
+    id: ativo.id,
+    tipoId: ativo.tipoId,
+    nome: ativo.nome,
   };
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Faturas", href: "/dashboard/invoices" },
+          { label: "Ativos", href: "/dashboard/ativos" },
           {
-            label: "Atualizar Fatura",
-            href: `/dashboard/invoices/${id}/edit`,
+            label: "Atualizar Ativos",
+            href: `/dashboard/ativos/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form invoice={typedInvoice} clientes={clientes} />
+      <Form ativo={typedAtivo} tipos={tipos} />
     </main>
   );
 }

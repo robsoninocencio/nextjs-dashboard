@@ -4,21 +4,16 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
-import {
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "@/app/ui/shared/button";
 
-import { createInvoice, InvoiceFormState } from "@/lib/invoices/actions";
+import { createAtivo, AtivoFormState } from "@/lib/ativos/actions";
 
-import { ClienteField } from "@/lib/clientes/definitions";
+import { TipoField } from "@/lib/tipos/definitions";
 
 // Botão com estado pendente (loading)
-function SubmitInvoiceButton() {
+function SubmitAtivoButton() {
   const { pending } = useFormStatus();
 
   return (
@@ -42,161 +37,99 @@ function InputError({ errors }: { errors?: string[] }) {
 }
 
 // Formulário principal de criação de fatura
-export default function Form({ clientes }: { clientes: ClienteField[] }) {
-  const initialState: InvoiceFormState = {
+export default function Form({ tipos }: { tipos: TipoField[] }) {
+  const initialState: AtivoFormState = {
     errors: {},
     message: "",
     submittedData: {},
   };
 
-  const [state, formAction] = useActionState(createInvoice, initialState);
+  const [state, formAction] = useActionState(createAtivo, initialState);
 
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Cliente Name */}
+        {/* Tipo Nome */}
         <div className="mb-4">
-          <label htmlFor="clienteId" className="mb-2 block text-sm font-medium">
-            Cliente
+          <label htmlFor="tipoId" className="mb-2 block text-sm font-medium">
+            Tipo
           </label>
           <div className="relative">
             <select
-              id="clienteId"
-              name="clienteId"
-              defaultValue={state.submittedData?.clienteId ?? ""}
-              aria-describedby="clienteId-error"
+              id="tipoId"
+              name="tipoId"
+              defaultValue={state.submittedData?.tipoId ?? ""}
+              aria-describedby="tipoId-error"
               className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.clienteId?.length
+                state.errors?.tipoId?.length
                   ? "border-red-500"
                   : "border-gray-200"
               } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
             >
               <option value="" disabled>
-                Selecione o cliente
+                Selecione o tipo
               </option>
-              {clientes.map((cliente) => (
-                <option key={cliente.id} value={cliente.id}>
-                  {cliente.name}
+              {tipos.map((tipo) => (
+                <option key={tipo.id} value={tipo.id}>
+                  {tipo.nome}
                 </option>
               ))}
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          {/* <p>{state.submittedData?.clienteId}</p> */}
+          {/* <p>{state.submittedData?.tipoId}</p> */}
 
-          <div id="clienteId-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.clienteId} />
+          <div id="tipoId-error" aria-live="polite" aria-atomic="true">
+            <InputError errors={state.errors?.tipoId} />
           </div>
         </div>
 
-        {/* Invoice Amount */}
+        {/* Cliente Name */}
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-            Valor
+          <label htmlFor="nome" className="mb-2 block text-sm font-medium">
+            Ativo
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="amount"
-                name="amount"
-                type="number"
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                defaultValue={state.submittedData?.amount}
-                aria-describedby="amount-error"
+                id="nome"
+                name="nome"
+                type="text"
+                placeholder="Nome do ativo"
+                defaultValue={state.submittedData?.nome}
+                aria-describedby="nome-error"
                 className={`peer block w-full rounded-md border ${
-                  state.errors?.amount?.length
+                  state.errors?.nome?.length
                     ? "border-red-500"
                     : "border-gray-200"
                 } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
 
-          <div id="amount-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.amount} />
-          </div>
+          {/* Mensagem de erro geral */}
+          {state.message && (
+            <div
+              aria-live="polite"
+              aria-atomic="true"
+              className="mt-6 text-sm text-red-700"
+            >
+              {state.message}
+            </div>
+          )}
         </div>
-
-        {/* Invoice Status */}
-        <fieldset>
-          <legend className="mb-2 block text-sm font-medium">
-            Escolha o status da fatura
-          </legend>
-          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-            <div className="flex gap-4">
-              <div className="flex items-center">
-                <input
-                  id="pendente"
-                  name="status"
-                  type="radio"
-                  value="pendente"
-                  defaultChecked={state.submittedData?.status === "pendente"}
-                  className={`text-white-600 h-4 w-4 cursor-pointer border ${
-                    state.errors?.status?.length
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } bg-gray-100 focus:ring-2`}
-                  aria-describedby="status-error"
-                />
-                <label
-                  htmlFor="pendente"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  Pendente <ClockIcon className="h-4 w-4" />
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="pago"
-                  name="status"
-                  type="radio"
-                  value="pago"
-                  defaultChecked={state.submittedData?.status === "pago"}
-                  className={`h-4 w-4 cursor-pointer border ${
-                    state.errors?.status?.length
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } bg-gray-100 text-gray-600 focus:ring-2`}
-                  aria-describedby="status-error"
-                />
-                <label
-                  htmlFor="pago"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
-                >
-                  Pago <CheckIcon className="h-4 w-4" />
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div id="status-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.status} />
-          </div>
-        </fieldset>
-
-        {/* Mensagem de erro geral */}
-        {state.message && (
-          <div
-            aria-live="polite"
-            aria-atomic="true"
-            className="mt-6 text-sm text-red-700"
-          >
-            {state.message}
-          </div>
-        )}
       </div>
 
       {/* Botões */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/invoices"
+          href="/dashboard/ativos"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancelar
         </Link>
-        <SubmitInvoiceButton />
+        <SubmitAtivoButton />
       </div>
     </form>
   );
