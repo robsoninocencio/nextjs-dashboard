@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  UserCircleIcon,
+  TagIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 
 import { Button } from "@/app/ui/shared/button";
 
@@ -75,7 +79,7 @@ export default function Form({ tipos }: { tipos: TipoField[] }) {
                 </option>
               ))}
             </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           {/* <p>{state.submittedData?.tipoId}</p> */}
 
@@ -104,7 +108,10 @@ export default function Form({ tipos }: { tipos: TipoField[] }) {
                     : "border-gray-200"
                 } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
               />
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="nome-error" aria-live="polite" aria-atomic="true">
+              <InputError errors={state.errors?.nome} />
             </div>
           </div>
 

@@ -2,21 +2,22 @@ import { notFound } from "next/navigation";
 
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
-import { fetchTipos } from "@/lib/tipos/data";
-
 import Form from "@/app/ui/ativos/edit-form";
 
+import { fetchTipos } from "@/lib/tipos/data";
 import { fetchAtivoById } from "@/lib/ativos/data";
+
 import type { Ativo } from "@/lib/ativos/definitions";
 
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Faturas",
+  title: "Ativos",
 };
 
-export default async function Page(props: any) {
-  const id = props.params.id;
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const id = params.id;
   if (!id) {
     notFound();
   }

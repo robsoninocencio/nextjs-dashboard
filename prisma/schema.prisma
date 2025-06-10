@@ -64,14 +64,14 @@ model invoices {
 
 model investimentos {
   id               String   @id @default(uuid()) @db.Uuid
-  saldoBruto       Int
-  saldoLiquido     Int
-  valorResgatado   Int
+  data             DateTime @db.Date
+  rendimentoDoMes  Int
   valorAplicado    Int
+  saldoBruto       Int
+  valorResgatado   Int
   impostoIncorrido Int
   impostoPrevisto  Int
-  rendimentoDoMes  Int
-  data             DateTime @db.Date
+  saldoLiquido     Int
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

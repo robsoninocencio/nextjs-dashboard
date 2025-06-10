@@ -19,7 +19,7 @@ export type FormattedTiposTable = {
 };
 
 export type TipoField = {
-  id: string;
+  id?: string;
   nome: string;
 };
 

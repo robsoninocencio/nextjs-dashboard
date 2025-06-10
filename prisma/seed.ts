@@ -295,6 +295,54 @@ async function seedAtivos() {
   }
 }
 
+async function seedInvestimentos() {
+  console.log("Iniciando o seeding da tabela 'Investimentos'...");
+  try {
+    let createdCount = 0;
+    let updatedCount = 0;
+    const createdInvestimentos = []; // Array para armazenar os investimentos criados com seus IDs
+    for (const i of investimentosData) {
+      const investimentos = await prisma.investimentos.findFirst({
+        where: { id: i.id },
+      });
+
+      if (!investimentos) {
+        createdCount++;
+      } else {
+        updatedCount++;
+      }
+
+      const result = await prisma.investimentos.upsert({
+        where: { id: i.id },
+        update: {},
+        create: {
+          id: i.id,
+          data: new Date(i.data),
+          rendimentoDoMes: i.rendimentoDoMes,
+          valorAplicado: i.valorAplicado,
+          saldoBruto: i.saldoBruto,
+          valorResgatado: i.valorResgatado,
+          impostoIncorrido: i.impostoIncorrido,
+          impostoPrevisto: i.impostoPrevisto,
+          saldoLiquido: i.saldoLiquido,
+          clienteId: i.cliente_id,
+          bancoId: i.bancoId,
+          ativoId: i.ativoId,
+        },
+      });
+      createdInvestimentos.push(result); // Adiciona o ativo criado ao array
+    }
+    console.log(
+      `Seeding da tabela 'Investimentos' concluído com sucesso. Criados: ${createdCount}, Atualizados: ${updatedCount}.`
+    );
+    return createdInvestimentos; // Retorna os investimentos criados
+  } catch (error) {
+    console.error("Erro ao semear a tabela 'Investimentos':", error);
+    console.error(error);
+    throw error;
+  }
+}
+
 /**
  * Função principal para executar todos os processos de seeding.
  */
@@ -308,6 +356,7 @@ export async function main() {
     await seedBancos();
     await seedTipos();
     await seedAtivos();
+    await seedInvestimentos();
     console.log("Todos os processos de seeding concluídos com sucesso!");
   } catch (error) {
     console.error("Erro durante o processo de seeding:", error);

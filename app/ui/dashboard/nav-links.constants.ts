@@ -14,6 +14,7 @@ export enum Paths {
   Bancos = "/dashboard/bancos",
   Tipos = "/dashboard/tipos",
   Ativos = "/dashboard/ativos",
+  Investimentos = "/dashboard/investimentos",
 }
 
 // 🔤 Labels para suporte a internacionalização futura
@@ -24,6 +25,7 @@ export const labels = {
   [Paths.Bancos]: "Bancos",
   [Paths.Tipos]: "Tipos",
   [Paths.Ativos]: "Ativos",
+  [Paths.Investimentos]: "Investimentos",
 } as const;
 
 // 🔧 Tipagem dos ícones
@@ -66,6 +68,11 @@ export const navLinksMenu: readonly NavLink[] = [
   {
     label: labels[Paths.Ativos],
     path: Paths.Ativos,
+    icon: BanknotesIcon,
+  },
+  {
+    label: labels[Paths.Investimentos],
+    path: Paths.Investimentos,
     icon: BanknotesIcon,
   },
 ] as const;

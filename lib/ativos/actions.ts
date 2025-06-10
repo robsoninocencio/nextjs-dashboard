@@ -9,9 +9,10 @@ import prisma from "@/prisma/lib/prisma";
 
 // Schema
 const AtivoFormSchema = z.object({
-  tipoId: z.string({
-    invalid_type_error: "Please select a tipo.",
-  }),
+  tipoId: z
+    .string({ invalid_type_error: "Please select a tipo." })
+    .optional()
+    .transform((val) => (val === "" ? null : val)), // Transforma "" em null
   nome: z
     .string({ invalid_type_error: "Por favor, insira um nome." })
     .min(3, "O nome deve ter pelo menos 3 caracteres.")
