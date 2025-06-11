@@ -8,32 +8,54 @@ import { redirect } from "next/navigation";
 import prisma from "@/prisma/lib/prisma";
 
 // Schema
-const InvoiceFormSchema = z.object({
+const InvestimentoFormSchema = z.object({
   clienteId: z.string({
-    invalid_type_error: "Please select a cliente.",
+    invalid_type_error: "Por favor selecione um Cliente.",
   }),
-  amount: z.coerce
-    .number()
-    .gt(0, { message: "Please enter an amount greater than $0." }),
-  status: z.enum(["pendente", "pago"], {
-    invalid_type_error: "Please select an invoice status.",
+  bancoId: z.string({
+    invalid_type_error: "Por favor selecione um Banco.",
   }),
+  ativoId: z.string({
+    invalid_type_error: "Por favor selecione um Ativo.",
+  }),
+  rendimentoDoMes: z.coerce.number(),
+  valorAplicado: z.coerce.number(),
+  saldoBruto: z.coerce.number(),
+  valorResgatado: z.coerce.number(),
+  impostoIncorrido: z.coerce.number(),
+  impostoPrevisto: z.coerce.number(),
+  saldoLiquido: z.coerce.number(),
 });
 
 // tipar explicitamente validatedFields.data
-type InvoiceData = z.infer<typeof InvoiceFormSchema>;
+type InvestimentoData = z.infer<typeof InvestimentoFormSchema>;
 
 // Types
-export type InvoiceFormState = {
+export type InvestimentoFormState = {
   errors?: {
     clienteId?: string[];
-    amount?: string[];
-    status?: string[];
+    bancoId?: string[];
+    ativoId?: string[];
+    rendimentoDoMes?: string[];
+    valorAplicado?: string[];
+    saldoBruto?: string[];
+    valorResgatado?: string[];
+    impostoIncorrido?: string[];
+    impostoPrevisto?: string[];
+    saldoLiquido?: string[];
   };
   message?: string | null;
   submittedData?: {
     clienteId?: string;
-    amount?: string;
+    bancoId?: string;
+    ativoId?: string;
+    rendimentoDoMes?: string;
+    valorAplicado?: string;
+    saldoBruto?: string;
+    valorResgatado?: string;
+    impostoIncorrido?: string;
+    impostoPrevisto?: string;
+    saldoLiquido?: string;
     status?: string;
   };
 };
@@ -45,11 +67,18 @@ function getFormValue(formData: FormData, key: string): string | undefined {
 }
 
 // Utils - Função para validar os campos do formulário usando Zod
-function parseInvoiceForm(formData: FormData) {
-  return InvoiceFormSchema.safeParse({
+function parseInvestimentoForm(formData: FormData) {
+  return InvestimentoFormSchema.safeParse({
     clienteId: getFormValue(formData, "clienteId"),
-    amount: getFormValue(formData, "amount"),
-    status: getFormValue(formData, "status"),
+    bancoId: getFormValue(formData, "bancoId"),
+    ativoId: getFormValue(formData, "ativoId"),
+    rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
+    valorAplicado: getFormValue(formData, "valorAplicado"),
+    saldoBruto: getFormValue(formData, "saldoBruto"),
+    valorResgatado: getFormValue(formData, "valorResgatado"),
+    impostoIncorrido: getFormValue(formData, "impostoIncorrido"),
+    impostoPrevisto: getFormValue(formData, "impostoPrevisto"),
+    saldoLiquido: getFormValue(formData, "saldoLiquido"),
   });
 }
 
@@ -57,14 +86,22 @@ function parseInvoiceForm(formData: FormData) {
 function handleValidationError(
   formData: FormData,
   validatedFields: { success: false; error: z.ZodError }
-): InvoiceFormState {
+): InvestimentoFormState {
   return {
     errors: validatedFields.error?.flatten().fieldErrors,
-    message: "Missing Fields. Failed to Create or Update Invoice.",
+    message:
+      "Preencha todos os campos obrigatórios. Houve erros na Criação ou Atualização do Investimento.",
     submittedData: {
       clienteId: getFormValue(formData, "clienteId"),
-      amount: getFormValue(formData, "amount"),
-      status: getFormValue(formData, "status"),
+      bancoId: getFormValue(formData, "bancoId"),
+      ativoId: getFormValue(formData, "ativoId"),
+      rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
+      valorAplicado: getFormValue(formData, "valorAplicado"),
+      saldoBruto: getFormValue(formData, "saldoBruto"),
+      valorResgatado: getFormValue(formData, "valorResgatado"),
+      impostoIncorrido: getFormValue(formData, "impostoIncorrido"),
+      impostoPrevisto: getFormValue(formData, "impostoPrevisto"),
+      saldoLiquido: getFormValue(formData, "saldoLiquido"),
     },
   };
 }
@@ -77,51 +114,72 @@ function getCurrentDate() {
 
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
 function getDatabaseErrorMessage(action: "create" | "update") {
-  return `Database Error: Failed to ${action} invoice.`;
+  return `Database Error: Failed to ${action} investimento.`;
 }
 
 // Utils - Função para salvar a fatura no banco
-async function saveInvoiceToDatabase(
-  data: InvoiceData,
+async function saveInvestimentoToDatabase(
+  data: InvestimentoData,
   id?: string
 ): Promise<void> {
-  const amountInCents = data.amount * 100; // Armazenar em centavos para precisão
+  const rendimentoDoMesInCents = data.rendimentoDoMes * 100;
+  const valorAplicadoInCents = data.valorAplicado * 100;
+  const saldoBrutoInCents = data.saldoBruto * 100;
+  const valorResgatadoInCents = data.valorResgatado * 100;
+  const impostoIncorridoInCents = data.impostoIncorrido * 100;
+  const impostoPrevistoInCents = data.impostoPrevisto * 100;
+  const saldoLiquidoInCents = data.saldoLiquido * 100;
+
   const date = getCurrentDate();
 
   if (id) {
     // Atualiza a fatura
-    await prisma.invoices.update({
+    await prisma.investimentos.update({
       where: { id },
       data: {
-        cliente_id: data.clienteId,
-        amount: amountInCents,
-        status: data.status,
+        rendimentoDoMes: rendimentoDoMesInCents,
+        valorAplicado: valorAplicadoInCents,
+        saldoBruto: saldoBrutoInCents,
+        valorResgatado: valorResgatadoInCents,
+        impostoIncorrido: impostoIncorridoInCents,
+        impostoPrevisto: impostoPrevistoInCents,
+        saldoLiquido: saldoLiquidoInCents,
+        clienteId: data.clienteId,
+        bancoId: data.bancoId,
+        ativoId: data.ativoId,
       },
     });
   } else {
     // Cria uma nova fatura
-    await prisma.invoices.create({
+    await prisma.investimentos.create({
       data: {
-        cliente_id: data.clienteId,
-        amount: amountInCents,
-        status: data.status,
-        date,
+        rendimentoDoMes: rendimentoDoMesInCents,
+        valorAplicado: valorAplicadoInCents,
+        saldoBruto: saldoBrutoInCents,
+        valorResgatado: valorResgatadoInCents,
+        impostoIncorrido: impostoIncorridoInCents,
+        impostoPrevisto: impostoPrevistoInCents,
+        saldoLiquido: saldoLiquidoInCents,
+        clienteId: data.clienteId,
+        bancoId: data.bancoId,
+        ativoId: data.ativoId,
+        data: date,
       },
     });
   }
 }
 
 // Actions - Ação de criação de fatura
-export async function createInvoice(
-  prevState: InvoiceFormState,
+export async function createInvestimento(
+  prevState: InvestimentoFormState,
   formData: FormData
-): Promise<InvoiceFormState | never> {
+): Promise<InvestimentoFormState | never> {
   if (process.env.NODE_ENV === "development") {
     console.log("Received FormData:", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
-  const validatedFields = parseInvoiceForm(formData);
+  const validatedFields = parseInvestimentoForm(formData);
   if (process.env.NODE_ENV === "development") {
     console.log("validatedFields.error:", validatedFields.error);
   }
@@ -133,30 +191,30 @@ export async function createInvoice(
 
   // Cria fatura no banco de dados
   try {
-    await saveInvoiceToDatabase(validatedFields.data);
+    await saveInvestimentoToDatabase(validatedFields.data);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Create Invoice Error:", error);
+      console.error("Create Investimento Error:", error);
     }
     return { message: getDatabaseErrorMessage("create") };
   }
 
   // Atualiza e redireciona para a página de faturas
-  revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
+  revalidatePath("/dashboard/investimentos");
+  redirect("/dashboard/investimentos");
 }
 
-export async function updateInvoice(
+export async function updateInvestimento(
   id: string,
-  prevState: InvoiceFormState,
+  prevState: InvestimentoFormState,
   formData: FormData
-): Promise<InvoiceFormState | never> {
+): Promise<InvestimentoFormState | never> {
   if (process.env.NODE_ENV === "development") {
     console.log("Received FormData:", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
-  const validatedFields = parseInvoiceForm(formData);
+  const validatedFields = parseInvestimentoForm(formData);
   if (process.env.NODE_ENV === "development") {
     console.log("validatedFields.error:", validatedFields.error);
   }
@@ -167,45 +225,47 @@ export async function updateInvoice(
   }
 
   // Verifica se a fatura existe antes de tentar atualizar
-  const existing = await prisma.invoices.findUnique({ where: { id } });
+  const existing = await prisma.investimentos.findUnique({ where: { id } });
   if (!existing) {
-    return { message: "Invoice not found. Cannot update." };
+    return { message: "Investimento not found. Cannot update." };
   }
 
   // Atualiza fatura no banco de dados
   try {
-    await saveInvoiceToDatabase(validatedFields.data, id);
+    await saveInvestimentoToDatabase(validatedFields.data, id);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Update Invoice Error:", error);
+      console.error("Update Investimento Error:", error);
     }
     return { message: getDatabaseErrorMessage("update") };
   }
 
   // Atualiza e redireciona para a página de faturas
-  revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
+  revalidatePath("/dashboard/investimentos");
+  redirect("/dashboard/investimentos");
 }
 
-export async function deleteInvoice(id: string) {
+export async function deleteInvestimento(id: string) {
   if (!id) {
-    throw new Error("Invoice ID for deletion is invalid.");
+    throw new Error("Investimento ID for deletion is invalid.");
   }
 
   try {
-    const invoice = await prisma.invoices.findUnique({ where: { id } });
-    if (!invoice) {
-      throw new Error("Invoice not found.");
+    const investimento = await prisma.investimentos.findUnique({
+      where: { id },
+    });
+    if (!investimento) {
+      throw new Error("Investimento not found.");
     }
 
-    await prisma.invoices.delete({
+    await prisma.investimentos.delete({
       where: { id: id },
     });
-    revalidatePath("/dashboard/invoices");
+    revalidatePath("/dashboard/investimentos");
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Delete Invoice Error:", error);
+      console.error("Delete Investimento Error:", error);
     }
-    throw new Error("Failed to delete invoice.");
+    throw new Error("Failed to delete investimento.");
   }
 }

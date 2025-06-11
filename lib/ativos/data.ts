@@ -47,6 +47,23 @@ export async function fetchFilteredAtivos(query: string, currentPage: number) {
   }
 }
 
+export async function fetchAtivos() {
+  try {
+    const ativos = await prisma.ativos.findMany({
+      select: {
+        id: true,
+        nome: true,
+      },
+      orderBy: { nome: "asc" },
+    });
+
+    return ativos;
+  } catch (error) {
+    console.error("Erro ao buscar ativos:", error);
+    throw new Error("Não foi possível buscar os ativos.");
+  }
+}
+
 export async function fetchAtivoById(id: string) {
   if (!id) {
     throw new Error("O ID da ativo é obrigatório.");
