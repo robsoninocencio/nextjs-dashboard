@@ -36,6 +36,8 @@ export type InvestimentoFormState = {
     clienteId?: string[];
     bancoId?: string[];
     ativoId?: string[];
+    ano?: string[];
+    mes?: string[];
     rendimentoDoMes?: string[];
     valorAplicado?: string[];
     saldoBruto?: string[];
@@ -49,6 +51,8 @@ export type InvestimentoFormState = {
     clienteId?: string;
     bancoId?: string;
     ativoId?: string;
+    ano?: string;
+    mes?: string;
     rendimentoDoMes?: string;
     valorAplicado?: string;
     saldoBruto?: string;
@@ -117,7 +121,7 @@ function getDatabaseErrorMessage(action: "create" | "update") {
   return `Database Error: Failed to ${action} investimento.`;
 }
 
-// Utils - Função para salvar a fatura no banco
+// Função para salvar investimento no banco
 async function saveInvestimentoToDatabase(
   data: InvestimentoData,
   id?: string
@@ -204,6 +208,7 @@ export async function createInvestimento(
   redirect("/dashboard/investimentos");
 }
 
+// Ação para atualizar investimento
 export async function updateInvestimento(
   id: string,
   prevState: InvestimentoFormState,
@@ -266,6 +271,6 @@ export async function deleteInvestimento(id: string) {
     if (process.env.NODE_ENV === "development") {
       console.error("Delete Investimento Error:", error);
     }
-    throw new Error("Failed to delete investimento.");
+    throw new Error("Falha ao deletar o investimento.");
   }
 }

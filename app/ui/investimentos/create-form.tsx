@@ -3,14 +3,10 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-
 import {
-  CheckIcon,
-  ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-
 import { Button } from "@/app/ui/shared/button";
 
 import {
@@ -33,6 +29,7 @@ function SubmitInvestimentoButton() {
   );
 }
 
+// Componente para erros
 function InputError({ errors }: { errors?: string[] }) {
   if (!errors) return null;
   return (
@@ -413,7 +410,6 @@ export default function Form({
         )}
       </div>
 
-      {/* Botões */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/investimentos"

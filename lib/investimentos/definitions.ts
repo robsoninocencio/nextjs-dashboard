@@ -1,38 +1,76 @@
-export type Invoice = {
+export type Investimento = {
   id: string;
-  cliente_id: string;
-  amount: number;
-  date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pendente' or 'pago'.
-  status: "pendente" | "pago";
+  data: string;
+  rendimentoDoMes: number;
+  valorAplicado: number;
+  saldoBruto: number;
+  valorResgatado: number;
+  impostoIncorrido: number;
+  impostoPrevisto: number;
+  saldoLiquido: number;
+  clienteId: string;
+  bancoId: string;
+  ativoId: string;
 };
 
-export type LatestInvoice = {
+export type LatestInvestimento = {
   id: string;
-  name: string;
-  email: string;
-  amount: string;
+  data: string;
+  rendimentoDoMes: string;
+  valorAplicado: string;
+  saldoBruto: string;
+  valorResgatado: string;
+  impostoIncorrido: string;
+  impostoPrevisto: string;
+  saldoLiquido: string;
 };
 
-// The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, "amount"> & {
-  amount: number;
+// The database returns a number for fieds, but we later format it to a string with the formatCurrency function
+export type LatestInvestimentoRaw = Omit<
+  LatestInvestimento,
+  | "rendimentoDoMes"
+  | "valorAplicado"
+  | "saldoBruto"
+  | "valorResgatado"
+  | "impostoIncorrido"
+  | "impostoPrevisto"
+  | "saldoLiquido"
+> & {
+  rendimentoDoMes: number;
+  valorAplicado: number;
+  saldoBruto: number;
+  valorResgatado: number;
+  impostoIncorrido: number;
+  impostoPrevisto: number;
+  saldoLiquido: number;
 };
 
-export type InvoicesTable = {
+export type InvestimentosTable = {
   id: string;
-  cliente_id: string;
-  name: string;
-  email: string;
-  date: string;
-  amount: number;
-  status: "pendente" | "pago";
+  clienteId: string;
+  ativoId: string;
+  bancoId: string;
+  data: string;
+  rendimentoDoMes: number;
+  valorAplicado: number;
+  saldoBruto: number;
+  valorResgatado: number;
+  impostoIncorrido: number;
+  impostoPrevisto: number;
+  saldoLiquido: number;
 };
 
-export type InvoiceForm = {
+export type InvestimentoForm = {
   id: string;
-  cliente_id: string;
-  amount: number;
-  status: "pendente" | "pago";
+  data: string;
+  clienteId: string;
+  ativoId: string;
+  bancoId: string;
+  rendimentoDoMes: number;
+  valorAplicado: number;
+  saldoBruto: number;
+  valorResgatado: number;
+  impostoIncorrido: number;
+  impostoPrevisto: number;
+  saldoLiquido: number;
 };

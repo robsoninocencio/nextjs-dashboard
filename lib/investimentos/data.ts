@@ -124,9 +124,17 @@ export async function fetchInvestimentoById(id: string) {
       where: { id },
       select: {
         id: true,
-        clienteId: true,
-        rendimentoDoMes: true,
         data: true,
+        rendimentoDoMes: true,
+        valorAplicado: true,
+        saldoBruto: true,
+        valorResgatado: true,
+        impostoIncorrido: true,
+        impostoPrevisto: true,
+        saldoLiquido: true,
+        clienteId: true,
+        bancoId: true,
+        ativoId: true,
       },
     });
 
@@ -136,7 +144,13 @@ export async function fetchInvestimentoById(id: string) {
 
     return {
       ...investimento,
-      rendimentoDoMes: investimento.rendimentoDoMes / 100, // Converte de centavos para dólares
+      rendimentoDoMes: investimento.rendimentoDoMes / 100,
+      valorAplicado: investimento.valorAplicado / 100,
+      saldoBruto: investimento.saldoBruto / 100,
+      valorResgatado: investimento.valorResgatado / 100,
+      impostoIncorrido: investimento.impostoIncorrido / 100,
+      impostoPrevisto: investimento.impostoPrevisto / 100,
+      saldoLiquido: investimento.saldoLiquido / 100,
     };
   } catch (error) {
     console.error(`Erro ao buscar investimento com ID ${id}:`, error);
