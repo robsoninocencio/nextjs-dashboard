@@ -18,6 +18,13 @@ import { ClienteField } from "@/lib/clientes/definitions";
 import { BancoField } from "@/lib/bancos/definitions";
 import { AtivoField } from "@/lib/ativos/definitions";
 
+// Interface para props do componente
+interface FormProps {
+  clientes: ClienteField[];
+  bancos: BancoField[];
+  ativos: AtivoField[];
+}
+
 // Botão com estado pendente (loading)
 function SubmitInvestimentoButton() {
   const { pending } = useFormStatus();
@@ -43,16 +50,56 @@ function InputError({ errors }: { errors?: string[] }) {
   );
 }
 
-// Formulário principal de criação de fatura
-export default function Form({
-  clientes,
-  bancos,
-  ativos,
+// Componente para selects
+function SelectField({
+  id,
+  label,
+  options,
+  defaultValue,
+  errors,
 }: {
-  clientes: ClienteField[];
-  bancos: BancoField[];
-  ativos: AtivoField[];
+  id: string;
+  label: string;
+  options: { id: string; name: string }[];
+  defaultValue?: string;
+  errors?: string[];
 }) {
+  return (
+    <div className="mb-4">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium">
+        {label}
+      </label>
+      <div className="relative mt-2 rounded-md">
+        <select
+          id={id}
+          name={id}
+          defaultValue={defaultValue ?? ""}
+          required
+          aria-describedby={`${id}-error`}
+          className={`peer block w-full rounded-md border ${
+            errors?.length ? "border-red-500" : "border-gray-200"
+          } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+        >
+          <option value="" disabled>
+            Selecione {label.toLowerCase()}
+          </option>
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+        <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
+      <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
+        <InputError errors={errors} />
+      </div>
+    </div>
+  );
+}
+
+// Formulário principal de criação de fatura
+export default function Form({ clientes, bancos, ativos }: FormProps) {
   const initialState: InvestimentoFormState = {
     errors: {},
     message: "",
@@ -61,9 +108,47 @@ export default function Form({
 
   const [state, formAction] = useActionState(createInvestimento, initialState);
 
+  // Opções para ano e mês (1 a 12)
+  const years = Array.from({ length: 15 }, (_, i) => ({
+    id: (2025 - i).toString(),
+    name: (2025 - i).toString(),
+  }));
+  const months = [
+    { id: "01", name: "Janeiro" },
+    { id: "02", name: "Fevereiro" },
+    { id: "03", name: "Março" },
+    { id: "04", name: "Abril" },
+    { id: "05", name: "Maio" },
+    { id: "06", name: "Junho" },
+    { id: "07", name: "Julho" },
+    { id: "08", name: "Agosto" },
+    { id: "09", name: "Setembro" },
+    { id: "10", name: "Outubro" },
+    { id: "11", name: "Novembro" },
+    { id: "12", name: "Dezembro" },
+  ];
+
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+        {/* Ano */}
+        <SelectField
+          id="ano"
+          label="Ano"
+          options={years}
+          defaultValue={state.submittedData?.ano?.toString()}
+          errors={state.errors?.ano}
+        />
+
+        {/* Mês */}
+        <SelectField
+          id="mes"
+          label="Mês"
+          options={months}
+          defaultValue={state.submittedData?.mes?.toString()}
+          errors={state.errors?.mes}
+        />
+
         {/* Cliente Nome */}
         <div className="mb-4">
           <label htmlFor="clienteId" className="mb-2 block text-sm font-medium">

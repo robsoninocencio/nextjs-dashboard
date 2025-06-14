@@ -18,6 +18,16 @@ const InvestimentoFormSchema = z.object({
   ativoId: z.string({
     invalid_type_error: "Por favor selecione um Ativo.",
   }),
+  ano: z.coerce
+    .number()
+    .int()
+    .min(2000, "Ano inválido")
+    .max(2025, "Ano inválido"),
+  mes: z.coerce
+    .number()
+    .int()
+    .min(1, "Mês deve estar entre 1 e 12")
+    .max(12, "Mês inválido"),
   rendimentoDoMes: z.coerce.number(),
   valorAplicado: z.coerce.number(),
   saldoBruto: z.coerce.number(),
@@ -76,6 +86,8 @@ function parseInvestimentoForm(formData: FormData) {
     clienteId: getFormValue(formData, "clienteId"),
     bancoId: getFormValue(formData, "bancoId"),
     ativoId: getFormValue(formData, "ativoId"),
+    ano: getFormValue(formData, "ano"),
+    mes: getFormValue(formData, "mes"),
     rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
     valorAplicado: getFormValue(formData, "valorAplicado"),
     saldoBruto: getFormValue(formData, "saldoBruto"),
@@ -99,6 +111,8 @@ function handleValidationError(
       clienteId: getFormValue(formData, "clienteId"),
       bancoId: getFormValue(formData, "bancoId"),
       ativoId: getFormValue(formData, "ativoId"),
+      ano: getFormValue(formData, "ano"),
+      mes: getFormValue(formData, "mes"),
       rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
       valorAplicado: getFormValue(formData, "valorAplicado"),
       saldoBruto: getFormValue(formData, "saldoBruto"),
@@ -110,10 +124,16 @@ function handleValidationError(
   };
 }
 
+// // Utils - Função auxiliar para formatação da data
+// function getCurrentDate() {
+//   // return new Date().toISOString().split("T")[0]; // Apenas a data (YYYY-MM-DD)
+//   return new Date(); // Gera um objeto Date válido para o Prisma
+// }
+
 // Utils - Função auxiliar para formatação da data
-function getCurrentDate() {
-  // return new Date().toISOString().split("T")[0]; // Apenas a data (YYYY-MM-DD)
-  return new Date(); // Gera um objeto Date válido para o Prisma
+function getInvestimentoDate(ano: number, mes: number): Date {
+  // Último dia do mês especificado
+  return new Date(ano, mes, 0, 23, 59, 59, 999);
 }
 
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
@@ -134,10 +154,11 @@ async function saveInvestimentoToDatabase(
   const impostoPrevistoInCents = data.impostoPrevisto * 100;
   const saldoLiquidoInCents = data.saldoLiquido * 100;
 
-  const date = getCurrentDate();
+  // const date = getCurrentDate();
+  const date = getInvestimentoDate(data.ano, data.mes);
 
   if (id) {
-    // Atualiza a fatura
+    // Atualiza a investimento
     await prisma.investimentos.update({
       where: { id },
       data: {
@@ -151,10 +172,11 @@ async function saveInvestimentoToDatabase(
         clienteId: data.clienteId,
         bancoId: data.bancoId,
         ativoId: data.ativoId,
+        data: date,
       },
     });
   } else {
-    // Cria uma nova fatura
+    // Cria um novo investimento
     await prisma.investimentos.create({
       data: {
         rendimentoDoMes: rendimentoDoMesInCents,
@@ -173,7 +195,7 @@ async function saveInvestimentoToDatabase(
   }
 }
 
-// Actions - Ação de criação de fatura
+// Actions - Ação de criação de investimento
 export async function createInvestimento(
   prevState: InvestimentoFormState,
   formData: FormData
@@ -193,7 +215,7 @@ export async function createInvestimento(
     return handleValidationError(formData, validatedFields);
   }
 
-  // Cria fatura no banco de dados
+  // Cria investimento no banco de dados
   try {
     await saveInvestimentoToDatabase(validatedFields.data);
   } catch (error) {
@@ -203,7 +225,7 @@ export async function createInvestimento(
     return { message: getDatabaseErrorMessage("create") };
   }
 
-  // Atualiza e redireciona para a página de faturas
+  // Atualiza e redireciona para a página de investimentos
   revalidatePath("/dashboard/investimentos");
   redirect("/dashboard/investimentos");
 }
@@ -229,13 +251,13 @@ export async function updateInvestimento(
     return handleValidationError(formData, validatedFields);
   }
 
-  // Verifica se a fatura existe antes de tentar atualizar
+  // Verifica se a investimento existe antes de tentar atualizar
   const existing = await prisma.investimentos.findUnique({ where: { id } });
   if (!existing) {
     return { message: "Investimento not found. Cannot update." };
   }
 
-  // Atualiza fatura no banco de dados
+  // Atualiza investimento no banco de dados
   try {
     await saveInvestimentoToDatabase(validatedFields.data, id);
   } catch (error) {
@@ -245,7 +267,7 @@ export async function updateInvestimento(
     return { message: getDatabaseErrorMessage("update") };
   }
 
-  // Atualiza e redireciona para a página de faturas
+  // Atualiza e redireciona para a página de investimentos
   revalidatePath("/dashboard/investimentos");
   redirect("/dashboard/investimentos");
 }
