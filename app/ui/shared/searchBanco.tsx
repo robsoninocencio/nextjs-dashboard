@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
-export default function Search({ placeholder }: { placeholder: string }) {
+export default function SearchBanco({ placeholder }: { placeholder: string }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -14,9 +14,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
     params.set("page", "1");
 
     if (term) {
-      params.set("query", term);
+      params.set("queryBanco", term);
     } else {
-      params.delete("query");
+      params.delete("queryBanco");
     }
 
     const queryString = params.toString();
@@ -27,20 +27,20 @@ export default function Search({ placeholder }: { placeholder: string }) {
   return (
     <div className="flex flex-1 flex-col">
       <label
-        htmlFor="search"
+        htmlFor="searchBanco"
         className="mb-1 text-sm font-medium text-gray-700"
       >
-        Buscar
+        Buscar Banco
       </label>
       <div className="relative flex flex-1 flex-shrink-0">
         <input
-          id="search"
+          id="searchBanco"
           className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
           placeholder={placeholder}
           onChange={(e) => {
             handleSearch(e.target.value);
           }}
-          defaultValue={searchParams.get("query")?.toString()}
+          defaultValue={searchParams.get("queryBanco")?.toString()}
         />
         <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div>

@@ -1,6 +1,6 @@
 import prisma from "@/prisma/lib/prisma";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 30;
 
 export async function fetchAtivosPages(query: string) {
   try {
@@ -10,6 +10,7 @@ export async function fetchAtivosPages(query: string) {
       },
     });
 
+    console.log("count:", count);
     return Math.ceil(count / ITEMS_PER_PAGE);
   } catch (error) {
     console.error("Erro ao buscar o número total de páginas:", error);

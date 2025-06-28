@@ -7,6 +7,9 @@ import { redirect } from "next/navigation";
 
 import prisma from "@/prisma/lib/prisma";
 
+// Obtendo o ano atual para validação dinâmica do ano
+const currentYear = new Date().getFullYear();
+
 // Schema
 const InvestimentoFormSchema = z.object({
   clienteId: z.string({
@@ -22,12 +25,15 @@ const InvestimentoFormSchema = z.object({
     .number()
     .int()
     .min(2000, "Ano inválido")
-    .max(2025, "Ano inválido"),
+    .max(currentYear, {
+      message: `Ano não pode ser maior que ${currentYear}.`,
+    }),
   mes: z.coerce
     .number()
     .int()
     .min(1, "Mês deve estar entre 1 e 12")
-    .max(12, "Mês inválido"),
+    .max(12, "Mês inválido")
+    .transform((val) => val.toString().padStart(2, "0")), // Garantindo o mês com 2 dígitos
   rendimentoDoMes: z.coerce.number(),
   valorAplicado: z.coerce.number(),
   saldoBruto: z.coerce.number(),
@@ -155,7 +161,10 @@ async function saveInvestimentoToDatabase(
   const saldoLiquidoInCents = data.saldoLiquido * 100;
 
   // const date = getCurrentDate();
-  const date = getInvestimentoDate(data.ano, data.mes);
+  const date = getInvestimentoDate(data.ano, parseInt(data.mes, 10)); // Converte para número inteiro);
+
+  console.log("data.mes.toString()", data.mes.toString());
+  console.log("data.ano.toString()", data.ano.toString());
 
   if (id) {
     // Atualiza a investimento
@@ -173,6 +182,8 @@ async function saveInvestimentoToDatabase(
         bancoId: data.bancoId,
         ativoId: data.ativoId,
         data: date,
+        ano: data.ano.toString(),
+        mes: data.mes.toString(),
       },
     });
   } else {
@@ -190,6 +201,8 @@ async function saveInvestimentoToDatabase(
         bancoId: data.bancoId,
         ativoId: data.ativoId,
         data: date,
+        ano: data.ano.toString(),
+        mes: data.mes.toString(),
       },
     });
   }

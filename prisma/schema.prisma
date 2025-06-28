@@ -39,6 +39,7 @@ model clientes {
   invoices      invoices[]
   investimentos investimentos[]
 
+  @@index([name])
   @@index([email])
   @@index([userId])
 }
@@ -60,11 +61,14 @@ model invoices {
 
   @@index([cliente_id]) // Índice para buscas por cliente
   @@index([cliente_id, date]) // Índice composto para buscas por cliente e data
+  @@index([usersId])
 }
 
 model investimentos {
   id               String   @id @default(uuid()) @db.Uuid
   data             DateTime @db.Date
+  ano              String   @db.VarChar(4)
+  mes              String   @db.VarChar(2)
   rendimentoDoMes  Int
   valorAplicado    Int
   saldoBruto       Int
@@ -88,9 +92,14 @@ model investimentos {
   userId String? @db.Uuid
 
   @@index([clienteId])
+  @@index([ano])
+  @@index([mes])
   @@index([bancoId])
+  @@index([ativoId])
+  @@index([clienteId, ano, mes])
+  @@index([clienteId, ano, mes, bancoId])
+  @@index([clienteId, ano, mes, bancoId, ativoId])
   @@index([userId])
-  @@index([clienteId, bancoId])
 }
 
 model ativos {
@@ -106,6 +115,9 @@ model ativos {
   // taxaId String? @db.Uuid
 
   investimentos investimentos[]
+
+  @@index([tipoId])
+  @@index([nome])
 }
 
 model tipos {
@@ -115,6 +127,8 @@ model tipos {
   updatedAt DateTime @updatedAt
 
   ativos ativos[]
+
+  @@index([nome])
 }
 
 model bancos {
@@ -124,6 +138,8 @@ model bancos {
   updatedAt DateTime @updatedAt
 
   investimentos investimentos[]
+
+  @@index([nome])
 }
 
 model revenue {

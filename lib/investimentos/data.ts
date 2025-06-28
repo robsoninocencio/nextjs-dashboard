@@ -1,23 +1,57 @@
 import prisma from "@/prisma/lib/prisma";
 
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 50;
 
-export async function fetchInvestimentosPages(query: string) {
+export async function fetchInvestimentosPages(
+  query: string,
+  queryAno: string,
+  queryMes: string,
+  queryCliente: string,
+  queryBanco: string,
+  queryAtivo: string,
+  queryTipo: string
+) {
   try {
-    const count = await prisma.investimentos.count({
-      where: {
-        OR: [
-          { clientes: { name: { contains: query, mode: "insensitive" } } },
-          { clientes: { email: { contains: query, mode: "insensitive" } } },
-          {
-            rendimentoDoMes: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-        ],
-      },
-    });
+    console.log("Entrei em fetchInvestimentosPages()");
+    const where: any = {};
 
+    // Filtra por cliente, se fornecido
+    if (queryCliente) {
+      where.clientes = {
+        name: { contains: queryCliente, mode: "insensitive" },
+      };
+    }
+
+    // Filtra por ano, se fornecido
+    if (queryAno) {
+      where.ano = { equals: queryAno };
+    }
+
+    // Filtra por mes, se fornecido
+    if (queryMes) {
+      where.mes = { equals: queryMes };
+    }
+
+    // Filtra por banco, se fornecido
+    if (queryBanco) {
+      where.bancos = {
+        nome: { contains: queryBanco, mode: "insensitive" },
+      };
+    }
+
+    if (queryAtivo || queryTipo) {
+      where.ativos = {
+        ...(queryAtivo && {
+          nome: { contains: queryAtivo, mode: "insensitive" },
+        }),
+        ...(queryTipo && {
+          tipos: { nome: { contains: queryTipo, mode: "insensitive" } },
+        }),
+      };
+    }
+
+    const count = await prisma.investimentos.count({ where });
+    console.log("count:", count);
     return Math.ceil(count / ITEMS_PER_PAGE);
   } catch (error) {
     console.error("Erro ao buscar o número total de páginas:", error);
@@ -27,59 +61,65 @@ export async function fetchInvestimentosPages(query: string) {
 
 export async function fetchFilteredInvestimentos(
   query: string,
-  currentPage: number
+  currentPage: number,
+  queryAno: string,
+  queryMes: string,
+  queryCliente: string,
+  queryBanco: string,
+  queryAtivo: string,
+  queryTipo: string
 ) {
+  console.log("Entrei em fetchFilteredInvestimentos()");
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
+  console.log("query", query);
+  console.log("queryAno", queryAno);
+  console.log("queryMes", queryMes);
+  console.log("queryCliente", queryCliente);
+  console.log("queryBanco", queryBanco);
+  console.log("queryAtivo", queryAtivo);
+  console.log("queryTipo", queryTipo);
+
   try {
+    const where: any = {};
+
+    // Filtra por cliente, se fornecido
+    if (queryCliente) {
+      where.clientes = {
+        name: { contains: queryCliente, mode: "insensitive" },
+      };
+    }
+
+    // Filtra por ano, se fornecido
+    if (queryAno) {
+      where.ano = { equals: queryAno };
+    }
+
+    // Filtra por mes, se fornecido
+    if (queryMes) {
+      where.mes = { equals: queryMes };
+    }
+
+    // Filtra por banco, se fornecido
+    if (queryBanco) {
+      where.bancos = {
+        nome: { contains: queryBanco, mode: "insensitive" },
+      };
+    }
+
+    if (queryAtivo || queryTipo) {
+      where.ativos = {
+        ...(queryAtivo && {
+          nome: { contains: queryAtivo, mode: "insensitive" },
+        }),
+        ...(queryTipo && {
+          tipos: { nome: { contains: queryTipo, mode: "insensitive" } },
+        }),
+      };
+    }
+
     const investimentos = await prisma.investimentos.findMany({
-      where: {
-        OR: [
-          { clientes: { name: { contains: query, mode: "insensitive" } } },
-          { bancos: { nome: { contains: query, mode: "insensitive" } } },
-          { ativos: { nome: { contains: query, mode: "insensitive" } } },
-          {
-            ativos: {
-              tipos: { nome: { contains: query, mode: "insensitive" } },
-            },
-          },
-          {
-            rendimentoDoMes: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          {
-            valorAplicado: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          {
-            saldoBruto: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          {
-            valorResgatado: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          {
-            impostoIncorrido: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          {
-            impostoPrevisto: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-          {
-            saldoLiquido: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
-          },
-        ],
-      },
+      where,
       include: {
         clientes: {
           select: {
@@ -102,7 +142,12 @@ export async function fetchFilteredInvestimentos(
           },
         },
       },
-      orderBy: { data: "desc" },
+      orderBy: [
+        { ano: "desc" },
+        { mes: "desc" },
+        { bancos: { nome: "asc" } },
+        { ativos: { nome: "asc" } },
+      ],
       skip: offset,
       take: ITEMS_PER_PAGE,
     });
@@ -125,6 +170,8 @@ export async function fetchInvestimentoById(id: string) {
       select: {
         id: true,
         data: true,
+        ano: true,
+        mes: true,
         rendimentoDoMes: true,
         valorAplicado: true,
         saldoBruto: true,
@@ -155,5 +202,78 @@ export async function fetchInvestimentoById(id: string) {
   } catch (error) {
     console.error(`Erro ao buscar investimento com ID ${id}:`, error);
     throw new Error("Erro ao buscar a investimento.");
+  }
+}
+
+export async function fetchInvestimentoGroupByClienteAnoMes() {
+  try {
+    // Usando o groupBy do Prisma para agrupar os dados corretamente
+    const resultado = await prisma.investimentos.groupBy({
+      by: ["clienteId", "ano", "mes"], // Agrupar por clienteId, ano e mês
+      _sum: {
+        rendimentoDoMes: true,
+        valorAplicado: true,
+        saldoBruto: true,
+        valorResgatado: true,
+        impostoIncorrido: true,
+        impostoPrevisto: true,
+        saldoLiquido: true,
+      },
+      _count: {
+        id: true,
+      },
+      orderBy: [{ clienteId: "asc" }, { ano: "desc" }, { mes: "desc" }],
+    });
+
+    // Estruturando os resultados
+    const agrupados = resultado.reduce(
+      (acc: Record<string, any>, investimento) => {
+        const clienteId = investimento.clienteId;
+
+        if (!acc[clienteId]) {
+          acc[clienteId] = {
+            Cliente: "", // Inicializa o nome do cliente (vai ser preenchido depois)
+            investimentos: [],
+          };
+        }
+
+        // Adicionando os dados de cada investimento ao cliente
+        acc[clienteId].investimentos.push({
+          ano: investimento.ano,
+          mes: investimento.mes,
+          rendimentoDoMes: investimento._sum.rendimentoDoMes ?? 0,
+          valorAplicado: investimento._sum.valorAplicado ?? 0,
+          saldoBruto: investimento._sum.saldoBruto ?? 0,
+          valorResgatado: investimento._sum.valorResgatado ?? 0,
+          impostoIncorrido: investimento._sum.impostoIncorrido ?? 0,
+          impostoPrevisto: investimento._sum.impostoPrevisto ?? 0,
+          saldoLiquido: investimento._sum.saldoLiquido ?? 0,
+        });
+
+        return acc;
+      },
+      {}
+    );
+
+    // Transformando os resultados para incluir o nome do cliente
+    const resultadoFormatado = await Promise.all(
+      Object.keys(agrupados).map(async (clienteId) => {
+        // Busca o nome do cliente pelo ID
+        const cliente = await prisma.clientes.findUnique({
+          where: { id: clienteId },
+          select: { name: true },
+        });
+
+        // Adicionando o nome do cliente ao resultado
+        agrupados[clienteId].Cliente = cliente?.name ?? "Cliente Desconhecido";
+
+        return agrupados[clienteId];
+      })
+    );
+
+    return resultadoFormatado;
+  } catch (error) {
+    console.error("Erro ao buscar os investimentos agrupados:", error);
+    throw new Error("Erro ao buscar os investimentos agrupados.");
   }
 }

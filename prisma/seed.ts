@@ -318,6 +318,8 @@ async function seedInvestimentos() {
         create: {
           id: i.id,
           data: new Date(i.data),
+          ano: i.ano,
+          mes: i.mes,
           rendimentoDoMes: i.rendimentoDoMes,
           valorAplicado: i.valorAplicado,
           saldoBruto: i.saldoBruto,

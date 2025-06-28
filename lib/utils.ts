@@ -7,6 +7,20 @@ export const formatCurrency = (amount: number) => {
   });
 };
 
+export const formatNumberWithDot = (amount: string): string | undefined => {
+  // Remove caracteres não numéricos, exceto vírgula e ponto
+  const cleanedAmount = amount.replace(/[^\d,.]/g, "").replace(",", ".");
+
+  // Converte para número e verifica se é válido
+  const parsedAmount = parseFloat(cleanedAmount);
+  if (isNaN(parsedAmount)) {
+    return undefined;
+  }
+
+  // Multiplica por 100 para centavos, arredonda e converte para string
+  return Math.round(parsedAmount * 100).toString();
+};
+
 export const formatDateToLocal = (
   dateStr: string,
   locale: string = "pt-BR"

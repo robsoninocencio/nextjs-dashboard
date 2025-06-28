@@ -22,7 +22,7 @@ function SubmitAtivoButton() {
 
   return (
     <Button type="submit" aria-disabled={pending} disabled={pending}>
-      {pending ? "Cadastrando Fatura..." : "Cadastrar Fatura"}
+      {pending ? "Cadastrando Ativo..." : "Cadastrar Ativo"}
     </Button>
   );
 }

@@ -39,12 +39,17 @@ CREATE TABLE "invoices" (
 -- CreateTable
 CREATE TABLE "investimentos" (
     "id" UUID NOT NULL,
-    "saldo" INTEGER NOT NULL,
-    "valorResgatado" INTEGER NOT NULL,
-    "valorAplicado" INTEGER NOT NULL,
-    "valorDoImposto" INTEGER NOT NULL,
     "data" DATE NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ano" VARCHAR(4) NOT NULL,
+    "mes" VARCHAR(2) NOT NULL,
+    "rendimentoDoMes" INTEGER NOT NULL,
+    "valorAplicado" INTEGER NOT NULL,
+    "saldoBruto" INTEGER NOT NULL,
+    "valorResgatado" INTEGER NOT NULL,
+    "impostoIncorrido" INTEGER NOT NULL,
+    "impostoPrevisto" INTEGER NOT NULL,
+    "saldoLiquido" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "clienteId" UUID NOT NULL,
     "bancoId" UUID NOT NULL,
@@ -58,7 +63,7 @@ CREATE TABLE "investimentos" (
 CREATE TABLE "ativos" (
     "id" UUID NOT NULL,
     "nome" VARCHAR(255) NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "tipoId" UUID,
 
@@ -69,7 +74,7 @@ CREATE TABLE "ativos" (
 CREATE TABLE "tipos" (
     "id" UUID NOT NULL,
     "nome" VARCHAR(255) NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "tipos_pkey" PRIMARY KEY ("id")
@@ -79,7 +84,7 @@ CREATE TABLE "tipos" (
 CREATE TABLE "bancos" (
     "id" UUID NOT NULL,
     "nome" VARCHAR(255) NOT NULL,
-    "createdAt" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "bancos_pkey" PRIMARY KEY ("id")
