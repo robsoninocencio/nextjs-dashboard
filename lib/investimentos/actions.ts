@@ -130,16 +130,10 @@ function handleValidationError(
   };
 }
 
-// // Utils - Função auxiliar para formatação da data
-// function getCurrentDate() {
-//   // return new Date().toISOString().split("T")[0]; // Apenas a data (YYYY-MM-DD)
-//   return new Date(); // Gera um objeto Date válido para o Prisma
-// }
-
 // Utils - Função auxiliar para formatação da data
 function getInvestimentoDate(ano: number, mes: number): Date {
   // Último dia do mês especificado
-  return new Date(ano, mes, 0, 23, 59, 59, 999);
+  return new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999));
 }
 
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
@@ -152,13 +146,16 @@ async function saveInvestimentoToDatabase(
   data: InvestimentoData,
   id?: string
 ): Promise<void> {
-  const rendimentoDoMesInCents = data.rendimentoDoMes * 100;
-  const valorAplicadoInCents = data.valorAplicado * 100;
+  const rendimentoDoMesInCents = Math.round(data.rendimentoDoMes * 100);
+  const valorAplicadoInCents = Math.round(data.valorAplicado * 100);
   const saldoBrutoInCents = data.saldoBruto * 100;
-  const valorResgatadoInCents = data.valorResgatado * 100;
+  const valorResgatadoInCents = Math.round(data.valorResgatado * 100);
   const impostoIncorridoInCents = data.impostoIncorrido * 100;
   const impostoPrevistoInCents = data.impostoPrevisto * 100;
   const saldoLiquidoInCents = data.saldoLiquido * 100;
+
+  console.log("data.rendimentoDoMes", data.rendimentoDoMes);
+  console.log("rendimentoDoMesInCents", rendimentoDoMesInCents);
 
   // const date = getCurrentDate();
   const date = getInvestimentoDate(data.ano, parseInt(data.mes, 10)); // Converte para número inteiro);
