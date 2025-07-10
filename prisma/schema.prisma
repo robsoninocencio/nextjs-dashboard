@@ -70,6 +70,7 @@ model investimentos {
   ano              String   @db.VarChar(4)
   mes              String   @db.VarChar(2)
   rendimentoDoMes  Int
+  dividendosDoMes  Int
   valorAplicado    Int
   saldoBruto       Int
   valorResgatado   Int
