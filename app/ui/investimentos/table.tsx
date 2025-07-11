@@ -13,7 +13,6 @@ import {
 
 // Interface para os props do componente
 interface InvestimentosTableProps {
-  query: string;
   currentPage: number;
   queryAno: string;
   queryMes: string;
@@ -387,7 +386,6 @@ function DesktopGroupedInvestimentosTable({
 
 // Componente principal
 export default async function InvestimentosTable({
-  query,
   currentPage,
   queryAno,
   queryMes,
@@ -398,7 +396,6 @@ export default async function InvestimentosTable({
 }: InvestimentosTableProps) {
   // Buscar dados de investimentos
   const investimentos = await fetchFilteredInvestimentos(
-    query,
     currentPage,
     queryAno,
     queryMes,

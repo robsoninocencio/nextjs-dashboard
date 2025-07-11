@@ -45,7 +45,6 @@ export default async function Page(props: {
   const queryTipo = searchParams?.queryTipo || "";
 
   const totalPages = await fetchInvestimentosPages(
-    query,
     queryAno,
     queryMes,
     queryCliente,
@@ -87,7 +86,6 @@ export default async function Page(props: {
         fallback={<InvestimentosTableSkeleton />}
       >
         <Table
-          query={query}
           currentPage={currentPage}
           queryAno={queryAno}
           queryMes={queryMes}

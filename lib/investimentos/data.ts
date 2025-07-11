@@ -3,7 +3,6 @@ import prisma from "@/prisma/lib/prisma";
 const ITEMS_PER_PAGE = 50;
 
 export async function fetchInvestimentosPages(
-  query: string,
   queryAno: string,
   queryMes: string,
   queryCliente: string,
@@ -60,7 +59,6 @@ export async function fetchInvestimentosPages(
 }
 
 export async function fetchFilteredInvestimentos(
-  query: string,
   currentPage: number,
   queryAno: string,
   queryMes: string,
@@ -72,7 +70,6 @@ export async function fetchFilteredInvestimentos(
   console.log("Entrei em fetchFilteredInvestimentos()");
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  console.log("query", query);
   console.log("queryAno", queryAno);
   console.log("queryMes", queryMes);
   console.log("queryCliente", queryCliente);

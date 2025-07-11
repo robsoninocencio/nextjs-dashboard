@@ -131,125 +131,143 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Ano */}
-        <SelectField
-          id="ano"
-          label="Ano"
-          options={years}
-          defaultValue={state.submittedData?.ano?.toString()}
-          errors={state.errors?.ano}
-        />
-
-        {/* Mês */}
-        <SelectField
-          id="mes"
-          label="Mês"
-          options={months}
-          defaultValue={state.submittedData?.mes?.toString()}
-          errors={state.errors?.mes}
-        />
-
-        {/* Cliente Nome */}
-        <div className="mb-4">
-          <label htmlFor="clienteId" className="mb-2 block text-sm font-medium">
-            Nome do Cliente
-          </label>
-          <div className="relative">
-            <select
-              id="clienteId"
-              name="clienteId"
-              defaultValue={state.submittedData?.clienteId ?? ""}
-              aria-describedby="clienteId-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.clienteId?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-            >
-              <option value="" disabled>
-                Selecione o cliente
-              </option>
-              {clientes.map((cliente) => (
-                <option key={cliente.id} value={cliente.id}>
-                  {cliente.name}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+        {/* Container flexível para Ano, Mês e Nome do Cliente */}
+        <div className="flex flex-col md:flex-row md:space-x-4">
+          {/* Container para Ano e Mês */}
+          <div className="flex space-x-4 mb-4 md:mb-0 md:w-1/2">
+            {/* Ano */}
+            <div className="w-1/2">
+              <SelectField
+                id="ano"
+                label="Ano"
+                options={years}
+                defaultValue={state.submittedData?.ano?.toString()}
+                errors={state.errors?.ano}
+              />
+            </div>
+            {/* Mês */}
+            <div className="w-1/2">
+              <SelectField
+                id="mes"
+                label="Mês"
+                options={months}
+                defaultValue={state.submittedData?.mes?.toString()}
+                errors={state.errors?.mes}
+              />
+            </div>
           </div>
-          <div id="clienteId-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.clienteId} />
+
+          {/* Container para Nome do Cliente */}
+          <div className="md:w-1/2">
+            <div className="mb-4">
+              <label
+                htmlFor="clienteId"
+                className="mb-2 block text-sm font-medium"
+              >
+                Nome do Cliente
+              </label>
+              <div className="relative">
+                <select
+                  id="clienteId"
+                  name="clienteId"
+                  defaultValue={state.submittedData?.clienteId ?? ""}
+                  aria-describedby="clienteId-error"
+                  className={`peer block w-full cursor-pointer rounded-md border ${
+                    state.errors?.clienteId?.length
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+                >
+                  <option value="" disabled>
+                    Selecione o cliente
+                  </option>
+                  {clientes.map((cliente) => (
+                    <option key={cliente.id} value={cliente.id}>
+                      {cliente.name}
+                    </option>
+                  ))}
+                </select>
+                <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              </div>
+              <div id="clienteId-error" aria-live="polite" aria-atomic="true">
+                <InputError errors={state.errors?.clienteId} />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Banco Nome */}
-        <div className="mb-4">
-          <label htmlFor="bancoId" className="mb-2 block text-sm font-medium">
-            Nome do Banco
-          </label>
-          <div className="relative">
-            <select
-              id="bancoId"
-              name="bancoId"
-              defaultValue={state.submittedData?.bancoId ?? ""}
-              aria-describedby="bancoId-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.bancoId?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-            >
-              <option value="" disabled>
-                Selecione o banco
-              </option>
-              {bancos.map((banco) => (
-                <option key={banco.id} value={banco.id}>
-                  {banco.nome}
+        {/* Campos restantes do formulário continuam empilhados */}
+        {/* Banco Nome e Ativo Nome agrupados para layout responsivo */}
+        <div className="flex flex-col md:flex-row md:space-x-4">
+          {/* Banco Nome */}
+          <div className="mb-4 md:mb-0 md:w-1/2">
+            <label htmlFor="bancoId" className="mb-2 block text-sm font-medium">
+              Nome do Banco
+            </label>
+            <div className="relative">
+              <select
+                id="bancoId"
+                name="bancoId"
+                defaultValue={state.submittedData?.bancoId ?? ""}
+                aria-describedby="bancoId-error"
+                className={`peer block w-full cursor-pointer rounded-md border ${
+                  state.errors?.bancoId?.length
+                    ? "border-red-500"
+                    : "border-gray-200"
+                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              >
+                <option value="" disabled>
+                  Selecione o banco
                 </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                {bancos.map((banco) => (
+                  <option key={banco.id} value={banco.id}>
+                    {banco.nome}
+                  </option>
+                ))}
+              </select>
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="bancoId-error" aria-live="polite" aria-atomic="true">
+              <InputError errors={state.errors?.bancoId} />
+            </div>
           </div>
-          <div id="bancoId-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.bancoId} />
-          </div>
-        </div>
 
-        {/* Ativo Nome */}
-        <div className="mb-4">
-          <label htmlFor="ativoId" className="mb-2 block text-sm font-medium">
-            Nome do Ativo
-          </label>
-          <div className="relative">
-            <select
-              id="ativoId"
-              name="ativoId"
-              defaultValue={state.submittedData?.ativoId ?? ""}
-              aria-describedby="ativoId-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.ativoId?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-            >
-              <option value="" disabled>
-                Selecione o ativo
-              </option>
-              {ativos.map((ativo) => (
-                <option key={ativo.id} value={ativo.id}>
-                  {ativo.nome}
+          {/* Ativo Nome */}
+          <div className="mb-4 md:mb-0 md:w-1/2">
+            <label htmlFor="ativoId" className="mb-2 block text-sm font-medium">
+              Nome do Ativo
+            </label>
+            <div className="relative">
+              <select
+                id="ativoId"
+                name="ativoId"
+                defaultValue={state.submittedData?.ativoId ?? ""}
+                aria-describedby="ativoId-error"
+                className={`peer block w-full cursor-pointer rounded-md border ${
+                  state.errors?.ativoId?.length
+                    ? "border-red-500"
+                    : "border-gray-200"
+                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              >
+                <option value="" disabled>
+                  Selecione o ativo
                 </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="ativoId-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.ativoId} />
+                {ativos.map((ativo) => (
+                  <option key={ativo.id} value={ativo.id}>
+                    {ativo.nome}
+                  </option>
+                ))}
+              </select>
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="ativoId-error" aria-live="polite" aria-atomic="true">
+              <InputError errors={state.errors?.ativoId} />
+            </div>
           </div>
         </div>
 
         {/* Investimento rendimentoDoMes */}
-        <div className="mb-4">
+        <div className="mt-4 mb-4">
           <label
             htmlFor="rendimentoDoMes"
             className="mb-2 block text-sm font-medium"
