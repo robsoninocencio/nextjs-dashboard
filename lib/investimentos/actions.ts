@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import prisma from "@/prisma/lib/prisma";
+import { fetchInvestimentoAnterior } from "@/lib/investimentos/data";
+import { fetchAtivos } from "@/lib/ativos/data";
 
 // Obtendo o ano atual para validação dinâmica do ano
 const currentYear = new Date().getFullYear();
@@ -34,7 +36,8 @@ const InvestimentoFormSchema = z.object({
     .min(1, "Mês deve estar entre 1 e 12")
     .max(12, "Mês inválido")
     .transform((val) => val.toString().padStart(2, "0")), // Garantindo o mês com 2 dígitos
-  rendimentoDoMes: z.coerce.number(),
+  rendimentoDoMes: z.coerce.number().optional().default(0),
+  dividendosDoMes: z.coerce.number().optional().default(0),
   valorAplicado: z.coerce.number(),
   saldoBruto: z.coerce.number(),
   valorResgatado: z.coerce.number(),
@@ -55,6 +58,7 @@ export type InvestimentoFormState = {
     ano?: string[];
     mes?: string[];
     rendimentoDoMes?: string[];
+    dividendosDoMes?: string[];
     valorAplicado?: string[];
     saldoBruto?: string[];
     valorResgatado?: string[];
@@ -70,6 +74,7 @@ export type InvestimentoFormState = {
     ano?: string;
     mes?: string;
     rendimentoDoMes?: string;
+    dividendosDoMes?: string;
     valorAplicado?: string;
     saldoBruto?: string;
     valorResgatado?: string;
@@ -95,6 +100,7 @@ function parseInvestimentoForm(formData: FormData) {
     ano: getFormValue(formData, "ano"),
     mes: getFormValue(formData, "mes"),
     rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
+    dividendosDoMes: getFormValue(formData, "dividendosDoMes"),
     valorAplicado: getFormValue(formData, "valorAplicado"),
     saldoBruto: getFormValue(formData, "saldoBruto"),
     valorResgatado: getFormValue(formData, "valorResgatado"),
@@ -120,6 +126,7 @@ function handleValidationError(
       ano: getFormValue(formData, "ano"),
       mes: getFormValue(formData, "mes"),
       rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
+      dividendosDoMes: getFormValue(formData, "dividendosDoMes"),
       valorAplicado: getFormValue(formData, "valorAplicado"),
       saldoBruto: getFormValue(formData, "saldoBruto"),
       valorResgatado: getFormValue(formData, "valorResgatado"),
@@ -146,7 +153,9 @@ async function saveInvestimentoToDatabase(
   data: InvestimentoData,
   id?: string
 ): Promise<void> {
-  const rendimentoDoMesInCents = Math.round(data.rendimentoDoMes * 100);
+  console.log("Entrei em saveInvestimentoToDatabase()");
+  let rendimentoDoMesInCents = Math.round(data.rendimentoDoMes * 100);
+  const dividendosDoMesInCents = Math.round(data.dividendosDoMes * 100);
   const valorAplicadoInCents = Math.round(data.valorAplicado * 100);
   const saldoBrutoInCents = data.saldoBruto * 100;
   const valorResgatadoInCents = Math.round(data.valorResgatado * 100);
@@ -154,8 +163,74 @@ async function saveInvestimentoToDatabase(
   const impostoPrevistoInCents = data.impostoPrevisto * 100;
   const saldoLiquidoInCents = data.saldoLiquido * 100;
 
-  console.log("data.rendimentoDoMes", data.rendimentoDoMes);
-  console.log("rendimentoDoMesInCents", rendimentoDoMesInCents);
+  const investimentoAnterior = await fetchInvestimentoAnterior(
+    data.ano.toString(),
+    data.mes.toString(),
+    data.clienteId,
+    data.bancoId,
+    data.ativoId
+  );
+
+  if (investimentoAnterior) {
+    console.log("investimentoAnterior:", investimentoAnterior);
+    const ativos = await fetchAtivos();
+    const selectedAtivo = ativos.find((ativo) => ativo.id === data.ativoId);
+    if (selectedAtivo?.nome === "CDB Automático") {
+      console.log("data.rendimentoDoMes:", data.rendimentoDoMes);
+      console.log("data.saldoBruto:", data.saldoBruto);
+      console.log(
+        "investimentoAnterior.saldoBruto:",
+        investimentoAnterior.saldoBruto
+      );
+      console.log("data.valorResgatado:", data.valorResgatado);
+      console.log("data.impostoIncorrido:", data.impostoIncorrido);
+      console.log("data.valorAplicado:", data.valorAplicado);
+      data.rendimentoDoMes =
+        data.saldoBruto -
+        investimentoAnterior.saldoBruto +
+        data.valorResgatado +
+        data.impostoIncorrido -
+        data.valorAplicado;
+      rendimentoDoMesInCents = Math.round(data.rendimentoDoMes * 100);
+      console.log("data.rendimentoDoMes:", data.rendimentoDoMes);
+      console.log("rendimentoDoMesInCents:", rendimentoDoMesInCents);
+    }
+  } else {
+    console.log("Nenhum investimento anterior encontrado.");
+    const ativos = await fetchAtivos();
+    const selectedAtivo = ativos.find((ativo) => ativo.id === data.ativoId);
+    if (selectedAtivo?.nome === "CDB Automático") {
+      data.rendimentoDoMes =
+        data.saldoBruto +
+        data.valorResgatado +
+        data.impostoIncorrido -
+        data.valorAplicado;
+      rendimentoDoMesInCents = Math.round(data.rendimentoDoMes * 100);
+    }
+  }
+
+  console.log("data.rendimentoDoMes =", data.rendimentoDoMes);
+  console.log("rendimentoDoMesInCents =", rendimentoDoMesInCents);
+
+  let percentualDeCrescimentoSaldoBruto = null;
+
+  // Calcular o percentual se houver registro anterior
+  if (investimentoAnterior && investimentoAnterior.saldoBruto !== 0) {
+    percentualDeCrescimentoSaldoBruto =
+      ((data.saldoBruto - investimentoAnterior.saldoBruto) /
+        investimentoAnterior.saldoBruto) *
+      100;
+  }
+
+  let percentualDeCrescimentoSaldoLiquido = null;
+
+  // Calcular o percentual se houver registro anterior
+  if (investimentoAnterior && investimentoAnterior.saldoLiquido !== 0) {
+    percentualDeCrescimentoSaldoLiquido =
+      ((data.saldoLiquido - investimentoAnterior.saldoLiquido) /
+        investimentoAnterior.saldoLiquido) *
+      100;
+  }
 
   // const date = getCurrentDate();
   const date = getInvestimentoDate(data.ano, parseInt(data.mes, 10)); // Converte para número inteiro);
@@ -169,12 +244,15 @@ async function saveInvestimentoToDatabase(
       where: { id },
       data: {
         rendimentoDoMes: rendimentoDoMesInCents,
+        dividendosDoMes: dividendosDoMesInCents,
         valorAplicado: valorAplicadoInCents,
         saldoBruto: saldoBrutoInCents,
+        percentualDeCrescimentoSaldoBruto,
         valorResgatado: valorResgatadoInCents,
         impostoIncorrido: impostoIncorridoInCents,
         impostoPrevisto: impostoPrevistoInCents,
         saldoLiquido: saldoLiquidoInCents,
+        percentualDeCrescimentoSaldoLiquido,
         clienteId: data.clienteId,
         bancoId: data.bancoId,
         ativoId: data.ativoId,
@@ -188,12 +266,15 @@ async function saveInvestimentoToDatabase(
     await prisma.investimentos.create({
       data: {
         rendimentoDoMes: rendimentoDoMesInCents,
+        dividendosDoMes: dividendosDoMesInCents,
         valorAplicado: valorAplicadoInCents,
         saldoBruto: saldoBrutoInCents,
+        percentualDeCrescimentoSaldoBruto,
         valorResgatado: valorResgatadoInCents,
         impostoIncorrido: impostoIncorridoInCents,
         impostoPrevisto: impostoPrevistoInCents,
         saldoLiquido: saldoLiquidoInCents,
+        percentualDeCrescimentoSaldoLiquido,
         clienteId: data.clienteId,
         bancoId: data.bancoId,
         ativoId: data.ativoId,

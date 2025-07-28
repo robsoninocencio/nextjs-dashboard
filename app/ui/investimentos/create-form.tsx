@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   CurrencyDollarIcon,
@@ -57,12 +57,14 @@ function SelectField({
   options,
   defaultValue,
   errors,
+  onChange,
 }: {
   id: string;
   label: string;
   options: { id: string; name: string }[];
   defaultValue?: string;
   errors?: string[];
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) {
   return (
     <div className="mb-4">
@@ -76,6 +78,7 @@ function SelectField({
           defaultValue={defaultValue ?? ""}
           required
           aria-describedby={`${id}-error`}
+          onChange={onChange}
           className={`peer block w-full rounded-md border ${
             errors?.length ? "border-red-500" : "border-gray-200"
           } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
@@ -106,7 +109,19 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
     submittedData: {},
   };
 
+  // console.log("ativos3:", ativos);
+
   const [state, formAction] = useActionState(createInvestimento, initialState);
+  const [isRendaVariavel, setIsRendaVariavel] = useState(false);
+  const [isCdbAutomatico, setCdbAutomatico] = useState(false);
+
+  // Função para atualizar isRendaVariavel com base no ativo selecionado
+  const handleAtivoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedAtivoId = e.target.value;
+    const selectedAtivo = ativos.find((ativo) => ativo.id === selectedAtivoId);
+    setIsRendaVariavel(selectedAtivo?.tipos?.nome === "Renda Variável");
+    setCdbAutomatico(selectedAtivo?.nome === "CDB Automático");
+  };
 
   // Opções para ano e mês (1 a 12)
   const years = Array.from({ length: 15 }, (_, i) => ({
@@ -171,6 +186,7 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
                   id="clienteId"
                   name="clienteId"
                   defaultValue={state.submittedData?.clienteId ?? ""}
+                  required
                   aria-describedby="clienteId-error"
                   className={`peer block w-full cursor-pointer rounded-md border ${
                     state.errors?.clienteId?.length
@@ -196,7 +212,6 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
           </div>
         </div>
 
-        {/* Campos restantes do formulário continuam empilhados */}
         {/* Banco Nome e Ativo Nome agrupados para layout responsivo */}
         <div className="flex flex-col md:flex-row md:space-x-4">
           {/* Banco Nome */}
@@ -209,6 +224,7 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
                 id="bancoId"
                 name="bancoId"
                 defaultValue={state.submittedData?.bancoId ?? ""}
+                required
                 aria-describedby="bancoId-error"
                 className={`peer block w-full cursor-pointer rounded-md border ${
                   state.errors?.bancoId?.length
@@ -242,7 +258,9 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
                 id="ativoId"
                 name="ativoId"
                 defaultValue={state.submittedData?.ativoId ?? ""}
+                required
                 aria-describedby="ativoId-error"
+                onChange={handleAtivoChange}
                 className={`peer block w-full cursor-pointer rounded-md border ${
                   state.errors?.ativoId?.length
                     ? "border-red-500"
@@ -255,6 +273,7 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
                 {ativos.map((ativo) => (
                   <option key={ativo.id} value={ativo.id}>
                     {ativo.nome}
+                    {ativo.tipos ? ` (${ativo.tipos.nome})` : ""}
                   </option>
                 ))}
               </select>
@@ -267,40 +286,86 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
         </div>
 
         {/* Investimento rendimentoDoMes */}
-        <div className="mt-4 mb-4">
-          <label
-            htmlFor="rendimentoDoMes"
-            className="mb-2 block text-sm font-medium"
-          >
-            Rendimento do Mês
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="rendimentoDoMes"
-                name="rendimentoDoMes"
-                type="number"
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                defaultValue={state.submittedData?.rendimentoDoMes}
-                aria-describedby="rendimentoDoMes-error"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.rendimentoDoMes?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+
+        {!isCdbAutomatico && (
+          <div className="mt-4 mb-4">
+            <label
+              htmlFor="rendimentoDoMes"
+              className="mb-2 block text-sm font-medium"
+            >
+              Rendimento do Mês
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="rendimentoDoMes"
+                  name="rendimentoDoMes"
+                  type="number"
+                  step="0.01"
+                  placeholder="Entre com o valor exemplo (99,99)"
+                  defaultValue={state.submittedData?.rendimentoDoMes}
+                  aria-describedby="rendimentoDoMes-error"
+                  className={`peer block w-full rounded-md border ${
+                    state.errors?.rendimentoDoMes?.length
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+                />
+                <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+
+            <div
+              id="rendimentoDoMes-error"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <InputError errors={state.errors?.rendimentoDoMes} />
             </div>
           </div>
+        )}
 
-          <div id="rendimentoDoMes-error" aria-live="polite" aria-atomic="true">
-            <InputError errors={state.errors?.rendimentoDoMes} />
+        {/* Investimento dividendosDoMes */}
+        {isRendaVariavel && (
+          <div className="mt-4 mb-4">
+            <label
+              htmlFor="dividendosDoMes"
+              className="mb-2 block text-sm font-medium"
+            >
+              Dividendos do Mês
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="dividendosDoMes"
+                  name="dividendosDoMes"
+                  type="number"
+                  step="0.01"
+                  placeholder="Entre com o valor exemplo (99,99)"
+                  defaultValue={state.submittedData?.dividendosDoMes}
+                  aria-describedby="dividendosDoMes-error"
+                  className={`peer block w-full rounded-md border ${
+                    state.errors?.dividendosDoMes?.length
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+                />
+                <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+
+            <div
+              id="dividendosDoMes-error"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <InputError errors={state.errors?.dividendosDoMes} />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Investimento valorAplicado */}
-        <div className="mb-4">
+        <div className="mt-4 mb-4">
           <label
             htmlFor="valorAplicado"
             className="mb-2 block text-sm font-medium"

@@ -5,6 +5,7 @@ import {
   formatCurrency,
   formatDateToYear,
   formatDateToMonth,
+  formatToDecimals,
 } from "@/lib/utils";
 import {
   fetchFilteredInvestimentos,
@@ -41,6 +42,14 @@ function MobileInvestimentoRow({ investimento }: { investimento: any }) {
         <p>Rendimento</p>
         <p>{formatCurrency(investimento.rendimentoDoMes)}</p>
       </div>
+
+      {investimento.dividendosDoMes > 0 && (
+        <div className="flex items-center justify-between pb-1">
+          <p>Dividendos</p>
+          <p>{formatCurrency(investimento.dividendosDoMes)}</p>
+        </div>
+      )}
+
       {investimento.valorAplicado > 0 && (
         <div className="flex items-center justify-between pb-1">
           <p>Aplicação</p>
@@ -96,6 +105,7 @@ function MobileTotals({ totais }: { totais: any }) {
       <p className="text-lg font-medium mb-1">Total Geral do Mês</p>
       {[
         { label: "Rendimento", value: totais.rendimentoDoMes },
+        { label: "Dividendos", value: totais.dividendosDoMes },
         { label: "Valores Aplicados", value: totais.valorAplicado },
         { label: "Saldo Bruto", value: totais.saldoBruto },
         { label: "Valores Resgatados", value: totais.valorResgatado },
@@ -139,6 +149,11 @@ function DesktopInvestimentosTable({
           {[
             { label: "Rendimento", key: "rendimentoDoMes" },
             {
+              label: "Dividendos",
+              key: "dividendosDoMes",
+              condition: totais.dividendosDoMes > 0,
+            },
+            {
               label: "Aplicações",
               key: "valorAplicado",
               condition: totais.valorAplicado > 0,
@@ -148,6 +163,12 @@ function DesktopInvestimentosTable({
               key: "saldoBruto",
               condition: totais.saldoBruto > 0,
             },
+
+            {
+              label: "% Cresc Bruto",
+              key: "percentualDeCrescimentoSaldoBruto",
+            },
+
             {
               label: "Resgates",
               key: "valorResgatado",
@@ -164,6 +185,11 @@ function DesktopInvestimentosTable({
               condition: totais.impostoPrevisto > 0,
             },
             { label: "Saldo Líquido", key: "saldoLiquido" },
+
+            {
+              label: "% Cresc Liquido",
+              key: "percentualDeCrescimentoSaldoLiquido",
+            },
           ].map(
             ({ label, condition = true }) =>
               condition && (
@@ -208,6 +234,13 @@ function DesktopInvestimentosTable({
             <td className="whitespace-nowrap px-2 py-1.5 text-right">
               {formatCurrency(investimento.rendimentoDoMes)}
             </td>
+
+            {totais.dividendosDoMes > 0 && (
+              <td className="whitespace-nowrap px-2 py-1.5 text-right">
+                {formatCurrency(investimento.dividendosDoMes)}
+              </td>
+            )}
+
             {totais.valorAplicado > 0 && (
               <td className="whitespace-nowrap px-2 py-1.5 text-right">
                 {formatCurrency(investimento.valorAplicado)}
@@ -218,6 +251,14 @@ function DesktopInvestimentosTable({
                 {formatCurrency(investimento.saldoBruto)}
               </td>
             )}
+
+            <td className="whitespace-nowrap px-2 py-1.5 text-right">
+              {formatToDecimals(
+                investimento.percentualDeCrescimentoSaldoBruto,
+                6
+              )}
+            </td>
+
             {totais.valorResgatado > 0 && (
               <td className="whitespace-nowrap px-2 py-1.5 text-right">
                 {formatCurrency(investimento.valorResgatado)}
@@ -236,6 +277,14 @@ function DesktopInvestimentosTable({
             <td className="whitespace-nowrap px-2 py-1.5 text-right">
               {formatCurrency(investimento.saldoLiquido)}
             </td>
+
+            <td className="whitespace-nowrap px-2 py-1.5 text-right">
+              {formatToDecimals(
+                investimento.percentualDeCrescimentoSaldoLiquido,
+                6
+              )}
+            </td>
+
             <td className="whitespace-nowrap py-1.5 pl-2 pr-3">
               <div className="flex justify-end gap-1">
                 <ButtonLinkUpdate
@@ -256,6 +305,13 @@ function DesktopInvestimentosTable({
             <td className="whitespace-nowrap px-2 py-1.5 text-right">
               {formatCurrency(totais.rendimentoDoMes)}
             </td>
+
+            {totais.dividendosDoMes > 0 && (
+              <td className="whitespace-nowrap px-2 py-1.5 text-right">
+                {formatCurrency(totais.dividendosDoMes)}
+              </td>
+            )}
+
             {totais.valorAplicado > 0 && (
               <td className="whitespace-nowrap px-2 py-1.5 text-right">
                 {formatCurrency(totais.valorAplicado)}
@@ -266,6 +322,9 @@ function DesktopInvestimentosTable({
                 {formatCurrency(totais.saldoBruto)}
               </td>
             )}
+
+            <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
+
             {totais.valorResgatado > 0 && (
               <td className="whitespace-nowrap px-2 py-1.5 text-right">
                 {formatCurrency(totais.valorResgatado)}
@@ -284,6 +343,7 @@ function DesktopInvestimentosTable({
             <td className="whitespace-nowrap px-2 py-1.5 text-right">
               {formatCurrency(totais.saldoLiquido)}
             </td>
+            <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
             <td></td>
           </tr>
         </tfoot>
@@ -322,6 +382,7 @@ function DesktopGroupedInvestimentosTable({
                       "Ano",
                       "Mês",
                       "Rendimento",
+                      "Dividendos",
                       "Valor Aplicado",
                       "Saldo Bruto",
                       "Valor Resgatado",
@@ -353,6 +414,9 @@ function DesktopGroupedInvestimentosTable({
                       </td>
                       <td className="whitespace-nowrap px-2 py-1.5">
                         {formatCurrency(grupoInvestimento.rendimentoDoMes)}
+                      </td>
+                      <td className="whitespace-nowrap px-2 py-1.5">
+                        {formatCurrency(grupoInvestimento.dividendosDoMes)}
                       </td>
                       <td className="whitespace-nowrap px-2 py-1.5">
                         {formatCurrency(grupoInvestimento.valorAplicado)}
@@ -409,6 +473,7 @@ export default async function InvestimentosTable({
   const totais = investimentos?.reduce(
     (acc, investimento) => ({
       rendimentoDoMes: acc.rendimentoDoMes + investimento.rendimentoDoMes,
+      dividendosDoMes: acc.dividendosDoMes + investimento.dividendosDoMes,
       valorAplicado: acc.valorAplicado + investimento.valorAplicado,
       saldoBruto: acc.saldoBruto + investimento.saldoBruto,
       valorResgatado: acc.valorResgatado + investimento.valorResgatado,
@@ -418,6 +483,7 @@ export default async function InvestimentosTable({
     }),
     {
       rendimentoDoMes: 0,
+      dividendosDoMes: 0,
       valorAplicado: 0,
       saldoBruto: 0,
       valorResgatado: 0,

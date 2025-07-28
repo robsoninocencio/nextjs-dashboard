@@ -18,6 +18,7 @@ export type AtivosTable = {
 export type AtivoField = {
   id: string;
   nome: string;
+  tipos: { nome: string } | null;
 };
 
 export type AtivoForm = {

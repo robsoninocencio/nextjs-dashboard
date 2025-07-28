@@ -56,6 +56,23 @@ export const formatDateToMonth = (
   return formatter.format(date);
 };
 
+// Converte número para um número específico de casas decimais com vírgula e ponto como separador de milhar
+export const formatToDecimals = (value: number, decimals: number): string => {
+  if (typeof value !== "number" || isNaN(value)) {
+    return "0," + "0".repeat(decimals);
+  }
+  if (!Number.isInteger(decimals) || decimals < 0) {
+    return value.toLocaleString("pt-BR", {
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
+    });
+  }
+  return value.toLocaleString("pt-BR", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+};
+
 export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis
   // based on highest record and in 1000s

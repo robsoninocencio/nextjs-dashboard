@@ -36,6 +36,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     id: investimento.id,
     data: investimento.data.toISOString(),
     rendimentoDoMes: investimento.rendimentoDoMes,
+    dividendosDoMes: investimento.dividendosDoMes,
     valorAplicado: investimento.valorAplicado,
     saldoBruto: investimento.saldoBruto,
     valorResgatado: investimento.valorResgatado,

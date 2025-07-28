@@ -1,5 +1,11 @@
 import prisma from "@/prisma/lib/prisma";
 
+interface Ativo {
+  id: string;
+  nome: string;
+  tipos: { nome: string } | null;
+}
+
 const ITEMS_PER_PAGE = 30;
 
 export async function fetchAtivosPages(query: string) {
@@ -48,15 +54,22 @@ export async function fetchFilteredAtivos(query: string, currentPage: number) {
   }
 }
 
-export async function fetchAtivos() {
+export async function fetchAtivos(): Promise<Ativo[]> {
   try {
     const ativos = await prisma.ativos.findMany({
       select: {
         id: true,
         nome: true,
+        tipos: {
+          select: {
+            nome: true,
+          },
+        },
       },
       orderBy: { nome: "asc" },
     });
+
+    // console.log("ativos:", ativos);
 
     return ativos;
   } catch (error) {

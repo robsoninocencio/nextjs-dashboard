@@ -17,6 +17,8 @@ export default async function Page() {
   const bancos = await fetchBancos();
   const ativos = await fetchAtivos();
 
+  // console.log("ativos2:", ativos);
+
   return (
     <main>
       <Breadcrumbs

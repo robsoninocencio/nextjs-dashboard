@@ -43,12 +43,15 @@ CREATE TABLE "investimentos" (
     "ano" VARCHAR(4) NOT NULL,
     "mes" VARCHAR(2) NOT NULL,
     "rendimentoDoMes" INTEGER NOT NULL,
+    "dividendosDoMes" INTEGER NOT NULL,
     "valorAplicado" INTEGER NOT NULL,
     "saldoBruto" INTEGER NOT NULL,
+    "percentualDeCrescimentoSaldoBruto" DOUBLE PRECISION,
     "valorResgatado" INTEGER NOT NULL,
     "impostoIncorrido" INTEGER NOT NULL,
     "impostoPrevisto" INTEGER NOT NULL,
     "saldoLiquido" INTEGER NOT NULL,
+    "percentualDeCrescimentoSaldoLiquido" DOUBLE PRECISION,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "clienteId" UUID NOT NULL,
@@ -110,6 +113,9 @@ CREATE INDEX "users_email_idx" ON "users"("email");
 CREATE UNIQUE INDEX "clientes_email_key" ON "clientes"("email");
 
 -- CreateIndex
+CREATE INDEX "clientes_name_idx" ON "clientes"("name");
+
+-- CreateIndex
 CREATE INDEX "clientes_email_idx" ON "clientes"("email");
 
 -- CreateIndex
@@ -122,19 +128,49 @@ CREATE INDEX "invoices_cliente_id_idx" ON "invoices"("cliente_id");
 CREATE INDEX "invoices_cliente_id_date_idx" ON "invoices"("cliente_id", "date");
 
 -- CreateIndex
+CREATE INDEX "invoices_usersId_idx" ON "invoices"("usersId");
+
+-- CreateIndex
+CREATE INDEX "investimentos_ano_idx" ON "investimentos"("ano");
+
+-- CreateIndex
+CREATE INDEX "investimentos_mes_idx" ON "investimentos"("mes");
+
+-- CreateIndex
 CREATE INDEX "investimentos_clienteId_idx" ON "investimentos"("clienteId");
 
 -- CreateIndex
 CREATE INDEX "investimentos_bancoId_idx" ON "investimentos"("bancoId");
 
 -- CreateIndex
+CREATE INDEX "investimentos_ativoId_idx" ON "investimentos"("ativoId");
+
+-- CreateIndex
+CREATE INDEX "investimentos_ano_mes_clienteId_idx" ON "investimentos"("ano", "mes", "clienteId");
+
+-- CreateIndex
+CREATE INDEX "investimentos_ano_mes_clienteId_bancoId_idx" ON "investimentos"("ano", "mes", "clienteId", "bancoId");
+
+-- CreateIndex
+CREATE INDEX "investimentos_ano_mes_clienteId_bancoId_ativoId_idx" ON "investimentos"("ano", "mes", "clienteId", "bancoId", "ativoId");
+
+-- CreateIndex
 CREATE INDEX "investimentos_userId_idx" ON "investimentos"("userId");
 
 -- CreateIndex
-CREATE INDEX "investimentos_clienteId_bancoId_idx" ON "investimentos"("clienteId", "bancoId");
+CREATE INDEX "ativos_tipoId_idx" ON "ativos"("tipoId");
+
+-- CreateIndex
+CREATE INDEX "ativos_nome_idx" ON "ativos"("nome");
+
+-- CreateIndex
+CREATE INDEX "tipos_nome_idx" ON "tipos"("nome");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "bancos_nome_key" ON "bancos"("nome");
+
+-- CreateIndex
+CREATE INDEX "bancos_nome_idx" ON "bancos"("nome");
 
 -- AddForeignKey
 ALTER TABLE "clientes" ADD CONSTRAINT "clientes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

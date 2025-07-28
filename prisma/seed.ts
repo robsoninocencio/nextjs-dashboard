@@ -321,6 +321,7 @@ async function seedInvestimentos() {
           ano: i.ano,
           mes: i.mes,
           rendimentoDoMes: i.rendimentoDoMes,
+          dividendosDoMes: i.dividendosDoMes,
           valorAplicado: i.valorAplicado,
           saldoBruto: i.saldoBruto,
           valorResgatado: i.valorResgatado,

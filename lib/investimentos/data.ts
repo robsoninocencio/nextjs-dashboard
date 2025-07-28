@@ -170,6 +170,7 @@ export async function fetchInvestimentoById(id: string) {
         ano: true,
         mes: true,
         rendimentoDoMes: true,
+        dividendosDoMes: true,
         valorAplicado: true,
         saldoBruto: true,
         valorResgatado: true,
@@ -189,6 +190,7 @@ export async function fetchInvestimentoById(id: string) {
     return {
       ...investimento,
       rendimentoDoMes: investimento.rendimentoDoMes / 100,
+      dividendosDoMes: investimento.dividendosDoMes / 100,
       valorAplicado: investimento.valorAplicado / 100,
       saldoBruto: investimento.saldoBruto / 100,
       valorResgatado: investimento.valorResgatado / 100,
@@ -209,6 +211,7 @@ export async function fetchInvestimentoGroupByClienteAnoMes() {
       by: ["clienteId", "ano", "mes"], // Agrupar por clienteId, ano e mês
       _sum: {
         rendimentoDoMes: true,
+        dividendosDoMes: true,
         valorAplicado: true,
         saldoBruto: true,
         valorResgatado: true,
@@ -239,6 +242,7 @@ export async function fetchInvestimentoGroupByClienteAnoMes() {
           ano: investimento.ano,
           mes: investimento.mes,
           rendimentoDoMes: investimento._sum.rendimentoDoMes ?? 0,
+          dividendosDoMes: investimento._sum.dividendosDoMes ?? 0,
           valorAplicado: investimento._sum.valorAplicado ?? 0,
           saldoBruto: investimento._sum.saldoBruto ?? 0,
           valorResgatado: investimento._sum.valorResgatado ?? 0,
@@ -272,5 +276,65 @@ export async function fetchInvestimentoGroupByClienteAnoMes() {
   } catch (error) {
     console.error("Erro ao buscar os investimentos agrupados:", error);
     throw new Error("Erro ao buscar os investimentos agrupados.");
+  }
+}
+
+export async function fetchInvestimentoAnterior(
+  ano: string,
+  mes: string,
+  clienteId: string,
+  bancoId: string,
+  ativoId: string
+) {
+  try {
+    // Validar parâmetros
+    if (!ano || !mes || !clienteId || !bancoId || !ativoId) {
+      throw new Error(
+        "Os parâmetros ano, mes, clienteId, bancoId e ativoId são obrigatórios."
+      );
+    }
+
+    // Converter ano e mês para números para calcular o mês anterior
+    const anoNum = parseInt(ano);
+    const mesNum = parseInt(mes);
+    let anoAnterior = anoNum;
+    let mesAnterior = mesNum - 1;
+
+    if (mesAnterior === 0) {
+      mesAnterior = 12;
+      anoAnterior -= 1;
+    }
+
+    // Buscar o registro do mês anterior para o mesmo cliente, banco e ativo
+    const registroAnterior = await prisma.investimentos.findFirst({
+      where: {
+        ano: anoAnterior.toString(),
+        mes: mesAnterior.toString().padStart(2, "0"),
+        clienteId,
+        bancoId,
+        ativoId,
+      },
+      select: {
+        saldoBruto: true,
+        saldoLiquido: true,
+      },
+    });
+
+    if (!registroAnterior) {
+      console.log("Nenhum investimento anterior encontrado.");
+      return null;
+    }
+
+    // return registroAnterior;
+    return {
+      ...registroAnterior,
+
+      saldoBruto: registroAnterior.saldoBruto / 100,
+
+      saldoLiquido: registroAnterior.saldoLiquido / 100,
+    };
+  } catch (error) {
+    console.error("Erro ao buscar o investimento anterior:", error);
+    throw new Error("Erro ao buscar o investimento anterior.");
   }
 }

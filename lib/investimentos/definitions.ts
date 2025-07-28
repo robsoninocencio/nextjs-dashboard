@@ -2,6 +2,7 @@ export type Investimento = {
   id: string;
   data: string;
   rendimentoDoMes: number;
+  dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
   valorResgatado: number;
@@ -17,6 +18,7 @@ export type LatestInvestimento = {
   id: string;
   data: string;
   rendimentoDoMes: string;
+  dividendosDoMes: string;
   valorAplicado: string;
   saldoBruto: string;
   valorResgatado: string;
@@ -29,6 +31,7 @@ export type LatestInvestimento = {
 export type LatestInvestimentoRaw = Omit<
   LatestInvestimento,
   | "rendimentoDoMes"
+  | "dividendosDoMes"
   | "valorAplicado"
   | "saldoBruto"
   | "valorResgatado"
@@ -37,6 +40,7 @@ export type LatestInvestimentoRaw = Omit<
   | "saldoLiquido"
 > & {
   rendimentoDoMes: number;
+  dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
   valorResgatado: number;
@@ -52,6 +56,7 @@ export type InvestimentosTable = {
   bancoId: string;
   data: string;
   rendimentoDoMes: number;
+  dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
   valorResgatado: number;
@@ -67,6 +72,7 @@ export type InvestimentoForm = {
   ativoId: string;
   bancoId: string;
   rendimentoDoMes: number;
+  dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
   valorResgatado: number;
