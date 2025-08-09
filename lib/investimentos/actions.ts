@@ -157,11 +157,11 @@ async function saveInvestimentoToDatabase(
   let rendimentoDoMesInCents = Math.round(data.rendimentoDoMes * 100);
   const dividendosDoMesInCents = Math.round(data.dividendosDoMes * 100);
   const valorAplicadoInCents = Math.round(data.valorAplicado * 100);
-  const saldoBrutoInCents = data.saldoBruto * 100;
+  const saldoBrutoInCents = Math.round(data.saldoBruto * 100);
   const valorResgatadoInCents = Math.round(data.valorResgatado * 100);
   const impostoIncorridoInCents = data.impostoIncorrido * 100;
   const impostoPrevistoInCents = data.impostoPrevisto * 100;
-  const saldoLiquidoInCents = data.saldoLiquido * 100;
+  const saldoLiquidoInCents = Math.round(data.saldoLiquido * 100);
 
   const investimentoAnterior = await fetchInvestimentoAnterior(
     data.ano.toString(),

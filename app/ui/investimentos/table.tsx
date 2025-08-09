@@ -141,18 +141,31 @@ function DesktopInvestimentosTable({
             <th
               key={header}
               scope="col"
-              className="px-2 py-1.5 font-medium text-left"
+              // className="px-2 py-1.5 font-medium text-left"
+              className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-100 border-b border-gray-300 text-left"
             >
               {header}
             </th>
           ))}
           {[
             { label: "Rendimento", key: "rendimentoDoMes" },
+            { label: "Rendimento (%)", key: "percentualRendimentoDoMes" },
             {
-              label: "Dividendos",
+              label: "Dividendo",
               key: "dividendosDoMes",
               condition: totais.dividendosDoMes > 0,
             },
+            {
+              label: "Dividendo (%)",
+              key: "percentualDividendosDoMes",
+              condition: totais.dividendosDoMes > 0,
+            },
+            {
+              label: "Rend + Div (%)",
+              key: "percentualRendMaisDivDoMes",
+              condition: totais.dividendosDoMes > 0,
+            },
+
             {
               label: "Aplicações",
               key: "valorAplicado",
@@ -190,13 +203,15 @@ function DesktopInvestimentosTable({
               label: "% Cresc Liquido",
               key: "percentualDeCrescimentoSaldoLiquido",
             },
+            { label: "", key: "" },
           ].map(
             ({ label, condition = true }) =>
               condition && (
                 <th
                   key={label}
                   scope="col"
-                  className="px-2 py-1.5 font-medium text-right"
+                  // className="px-2 py-1.5 font-medium text-right"
+                  className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-100 border-b border-gray-300 text-right"
                 >
                   {label}
                 </th>
@@ -235,9 +250,58 @@ function DesktopInvestimentosTable({
               {formatCurrency(investimento.rendimentoDoMes)}
             </td>
 
+            <td className="whitespace-nowrap px-2 py-1.5 text-right">
+              {formatToDecimals(
+                (investimento.rendimentoDoMes /
+                  100 /
+                  (investimento.saldoBruto / 100 -
+                    investimento.rendimentoDoMes / 100 -
+                    investimento.valorAplicado / 100 +
+                    investimento.valorResgatado / 100 +
+                    investimento.impostoIncorrido / 100 +
+                    investimento.valorAplicado / 100)) *
+                  100,
+                6
+              )}
+            </td>
+
             {totais.dividendosDoMes > 0 && (
               <td className="whitespace-nowrap px-2 py-1.5 text-right">
                 {formatCurrency(investimento.dividendosDoMes)}
+              </td>
+            )}
+
+            {totais.dividendosDoMes > 0 && (
+              <td className="whitespace-nowrap px-2 py-1.5 text-right">
+                {formatToDecimals(
+                  (investimento.dividendosDoMes /
+                    100 /
+                    (investimento.saldoBruto / 100 -
+                      investimento.rendimentoDoMes / 100 -
+                      investimento.valorAplicado / 100 +
+                      investimento.valorResgatado / 100 +
+                      investimento.impostoIncorrido / 100 +
+                      investimento.valorAplicado / 100)) *
+                    100,
+                  6
+                )}
+              </td>
+            )}
+
+            {totais.dividendosDoMes > 0 && (
+              <td className="whitespace-nowrap px-2 py-1.5 text-right">
+                {formatToDecimals(
+                  ((investimento.rendimentoDoMes / 100 +
+                    investimento.dividendosDoMes / 100) /
+                    (investimento.saldoBruto / 100 -
+                      investimento.rendimentoDoMes / 100 -
+                      investimento.valorAplicado / 100 +
+                      investimento.valorResgatado / 100 +
+                      investimento.impostoIncorrido / 100 +
+                      investimento.valorAplicado / 100)) *
+                    100,
+                  6
+                )}
               </td>
             )}
 
@@ -306,10 +370,31 @@ function DesktopInvestimentosTable({
               {formatCurrency(totais.rendimentoDoMes)}
             </td>
 
+            <td className="whitespace-nowrap px-2 py-1.5 text-right">
+              {formatToDecimals(
+                (totais.rendimentoDoMes /
+                  (totais.saldoBruto -
+                    totais.rendimentoDoMes -
+                    totais.valorAplicado +
+                    totais.valorResgatado +
+                    totais.impostoIncorrido)) *
+                  100,
+                6
+              )}
+            </td>
+
             {totais.dividendosDoMes > 0 && (
               <td className="whitespace-nowrap px-2 py-1.5 text-right">
                 {formatCurrency(totais.dividendosDoMes)}
               </td>
+            )}
+
+            {totais.dividendosDoMes > 0 && (
+              <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
+            )}
+
+            {totais.dividendosDoMes > 0 && (
+              <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
             )}
 
             {totais.valorAplicado > 0 && (
@@ -468,6 +553,7 @@ export default async function InvestimentosTable({
     queryAtivo,
     queryTipo
   );
+  // console.log("investimentos**************************:", investimentos);
 
   // Calcular totais
   const totais = investimentos?.reduce(
@@ -475,7 +561,8 @@ export default async function InvestimentosTable({
       rendimentoDoMes: acc.rendimentoDoMes + investimento.rendimentoDoMes,
       dividendosDoMes: acc.dividendosDoMes + investimento.dividendosDoMes,
       valorAplicado: acc.valorAplicado + investimento.valorAplicado,
-      saldoBruto: acc.saldoBruto + investimento.saldoBruto,
+      saldoBruto:
+        acc.saldoBruto + Math.round(investimento.saldoBruto * 100) / 100,
       valorResgatado: acc.valorResgatado + investimento.valorResgatado,
       impostoIncorrido: acc.impostoIncorrido + investimento.impostoIncorrido,
       impostoPrevisto: acc.impostoPrevisto + investimento.impostoPrevisto,
@@ -492,6 +579,7 @@ export default async function InvestimentosTable({
       saldoLiquido: 0,
     }
   );
+  // console.log("totais**************************:", totais);
 
   // Buscar dados agrupados por cliente, ano e mês
   const grupoInvestimentos = await fetchInvestimentoGroupByClienteAnoMes();
