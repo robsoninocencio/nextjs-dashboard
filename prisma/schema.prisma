@@ -105,24 +105,6 @@ model investimentos {
   @@index([userId])
 }
 
-model ativos {
-  id        String   @id @default(uuid()) @db.Uuid
-  nome      String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  tipos  tipos?  @relation(fields: [tipoId], references: [id])
-  tipoId String? @db.Uuid
-
-  // taxas  taxas?  @relation(fields: [taxaId], references: [id])
-  // taxaId String? @db.Uuid
-
-  investimentos investimentos[]
-
-  @@index([tipoId])
-  @@index([nome])
-}
-
 model tipos {
   id        String   @id @default(uuid()) @db.Uuid
   nome      String   @db.VarChar(255)
@@ -132,6 +114,63 @@ model tipos {
   ativos ativos[]
 
   @@index([nome])
+}
+
+model ativos {
+  id        String   @id @default(uuid()) @db.Uuid
+  nome      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tipos  tipos?  @relation(fields: [tipoId], references: [id])
+  tipoId String? @db.Uuid
+
+  // Relacionamento muitos-para-muitos com categorias
+  ativo_categorias ativo_categoria[]
+
+  investimentos investimentos[]
+
+  @@index([tipoId])
+  @@index([nome])
+}
+
+// Tabela de junção para relacionamento muitos-para-muitos
+model ativo_categoria {
+  ativoId     String   @db.Uuid
+  categoriaId String   @db.Uuid
+  createdAt   DateTime @default(now())
+
+  ativo     ativos     @relation(fields: [ativoId], references: [id], onDelete: Cascade)
+  categoria categorias @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+
+  @@id([ativoId, categoriaId])
+  @@index([ativoId])
+  @@index([categoriaId])
+}
+
+model categorias {
+  id   String @id @default(uuid()) @db.Uuid
+  nome String @db.VarChar(255)
+
+  // Campo para armazenar o ID da categoria pai
+  parentId String? @db.Uuid // Pode ser nulo para categorias de nível superior
+
+  // Relacionamento com a categoria pai
+  // O nome da relação "SubCategories" é uma convenção para diferenciar este lado do relacionamento
+  parent categorias? @relation("SubCategories", fields: [parentId], references: [id], onDelete: SetNull)
+
+  // Relacionamento com as subcategorias (filhas)
+  subCategories categorias[] @relation("SubCategories")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoria_ativos ativo_categoria[]
+  // Se você está usando ativo_categoria para muitos-para-muitos, esta linha deve ser removida:
+  // ativos          ativos[]
+
+  @@index([nome])
+  @@index([parentId]) // É crucial indexar o parentId para buscas eficientes
 }
 
 model bancos {
@@ -158,15 +197,4 @@ model revenue {
 //   IPCA
 //   SELIC
 //   PREFIXADO
-// }
-
-// model taxas {
-//   id         String    @id @default(uuid()) @db.Uuid
-//   indexador  Indexador
-//   percentual Decimal
-//   taxaAnual  Decimal
-//   createdAt  DateTime  @default(now()) @db.Date
-//   updatedAt  DateTime  @updatedAt
-
-//   ativos ativos[]
 // }

@@ -1,0 +1,57 @@
+import { Suspense } from "react";
+
+import SearchCategoria from "@/app/ui/shared/searchCategoria";
+
+import { lusitana } from "@/app/ui/shared/fonts";
+import Pagination from "@/app/ui/shared/pagination";
+import { ButtonLinkCreate } from "@/app/ui/shared/buttonsLinkCreate";
+
+import Table from "@/app/ui/categorias/table";
+import { CategoriasTableSkeleton } from "@/app/ui/categorias/skeletons";
+
+import { fetchCategoriasPages } from "@/lib/categorias/data";
+
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Categorias",
+};
+
+export default async function Page(props: {
+  searchParams?: Promise<{
+    query?: string;
+    page?: string;
+    queryCategoria?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query || "";
+  const currentPage = Number(searchParams?.page) || 1;
+  const queryCategoria = searchParams?.queryCategoria || "";
+
+  const totalPages = await fetchCategoriasPages(queryCategoria);
+
+  return (
+    <div className="w-full">
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`${lusitana.className} text-2xl`}>Categorias</h1>
+        <ButtonLinkCreate href="/dashboard/categorias/create">
+          Cadastrar Categoria
+        </ButtonLinkCreate>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <SearchCategoria placeholder="Buscar Categoria..." />
+      </div>
+      <Suspense
+        key={query + currentPage + queryCategoria}
+        fallback={<CategoriasTableSkeleton />}
+      >
+        <Table currentPage={currentPage} queryCategoria={queryCategoria} />
+      </Suspense>
+      <div className="mt-5 flex w-full justify-center">
+        <Pagination totalPages={totalPages} />
+      </div>
+    </div>
+  );
+}

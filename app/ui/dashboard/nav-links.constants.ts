@@ -1,8 +1,12 @@
 import {
+  ArchiveBoxIcon,
+  ArrowTrendingUpIcon,
   HomeIcon,
   DocumentDuplicateIcon,
   UserGroupIcon,
   BanknotesIcon,
+  TagIcon,
+  FolderIcon,
 } from "@heroicons/react/24/outline";
 import { ComponentType, SVGProps } from "react";
 
@@ -15,6 +19,7 @@ export enum Paths {
   Tipos = "/dashboard/tipos",
   Ativos = "/dashboard/ativos",
   Investimentos = "/dashboard/investimentos",
+  Categorias = "/dashboard/categorias",
 }
 
 // 🔤 Labels para suporte a internacionalização futura
@@ -26,6 +31,7 @@ export const labels = {
   [Paths.Tipos]: "Tipos",
   [Paths.Ativos]: "Ativos",
   [Paths.Investimentos]: "Investimentos",
+  [Paths.Categorias]: "Categorias",
 } as const;
 
 // 🔧 Tipagem dos ícones
@@ -63,17 +69,22 @@ export const navLinksMenu: readonly NavLink[] = [
   {
     label: labels[Paths.Tipos],
     path: Paths.Tipos,
-    icon: BanknotesIcon,
+    icon: TagIcon,
+  },
+  {
+    label: labels[Paths.Categorias],
+    path: Paths.Categorias,
+    icon: FolderIcon,
   },
   {
     label: labels[Paths.Ativos],
     path: Paths.Ativos,
-    icon: BanknotesIcon,
+    icon: ArchiveBoxIcon,
   },
   {
     label: labels[Paths.Investimentos],
     path: Paths.Investimentos,
-    icon: BanknotesIcon,
+    icon: ArrowTrendingUpIcon,
   },
 ] as const;
 

@@ -47,6 +47,8 @@ export async function fetchFilteredAtivos(query: string, currentPage: number) {
       take: ITEMS_PER_PAGE,
     });
 
+    console.log("ativos:", ativos);
+
     return ativos;
   } catch (error) {
     console.error("Erro ao buscar ativos filtradas:", error);

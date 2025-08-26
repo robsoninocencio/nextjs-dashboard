@@ -1,12 +1,7 @@
-import Image from "next/image";
-
 import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
-
-import { formatDateToLocal, formatCurrency } from "@/lib/utils";
+import { ButtonLinkDelete } from "@/app/ui/ativos/buttonLinkDelete";
 
 import { fetchFilteredAtivos } from "@/lib/ativos/data";
-
-import { ButtonLinkDelete } from "@/app/ui/ativos/buttonLinkDelete";
 
 export default async function AtivosTable({
   query,
