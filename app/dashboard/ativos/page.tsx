@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import Search from "@/app/ui/shared/search";
+
 import { lusitana } from "@/app/ui/shared/fonts";
 import Pagination from "@/app/ui/shared/pagination";
 import { ButtonLinkCreate } from "@/app/ui/shared/buttonsLinkCreate";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page(props: {
-  searchParams?: Promise<{
+  searchParams: Promise<{
     query?: string;
     page?: string;
   }>;

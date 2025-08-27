@@ -6,6 +6,7 @@ import Form from "@/app/ui/ativos/edit-form";
 
 import { fetchTipos } from "@/lib/tipos/data";
 import { fetchAtivoById } from "@/lib/ativos/data";
+import { fetchCategorias } from "@/lib/categorias/data";
 
 import type { Ativo } from "@/lib/ativos/definitions";
 
@@ -21,7 +22,11 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   if (!id) {
     notFound();
   }
-  const [ativo, tipos] = await Promise.all([fetchAtivoById(id), fetchTipos()]);
+  const [ativo, tipos, categorias] = await Promise.all([
+    fetchAtivoById(id),
+    fetchTipos(),
+    fetchCategorias(),
+  ]);
 
   if (!ativo) {
     notFound();
@@ -46,7 +51,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           },
         ]}
       />
-      <Form ativo={typedAtivo} tipos={tipos} />
+      <Form ativo={typedAtivo} tipos={tipos} categorias={categorias} />
     </main>
   );
 }

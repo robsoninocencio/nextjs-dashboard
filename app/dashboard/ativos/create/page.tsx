@@ -5,13 +5,17 @@ import Form from "@/app/ui/ativos/create-form";
 import { fetchTipos } from "@/lib/tipos/data";
 
 import { Metadata } from "next";
+import { fetchCategorias } from "@/lib/categorias/data";
 
 export const metadata: Metadata = {
   title: "Ativos",
 };
 
 export default async function Page() {
-  const tipos = await fetchTipos();
+  const [tipos, categorias] = await Promise.all([
+    fetchTipos(),
+    fetchCategorias(),
+  ]);
 
   return (
     <main>
@@ -25,7 +29,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form tipos={tipos} />
+      <Form tipos={tipos} categorias={categorias} />
     </main>
   );
 }

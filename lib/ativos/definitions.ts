@@ -1,7 +1,10 @@
 export type Ativo = {
   id: string;
-  tipoId: string | null;
   nome: string;
+  tipoId?: string | null;
+  ativo_categorias?: {
+    categoriaId: string;
+  }[];
 };
 
 export type LatestAtivo = {

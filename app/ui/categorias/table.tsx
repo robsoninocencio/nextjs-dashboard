@@ -1,14 +1,8 @@
 import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
 import { ButtonLinkDelete } from "@/app/ui/categorias/buttonLinkDelete";
 
-import {
-  formatCurrency,
-  formatDateToYear,
-  formatDateToMonth,
-  formatToDecimals,
-} from "@/lib/utils";
-
 import { fetchFilteredCategorias } from "@/lib/categorias/data";
+import type { CategoriaComPai } from "@/lib/categorias/definitions";
 
 // Interface para os props do componente
 interface CategoriasTableProps {
@@ -17,17 +11,19 @@ interface CategoriasTableProps {
 }
 
 // Componente para exibir uma linha de categoria no layout mobile
-function MobileCategoriaRow({ categoria }: { categoria: any }) {
+function MobileCategoriaRow({ categoria }: { categoria: CategoriaComPai }) {
   return (
     <div key={categoria.id} className="mb-1 w-full rounded-md bg-white p-2">
       <div className="flex items-center justify-between pb-1">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-1">
           <p className="text-lg font-medium">{categoria.nome}</p>
-          <p className="text-lg font-medium">{categoria.parentId}</p>
+          <p className="text-sm text-gray-500">
+            Categoria Pai: {categoria.nomePai || categoria.parentId || "-"}
+          </p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-end">
         <div className="flex justify-end gap-1">
           <ButtonLinkUpdate
             href={`/dashboard/categorias/${categoria.id}/edit`}
@@ -40,7 +36,11 @@ function MobileCategoriaRow({ categoria }: { categoria: any }) {
 }
 
 // Componente para exibir a tabela de categorias no layout desktop
-function DesktopCategoriasTable({ categorias }: { categorias: any[] }) {
+function DesktopCategoriasTable({
+  categorias,
+}: {
+  categorias: CategoriaComPai[];
+}) {
   return (
     <table className="hidden min-w-full text-gray-900 md:table">
       <thead className="rounded-lg text-left text-sm font-normal">
@@ -72,9 +72,10 @@ function DesktopCategoriasTable({ categorias }: { categorias: any[] }) {
                 <p>{categoria.nome}</p>
               </div>
             </td>
+
             <td className="whitespace-nowrap py-3 pl-6 pr-3">
               <div className="flex items-center gap-3">
-                <p>{categoria.parentId}</p>
+                <p>{categoria.nomePai || categoria.parentId || "-"}</p>
               </div>
             </td>
 
@@ -99,21 +100,31 @@ export default async function CategoriasTable({
   queryCategoria,
 }: CategoriasTableProps) {
   // Buscar dados de categorias
-  const categorias = await fetchFilteredCategorias(currentPage, queryCategoria);
-  console.log("categorias**************************:", categorias);
+  const categoriasComNomePai = await fetchFilteredCategorias(
+    currentPage,
+    queryCategoria
+  );
+
+  if (!categoriasComNomePai || categoriasComNomePai.length === 0) {
+    return (
+      <p className="mt-6 text-center text-gray-500">
+        Nenhuma categoria encontrada.
+      </p>
+    );
+  }
 
   return (
     <div className="mt-4 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2">
+        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Layout para dispositivos móveis */}
           <div className="md:hidden">
-            {categorias?.map((categoria) => (
+            {categoriasComNomePai?.map((categoria) => (
               <MobileCategoriaRow key={categoria.id} categoria={categoria} />
             ))}
           </div>
           {/* Layout para desktop */}
-          <DesktopCategoriasTable categorias={categorias} />
+          <DesktopCategoriasTable categorias={categoriasComNomePai} />
         </div>
       </div>
     </div>

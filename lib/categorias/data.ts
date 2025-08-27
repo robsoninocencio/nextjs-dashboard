@@ -1,14 +1,6 @@
 import prisma from "@/prisma/lib/prisma";
 import { Prisma } from "../../generated/prisma";
-import type { CategoriaField } from "./definitions";
-type CategoriaModel = Prisma.categoriasGetPayload<{}>;
-
-// import { categorias as CategoriaModel } from "@prisma/client";
-
-interface Categoria {
-  id: string;
-  nome: string;
-}
+import type { CategoriaComPai, CategoriaField } from "./definitions"; // Supondo que CategoriaComPai foi movido para definitions
 
 const ITEMS_PER_PAGE = 50;
 
@@ -34,29 +26,45 @@ export async function fetchCategoriasPages(queryCategoria: string) {
 export async function fetchFilteredCategorias(
   currentPage: number,
   queryCategoria: string
-) {
+): Promise<CategoriaComPai[]> {
   console.log("Entrei em fetchFilteredCategorias()");
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  console.log("queryCategoria", queryCategoria);
+  console.log("queryCategoria = ", queryCategoria);
 
   try {
-    // Para ordenação case-insensitive, a abordagem mais confiável com Prisma é usar uma query raw,
-    // pois a API `findMany` não suporta `mode: 'insensitive'` no `orderBy`.
-    // A query abaixo assume um banco de dados PostgreSQL, usando LOWER() para ordenar e ILIKE para filtrar.
-    let categorias: CategoriaModel[];
+    let categorias: CategoriaComPai[];
+
     if (queryCategoria) {
-      categorias = await prisma.$queryRaw`
-        SELECT * FROM "categorias"
-        WHERE "nome" ILIKE ${`%${queryCategoria}%`}
-        ORDER BY LOWER("nome") ASC
+      // Query com filtro
+      categorias = await prisma.$queryRaw<CategoriaComPai[]>`
+        SELECT
+          c.id,
+          c.nome,
+          c."parentId",
+          c."createdAt",
+          c."updatedAt",
+          p.nome as "nomePai"
+        FROM "categorias" c
+        LEFT JOIN "categorias" p ON c."parentId" = p.id
+        WHERE c.nome ILIKE ${`%${queryCategoria}%`}
+        ORDER BY LOWER(c.nome) ASC
         LIMIT ${ITEMS_PER_PAGE}
         OFFSET ${offset}
       `;
     } else {
-      categorias = await prisma.$queryRaw`
-        SELECT * FROM "categorias"
-        ORDER BY LOWER("nome") ASC
+      // Query sem filtro
+      categorias = await prisma.$queryRaw<CategoriaComPai[]>`
+        SELECT
+          c.id,
+          c.nome,
+          c."parentId",
+          c."createdAt",
+          c."updatedAt",
+          p.nome as "nomePai"
+        FROM "categorias" c
+        LEFT JOIN "categorias" p ON c."parentId" = p.id
+        ORDER BY LOWER(c.nome) ASC
         LIMIT ${ITEMS_PER_PAGE}
         OFFSET ${offset}
       `;

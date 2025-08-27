@@ -1,7 +1,11 @@
 export type Categoria = {
   id: string;
-  parentId: string | null;
   nome: string;
+  parentId: string | null;
+};
+
+export type CategoriaComPai = Categoria & {
+  nomePai: string | null;
 };
 
 export type LatestCategoria = {
@@ -11,8 +15,8 @@ export type LatestCategoria = {
 
 export type CategoriasTable = {
   id: string;
-  parentId: string;
   nome: string;
+  parentId: string;
 };
 
 export type CategoriaField = {

@@ -12,11 +12,14 @@ const AtivoFormSchema = z.object({
   tipoId: z
     .string({ invalid_type_error: "Please select a tipo." })
     .optional()
-    .transform((val) => (val === "" ? null : val)), // Transforma "" em null
+    .transform((val) => (val === "" ? null : val)) // Transforma "" em null
+    .refine((val) => val !== null, { message: "Please select a tipo." }), // Adiciona uma validação
   nome: z
     .string({ invalid_type_error: "Por favor, insira um nome." })
     .min(3, "O nome deve ter pelo menos 3 caracteres.")
     .max(255, "O nome deve ter no máximo 255 caracteres."),
+
+  categoriaIds: z.array(z.string()).optional(),
 });
 
 // tipar explicitamente validatedFields.data
@@ -27,11 +30,13 @@ export type AtivoFormState = {
   errors?: {
     tipoId?: string[];
     nome?: string[];
+    categoriaIds?: string[];
   };
   message?: string | null;
   submittedData?: {
     tipoId?: string;
     nome?: string;
+    categoriaIds?: string[];
   };
 };
 
@@ -41,11 +46,16 @@ function getFormValue(formData: FormData, key: string): string | undefined {
   return value?.toString();
 }
 
+function getFormArray(formData: FormData, key: string): string[] {
+  return formData.getAll(key).map((v) => v.toString());
+}
+
 // Utils - Função para validar os campos do formulário usando Zod
 function parseAtivoForm(formData: FormData) {
   return AtivoFormSchema.safeParse({
     tipoId: getFormValue(formData, "tipoId"),
     nome: getFormValue(formData, "nome"),
+    categoriaIds: getFormArray(formData, "categoriaIds"),
   });
 }
 
@@ -54,12 +64,15 @@ function handleValidationError(
   formData: FormData,
   validatedFields: { success: false; error: z.ZodError }
 ): AtivoFormState {
+  const fieldErrors = validatedFields.error.flatten().fieldErrors;
+
   return {
-    errors: validatedFields.error?.flatten().fieldErrors,
-    message: "Missing Fields. Failed to Create or Update Ativo.",
+    errors: fieldErrors,
+    message: "Preencha todos os campos obrigatórios.",
     submittedData: {
       tipoId: getFormValue(formData, "tipoId"),
       nome: getFormValue(formData, "nome"),
+      categoriaIds: getFormArray(formData, "categoriaIds"),
     },
   };
 }
@@ -80,21 +93,37 @@ async function saveAtivoToDatabase(
   data: AtivoData,
   id?: string
 ): Promise<void> {
+  const { nome, tipoId, categoriaIds } = data;
+  console.log("Entrei em saveAtivoToDatabase()");
+
   if (id) {
-    // Atualiza a fatura
-    await prisma.ativos.update({
-      where: { id },
-      data: {
-        tipoId: data.tipoId,
-        nome: data.nome,
-      },
-    });
+    // Atualiza o ativo e recria as relações de categorias
+    await prisma.$transaction([
+      prisma.ativo_categoria.deleteMany({ where: { ativoId: id } }),
+      prisma.ativos.update({
+        where: { id },
+        data: {
+          nome,
+          tipoId,
+          ativo_categorias: {
+            create: categoriaIds?.map((categoriaId) => ({
+              categoria: { connect: { id: categoriaId } },
+            })),
+          },
+        },
+      }),
+    ]);
   } else {
-    // Cria uma nova fatura
+    // Criação com categorias relacionadas
     await prisma.ativos.create({
       data: {
-        tipoId: data.tipoId,
-        nome: data.nome,
+        nome,
+        tipoId,
+        ativo_categorias: {
+          create: categoriaIds?.map((categoriaId) => ({
+            categoria: { connect: { id: categoriaId } },
+          })),
+        },
       },
     });
   }

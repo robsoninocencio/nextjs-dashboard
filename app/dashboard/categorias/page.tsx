@@ -19,14 +19,13 @@ export const metadata: Metadata = {
 
 export default async function Page(props: {
   searchParams?: Promise<{
-    query?: string;
-    page?: string;
     queryCategoria?: string;
+    page?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
+
   const queryCategoria = searchParams?.queryCategoria || "";
 
   const totalPages = await fetchCategoriasPages(queryCategoria);
@@ -40,11 +39,12 @@ export default async function Page(props: {
         </ButtonLinkCreate>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="mt-4 md:mt-8">
         <SearchCategoria placeholder="Buscar Categoria..." />
       </div>
+
       <Suspense
-        key={query + currentPage + queryCategoria}
+        key={currentPage + queryCategoria}
         fallback={<CategoriasTableSkeleton />}
       >
         <Table currentPage={currentPage} queryCategoria={queryCategoria} />

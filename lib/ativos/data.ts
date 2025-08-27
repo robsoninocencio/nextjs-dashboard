@@ -92,6 +92,11 @@ export async function fetchAtivoById(id: string) {
         id: true,
         tipoId: true,
         nome: true,
+        ativo_categorias: {
+          select: {
+            categoriaId: true,
+          },
+        },
       },
     });
 

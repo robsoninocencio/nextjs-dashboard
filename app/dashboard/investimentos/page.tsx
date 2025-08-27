@@ -35,11 +35,14 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
+
+  const query = searchParams?.query || "";
+
+  const queryCliente = searchParams?.queryCliente || "";
   const queryAno = searchParams?.queryAno || "";
   const queryMes = searchParams?.queryMes || "";
-  const queryCliente = searchParams?.queryCliente || "";
+
   const queryBanco = searchParams?.queryBanco || "";
   const queryAtivo = searchParams?.queryAtivo || "";
   const queryTipo = searchParams?.queryTipo || "";
@@ -72,6 +75,7 @@ export default async function Page(props: {
         <SearchAtivo placeholder="Buscar Ativo..." />
         <SearchTipo placeholder="Buscar Tipo..." />
       </div>
+
       <Suspense
         key={
           query +
