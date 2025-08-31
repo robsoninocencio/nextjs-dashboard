@@ -2,23 +2,28 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import {
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  UserCircleIcon,
-  TagIcon,
-  DocumentTextIcon,
-} from "@heroicons/react/24/outline";
+import { TagIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "@/app/ui/shared/button";
 
-import { Ativo, AtivoForm } from "@/lib/ativos/definitions";
+import { Ativo } from "@/lib/ativos/definitions";
 import { TipoField } from "@/lib/tipos/definitions";
 import { CategoriaField } from "@/lib/categorias/definitions";
 
-// import { updateAtivo, State } from "@/app/lib/ativos/actions";
 import { updateAtivo, AtivoFormState } from "@/lib/ativos/actions";
+
+function FieldErrors({ errors }: { errors?: string[] }) {
+  if (!errors) return null;
+  return (
+    <>
+      {errors.map((error) => (
+        <p key={error} className="mt-2 text-sm text-red-500">
+          {error}
+        </p>
+      ))}
+    </>
+  );
+}
 
 export default function EditAtivoForm({
   ativo,
@@ -31,6 +36,7 @@ export default function EditAtivoForm({
 }) {
   const initialState: AtivoFormState = { message: "", errors: {} };
   const updateAtivoWithId = updateAtivo.bind(null, ativo.id);
+
   const [state, formAction] = useActionState(updateAtivoWithId, initialState);
 
   // Garantir que ativo.tipoId não seja null ou undefined para defaultValue
@@ -63,12 +69,7 @@ export default function EditAtivoForm({
           </div>
 
           <div id="nome-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.nome &&
-              state.errors.nome.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            <FieldErrors errors={state.errors?.nome} />
           </div>
         </div>
 
@@ -102,12 +103,7 @@ export default function EditAtivoForm({
           </div>
 
           <div id="tipoId-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.tipoId &&
-              state.errors.tipoId.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            <FieldErrors errors={state.errors?.tipoId} />
           </div>
         </div>
 
@@ -130,7 +126,7 @@ export default function EditAtivoForm({
                 state.errors?.categoriaIds?.length
                   ? "border-red-500"
                   : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 h-32`}
+              } py-2 pl-2 text-sm outline-2 placeholder:text-gray-500 h-32`}
             >
               {categorias.map((categoria) => (
                 <option key={categoria.id} value={categoria.id}>
@@ -138,15 +134,9 @@ export default function EditAtivoForm({
                 </option>
               ))}
             </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-3 h-[18px] w-[18px] text-gray-500" />
           </div>
           <div id="categoriaIds-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.categoriaIds &&
-              state.errors.categoriaIds.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+            <FieldErrors errors={state.errors?.categoriaIds} />
           </div>
         </div>
 

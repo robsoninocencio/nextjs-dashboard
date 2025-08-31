@@ -22,7 +22,7 @@ const AtivoFormSchema = z.object({
   categoriaIds: z.array(z.string()).optional(),
 });
 
-// tipar explicitamente validatedFields.data
+// Tipar explicitamente validatedFields.data
 type AtivoData = z.infer<typeof AtivoFormSchema>;
 
 // Types
@@ -46,6 +46,7 @@ function getFormValue(formData: FormData, key: string): string | undefined {
   return value?.toString();
 }
 
+// Utils - Função para evitar repetição e tornar o parsing de array mais robusto.
 function getFormArray(formData: FormData, key: string): string[] {
   return formData.getAll(key).map((v) => v.toString());
 }
@@ -77,18 +78,12 @@ function handleValidationError(
   };
 }
 
-// Utils - Função auxiliar para formatação da data
-function getCurrentDate() {
-  // return new Date().toISOString().split("T")[0]; // Apenas a data (YYYY-MM-DD)
-  return new Date(); // Gera um objeto Date válido para o Prisma
-}
-
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
 function getDatabaseErrorMessage(action: "create" | "update") {
   return `Database Error: Failed to ${action} ativo.`;
 }
 
-// Utils - Função para salvar a fatura no banco
+// Utils - Função para salvar a ativo no banco
 async function saveAtivoToDatabase(
   data: AtivoData,
   id?: string
@@ -129,27 +124,27 @@ async function saveAtivoToDatabase(
   }
 }
 
-// Actions - Ação de criação de fatura
+// Actions - Ação de criação de ativo
 export async function createAtivo(
   prevState: AtivoFormState,
   formData: FormData
 ): Promise<AtivoFormState | never> {
   if (process.env.NODE_ENV === "development") {
-    console.log("Received FormData:", [...formData.entries()]);
+    console.log("Dados do formulário recebidos: ", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
   const validatedFields = parseAtivoForm(formData);
-  if (process.env.NODE_ENV === "development") {
-    console.log("validatedFields.error:", validatedFields.error);
-  }
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
   if (!validatedFields.success) {
+    if (process.env.NODE_ENV === "development") {
+      console.log("validatedFields.error:", validatedFields.error);
+    }
     return handleValidationError(formData, validatedFields);
   }
 
-  // Cria fatura no banco de dados
+  // Cria ativo no banco de dados
   try {
     await saveAtivoToDatabase(validatedFields.data);
   } catch (error) {
@@ -159,7 +154,7 @@ export async function createAtivo(
     return { message: getDatabaseErrorMessage("create") };
   }
 
-  // Atualiza e redireciona para a página de faturas
+  // Atualiza e redireciona para a página
   revalidatePath("/dashboard/ativos");
   redirect("/dashboard/ativos");
 }
@@ -170,27 +165,27 @@ export async function updateAtivo(
   formData: FormData
 ): Promise<AtivoFormState | never> {
   if (process.env.NODE_ENV === "development") {
-    console.log("Received FormData:", [...formData.entries()]);
+    console.log("Dados do formulário recebidos: ", [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
   const validatedFields = parseAtivoForm(formData);
-  if (process.env.NODE_ENV === "development") {
-    console.log("validatedFields.error:", validatedFields.error);
-  }
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
   if (!validatedFields.success) {
+    if (process.env.NODE_ENV === "development") {
+      console.log("validatedFields.error:", validatedFields.error);
+    }
     return handleValidationError(formData, validatedFields);
   }
 
-  // Verifica se a fatura existe antes de tentar atualizar
+  // Verifica se a ativo existe antes de tentar atualizar
   const existing = await prisma.ativos.findUnique({ where: { id } });
   if (!existing) {
     return { message: "Ativo not found. Cannot update." };
   }
 
-  // Atualiza fatura no banco de dados
+  // Atualiza ativo no banco de dados
   try {
     await saveAtivoToDatabase(validatedFields.data, id);
   } catch (error) {
@@ -200,7 +195,7 @@ export async function updateAtivo(
     return { message: getDatabaseErrorMessage("update") };
   }
 
-  // Atualiza e redireciona para a página de faturas
+  // Atualiza e redireciona para a página
   revalidatePath("/dashboard/ativos");
   redirect("/dashboard/ativos");
 }
@@ -216,9 +211,7 @@ export async function deleteAtivo(id: string) {
       throw new Error("Ativo not found.");
     }
 
-    await prisma.ativos.delete({
-      where: { id: id },
-    });
+    await prisma.ativos.delete({ where: { id } });
     revalidatePath("/dashboard/ativos");
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
