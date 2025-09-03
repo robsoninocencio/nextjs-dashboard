@@ -1,16 +1,25 @@
 import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
 import { ButtonLinkDelete } from "@/app/ui/ativos/buttonLinkDelete";
+import { Badge } from "@/components/ui/badge";
 
 import { fetchFilteredAtivos } from "@/lib/ativos/data";
 
 export default async function AtivosTable({
-  query,
   currentPage,
+  query,
+  categoriaId,
 }: {
-  query: string;
   currentPage: number;
+  query: string;
+  categoriaId: string;
 }) {
-  const ativos = await fetchFilteredAtivos(query, currentPage);
+  const ativos = await fetchFilteredAtivos(currentPage, query, categoriaId);
+
+  if (!ativos || ativos.length === 0) {
+    return (
+      <p className="mt-6 text-center text-gray-500">Nenhum ativo encontrado.</p>
+    );
+  }
 
   return (
     <div className="mt-6 flow-root">
@@ -29,6 +38,13 @@ export default async function AtivosTable({
                     </div>
                     <div className="mb-2 flex items-center">
                       <p>{ativo.tipos?.nome}</p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-1 pt-2">
+                      {ativo.ativo_categorias.map(({ categoria }) => (
+                        <Badge key={categoria.id} variant="secondary">
+                          {categoria.nome}
+                        </Badge>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -52,6 +68,9 @@ export default async function AtivosTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   Tipo
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Categorias
+                </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -68,9 +87,16 @@ export default async function AtivosTable({
                       <p>{ativo.nome}</p>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex items-center gap-3">
-                      <p>{ativo.tipos?.nome}</p>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {ativo.tipos?.nome}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {ativo.ativo_categorias.map(({ categoria }) => (
+                        <Badge key={categoria.id} variant="secondary">
+                          {categoria.nome}
+                        </Badge>
+                      ))}
                     </div>
                   </td>
 

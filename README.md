@@ -93,3 +93,5 @@ Quando alteracoes sem apagar o banco
 npx prisma migrate dev --name init // init para primeira migrate ou descreva a alteração
 
 https://console.prisma.io/cm92du7tm010j20ttnxtixomg/overview
+
+npx shadcn@latest add badge

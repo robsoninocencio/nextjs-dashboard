@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import Search from "@/app/ui/shared/search";
+import CategoriaFilter from "@/app/ui/shared/categoria-filter";
 
 import { lusitana } from "@/app/ui/shared/fonts";
 import Pagination from "@/app/ui/shared/pagination";
@@ -10,6 +11,7 @@ import Table from "@/app/ui/ativos/table";
 import { AtivosTableSkeleton } from "@/app/ui/ativos/skeletons";
 
 import { fetchAtivosPages } from "@/lib/ativos/data";
+import { fetchCategorias } from "@/lib/categorias/data";
 
 import { Metadata } from "next";
 
@@ -17,34 +19,48 @@ export const metadata: Metadata = {
   title: "Ativos",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
+export default async function Page(props: {
+  searchParams: Promise<{
     page?: string;
-  };
+    query?: string;
+    categoriaId?: string;
+  }>;
 }) {
-  const query = searchParams?.query || "";
+  const searchParams = await props.searchParams;
+
   const currentPage = Number(searchParams?.page) || 1;
 
-  const totalPages = await fetchAtivosPages(query);
+  const query = searchParams?.query || "";
+  const categoriaId = searchParams?.categoriaId || "";
+
+  const [{ totalPages, totalItems }, categorias] = await Promise.all([
+    fetchAtivosPages(query, categoriaId),
+    fetchCategorias(),
+  ]);
 
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <h1 className={`${lusitana.className} text-2xl`}>Ativos</h1>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between gap-4 md:mt-8">
-        <Search placeholder="Pesquisar ativos..." />
         <ButtonLinkCreate href="/dashboard/ativos/create">
           Cadastrar Ativo
         </ButtonLinkCreate>
       </div>
 
-      <Suspense key={query + currentPage} fallback={<AtivosTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+      <div className="mt-4 flex items-center justify-between gap-4 md:mt-8">
+        <Search placeholder="Pesquisar ativos..." />
+        <CategoriaFilter categorias={categorias} />
+      </div>
+
+      <Suspense
+        key={query + currentPage + categoriaId}
+        fallback={<AtivosTableSkeleton />}
+      >
+        <Table
+          query={query}
+          currentPage={currentPage}
+          categoriaId={categoriaId}
+        />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />

@@ -2,59 +2,137 @@ import prisma from "@/prisma/lib/prisma";
 
 const ITEMS_PER_PAGE = 50;
 
-export async function fetchInvestimentosPages(
+/**
+ * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
+ */
+async function getCategoriaIds(categoriaId: string): Promise<string[]> {
+  if (!categoriaId) return [];
+  const categoria = await prisma.categorias.findUnique({
+    where: { id: categoriaId },
+    include: { subCategories: true },
+  });
+
+  if (!categoria) return [];
+
+  const subIds = await Promise.all(
+    categoria.subCategories.map((sub) => getCategoriaIds(sub.id))
+  );
+
+  return [categoria.id, ...subIds.flat()];
+}
+
+function buildInvestimentosFilters(
   queryAno: string,
   queryMes: string,
   queryCliente: string,
   queryBanco: string,
   queryAtivo: string,
-  queryTipo: string
-) {
-  try {
-    console.log("Entrei em fetchInvestimentosPages()");
-    const where: any = {};
+  queryTipo: string,
+  categoriaIds?: string[]
+): Record<string, any> {
+  const filters: Record<string, any>[] = [];
 
-    // Filtra por cliente, se fornecido
-    if (queryCliente) {
-      where.clientes = {
-        name: { contains: queryCliente, mode: "insensitive" },
-      };
-    }
+  if (queryCliente) {
+    filters.push({
+      clientes: { name: { contains: queryCliente, mode: "insensitive" } },
+    });
+  }
 
-    // Filtra por ano, se fornecido
-    if (queryAno) {
-      where.ano = { equals: queryAno };
-    }
+  if (queryAno) {
+    filters.push({ ano: { equals: queryAno } });
+  }
 
-    // Filtra por mes, se fornecido
-    if (queryMes) {
-      where.mes = { equals: queryMes };
-    }
+  if (queryMes) {
+    filters.push({ mes: { equals: queryMes } });
+  }
 
-    // Filtra por banco, se fornecido
-    if (queryBanco) {
-      where.bancos = {
-        nome: { contains: queryBanco, mode: "insensitive" },
-      };
-    }
+  if (queryBanco) {
+    filters.push({
+      bancos: { nome: { contains: queryBanco, mode: "insensitive" } },
+    });
+  }
 
-    if (queryAtivo || queryTipo) {
-      where.ativos = {
+  if (queryAtivo || queryTipo) {
+    filters.push({
+      ativos: {
         ...(queryAtivo && {
           nome: { contains: queryAtivo, mode: "insensitive" },
         }),
         ...(queryTipo && {
           tipos: { nome: { contains: queryTipo, mode: "insensitive" } },
         }),
-      };
+      },
+    });
+  }
+
+  if (categoriaIds && categoriaIds.length > 0) {
+    filters.push({
+      ativos: {
+        ativo_categorias: {
+          some: { categoriaId: { in: categoriaIds } },
+        },
+      },
+    });
+  }
+
+  return filters.length > 0 ? { AND: filters } : {};
+}
+
+export async function fetchInvestimentosPages(
+  queryAno: string,
+  queryMes: string,
+  queryCliente: string,
+  queryBanco: string,
+  queryAtivo: string,
+  queryTipo: string,
+  categoriaId?: string
+): Promise<{ totalPages: number; totalItems: number }> {
+  try {
+    if (process.env.NODE_ENV === "development") {
+      console.log("Entrei em fetchInvestimentosPages()");
+      console.log("queryAno", queryAno);
+      console.log("queryMes", queryMes);
+      console.log("queryCliente", queryCliente);
+      console.log("queryBanco", queryBanco);
+      console.log("queryAtivo", queryAtivo);
+      console.log("queryTipo", queryTipo);
+      console.log("categoriaId", categoriaId);
     }
 
-    const count = await prisma.investimentos.count({ where });
-    console.log("count:", count);
-    return Math.ceil(count / ITEMS_PER_PAGE);
+    let categoriaIds: string[] = [];
+    if (categoriaId) {
+      categoriaIds = await getCategoriaIds(categoriaId);
+    }
+
+    const where = buildInvestimentosFilters(
+      queryAno,
+      queryMes,
+      queryCliente,
+      queryBanco,
+      queryAtivo,
+      queryTipo,
+      categoriaIds
+    );
+
+    const totalItems = await prisma.investimentos.count({ where });
+
+    const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("where:", JSON.stringify(where, null, 2));
+      console.log("totalItems: ", totalItems);
+      console.log("totalPages: ", totalPages);
+    }
+
+    return { totalPages, totalItems };
   } catch (error) {
     console.error("Erro ao buscar o número total de páginas:", error);
-    throw new Error("Erro ao buscar o número total de páginas.");
+
+    throw new Error(
+      error instanceof Error
+        ? error.message
+        : "Erro ao buscar o número total de páginas."
+    );
   }
 }
 
@@ -65,54 +143,41 @@ export async function fetchFilteredInvestimentos(
   queryCliente: string,
   queryBanco: string,
   queryAtivo: string,
-  queryTipo: string
+  queryTipo: string,
+  categoriaId?: string
 ) {
-  console.log("Entrei em fetchFilteredInvestimentos()");
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-  console.log("queryAno", queryAno);
-  console.log("queryMes", queryMes);
-  console.log("queryCliente", queryCliente);
-  console.log("queryBanco", queryBanco);
-  console.log("queryAtivo", queryAtivo);
-  console.log("queryTipo", queryTipo);
-
   try {
-    const where: any = {};
-
-    // Filtra por cliente, se fornecido
-    if (queryCliente) {
-      where.clientes = {
-        name: { contains: queryCliente, mode: "insensitive" },
-      };
+    if (process.env.NODE_ENV === "development") {
+      console.log("Entrei em fetchFilteredInvestimentos()");
+      console.log("currentPage", currentPage);
+      console.log("queryAno", queryAno);
+      console.log("queryMes", queryMes);
+      console.log("queryCliente:", queryCliente);
+      console.log("queryBanco", queryBanco);
+      console.log("queryAtivo", queryAtivo);
+      console.log("queryTipo", queryTipo);
+      console.log("categoriaId", categoriaId);
     }
 
-    // Filtra por ano, se fornecido
-    if (queryAno) {
-      where.ano = { equals: queryAno };
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    let categoriaIds: string[] = [];
+    if (categoriaId) {
+      categoriaIds = await getCategoriaIds(categoriaId);
     }
 
-    // Filtra por mes, se fornecido
-    if (queryMes) {
-      where.mes = { equals: queryMes };
-    }
+    const where = buildInvestimentosFilters(
+      queryAno,
+      queryMes,
+      queryCliente,
+      queryBanco,
+      queryAtivo,
+      queryTipo,
+      categoriaIds
+    );
 
-    // Filtra por banco, se fornecido
-    if (queryBanco) {
-      where.bancos = {
-        nome: { contains: queryBanco, mode: "insensitive" },
-      };
-    }
-
-    if (queryAtivo || queryTipo) {
-      where.ativos = {
-        ...(queryAtivo && {
-          nome: { contains: queryAtivo, mode: "insensitive" },
-        }),
-        ...(queryTipo && {
-          tipos: { nome: { contains: queryTipo, mode: "insensitive" } },
-        }),
-      };
+    if (process.env.NODE_ENV === "development") {
+      console.log("where:", JSON.stringify(where, null, 2));
     }
 
     const investimentos = await prisma.investimentos.findMany({

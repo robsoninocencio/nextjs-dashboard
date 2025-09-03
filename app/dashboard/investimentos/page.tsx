@@ -6,6 +6,7 @@ import SearchCliente from "@/app/ui/shared/searchCliente";
 import SearchBanco from "@/app/ui/shared/searchBanco";
 import SearchAtivo from "@/app/ui/shared/searchAtivo";
 import SearchTipo from "@/app/ui/shared/searchTipo";
+import CategoriaFilter from "@/app/ui/shared/categoria-filter";
 
 import { lusitana } from "@/app/ui/shared/fonts";
 import Pagination from "@/app/ui/shared/pagination";
@@ -13,6 +14,7 @@ import { ButtonLinkCreate } from "@/app/ui/shared/buttonsLinkCreate";
 
 import Table from "@/app/ui/investimentos/table";
 import { InvestimentosTableSkeleton } from "@/app/ui/investimentos/skeletons";
+import { fetchCategorias } from "@/lib/categorias/data";
 
 import { fetchInvestimentosPages } from "@/lib/investimentos/data";
 
@@ -24,37 +26,47 @@ export const metadata: Metadata = {
 
 export default async function Page(props: {
   searchParams?: Promise<{
-    query?: string;
     page?: string;
+    query?: string;
+    queryCliente?: string;
     queryAno?: string;
     queryMes?: string;
-    queryCliente?: string;
     queryBanco?: string;
     queryAtivo?: string;
     queryTipo?: string;
+    categoriaId?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
+
   const currentPage = Number(searchParams?.page) || 1;
 
   const query = searchParams?.query || "";
 
   const queryCliente = searchParams?.queryCliente || "";
   const queryAno = searchParams?.queryAno || "";
-  const queryMes = searchParams?.queryMes || "";
+  let queryMes = searchParams?.queryMes || "";
+  if (queryMes) {
+    queryMes = queryMes.padStart(2, "0"); // transforma "1" em "01"
+  }
+  const categoriaId = searchParams?.categoriaId || "";
 
   const queryBanco = searchParams?.queryBanco || "";
   const queryAtivo = searchParams?.queryAtivo || "";
   const queryTipo = searchParams?.queryTipo || "";
 
-  const totalPages = await fetchInvestimentosPages(
-    queryAno,
-    queryMes,
-    queryCliente,
-    queryBanco,
-    queryAtivo,
-    queryTipo
-  );
+  const [{ totalPages, totalItems }, categorias] = await Promise.all([
+    fetchInvestimentosPages(
+      queryAno,
+      queryMes,
+      queryCliente,
+      queryBanco,
+      queryAtivo,
+      queryTipo,
+      categoriaId
+    ),
+    fetchCategorias(),
+  ]);
 
   return (
     <div className="w-full">
@@ -69,7 +81,9 @@ export default async function Page(props: {
         <SearchCliente placeholder="Buscar Cliente..." />
         <SearchAno placeholder="Buscar Ano..." />
         <SearchMes placeholder="Buscar Mes..." />
+        <CategoriaFilter categorias={categorias} /> {/* 🔥 filtro visível */}
       </div>
+
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <SearchBanco placeholder="Buscar Banco..." />
         <SearchAtivo placeholder="Buscar Ativo..." />
@@ -85,7 +99,8 @@ export default async function Page(props: {
           queryCliente +
           queryBanco +
           queryAtivo +
-          queryTipo
+          queryTipo +
+          categoriaId
         }
         fallback={<InvestimentosTableSkeleton />}
       >
@@ -97,6 +112,7 @@ export default async function Page(props: {
           queryBanco={queryBanco}
           queryAtivo={queryAtivo}
           queryTipo={queryTipo}
+          categoriaId={categoriaId}
         />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">

@@ -14,8 +14,16 @@ export type LatestAtivo = {
 
 export type AtivosTable = {
   id: string;
-  tipoId: string;
   nome: string;
+  tipos: {
+    nome: string;
+  } | null;
+  ativo_categorias: {
+    categoria: {
+      id: string;
+      nome: string;
+    };
+  }[];
 };
 
 export type AtivoField = {

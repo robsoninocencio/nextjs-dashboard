@@ -21,6 +21,7 @@ interface InvestimentosTableProps {
   queryBanco: string;
   queryAtivo: string;
   queryTipo: string;
+  categoriaId?: string;
 }
 
 // Componente para exibir uma linha de investimento no layout mobile
@@ -542,6 +543,7 @@ export default async function InvestimentosTable({
   queryBanco,
   queryAtivo,
   queryTipo,
+  categoriaId,
 }: InvestimentosTableProps) {
   // Buscar dados de investimentos
   const investimentos = await fetchFilteredInvestimentos(
@@ -551,7 +553,8 @@ export default async function InvestimentosTable({
     queryCliente,
     queryBanco,
     queryAtivo,
-    queryTipo
+    queryTipo,
+    categoriaId
   );
   // console.log("investimentos**************************:", investimentos);
 

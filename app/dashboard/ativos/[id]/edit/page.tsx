@@ -32,13 +32,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     notFound();
   }
 
-  // Garantir que ativo.status tenha o tipo correto
-  const typedAtivo: Ativo = {
-    id: ativo.id,
-    tipoId: ativo.tipoId,
-    nome: ativo.nome,
-  };
-
   return (
     <main>
       <Breadcrumbs
@@ -51,7 +44,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           },
         ]}
       />
-      <Form ativo={typedAtivo} tipos={tipos} categorias={categorias} />
+      <Form ativo={ativo} tipos={tipos} categorias={categorias} />
     </main>
   );
 }

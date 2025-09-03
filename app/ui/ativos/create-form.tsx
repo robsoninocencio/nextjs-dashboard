@@ -1,21 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 
-import {
-  UserCircleIcon,
-  TagIcon,
-  DocumentTextIcon,
-} from "@heroicons/react/24/outline";
+import { TagIcon as TagIconOutline } from "@heroicons/react/24/outline";
+import { FileText, Check, ChevronsUpDown, TagIcon } from "lucide-react";
 
-import { Button } from "@/app/ui/shared/button";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 import { createAtivo, AtivoFormState } from "@/lib/ativos/actions";
 
 import { TipoField } from "@/lib/tipos/definitions";
 import type { CategoriaField } from "@/lib/categorias/definitions";
+import { cn } from "@/lib/utils";
 
 // Botão com estado pendente (loading)
 function SubmitAtivoButton() {
@@ -57,6 +66,16 @@ export default function Form({
 
   const [state, formAction] = useActionState(createAtivo, initialState);
 
+  // Estado local para o multi-select de categorias
+  const [selectedCategorias, setSelectedCategorias] = useState<string[]>(
+    state.submittedData?.categoriaIds ?? []
+  );
+
+  const toggleCategoria = (id: string) => {
+    setSelectedCategorias((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  };
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -80,7 +99,7 @@ export default function Form({
                     : "border-gray-200"
                 } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
               />
-              <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              <FileText className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
             <div id="nome-error" aria-live="polite" aria-atomic="true">
               <InputError errors={state.errors?.nome} />
@@ -114,7 +133,7 @@ export default function Form({
                 </option>
               ))}
             </select>
-            <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <TagIconOutline className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           {/* <p>{state.submittedData?.tipoId}</p> */}
 
@@ -124,38 +143,62 @@ export default function Form({
         </div>
 
         {/* Categoria Nome */}
-        <div className="mb-4">
-          <label
-            htmlFor="categoriaIds"
-            className="mb-2 block text-sm font-medium"
-          >
-            Categorias
-          </label>
-          <div className="relative">
-            <select
-              id="categoriaIds"
-              name="categoriaIds"
-              multiple
-              defaultValue={state.submittedData?.categoriaIds ?? []}
-              aria-describedby="categoriaIds-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.categoriaIds?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 h-32`}
-            >
-              {categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.id}>
-                  {categoria.nome}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-3 h-[18px] w-[18px] text-gray-500" />
-          </div>
+        <div className="mb-4" aria-describedby="categoriaIds-error">
+          <label className="mb-2 block text-sm font-medium">Categorias</label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                className={cn(
+                  "w-full justify-between font-normal",
+                  state.errors?.categoriaIds?.length ? "border-red-500" : ""
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <TagIcon className="h-4 w-4 text-gray-500" />
+                  {selectedCategorias.length > 0
+                    ? `${selectedCategorias.length} selecionada(s)`
+                    : "Selecione as categorias"}
+                </div>
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+              <Command>
+                <CommandList>
+                  <CommandGroup>
+                    {categorias.map((categoria) => (
+                      <CommandItem
+                        key={categoria.id}
+                        value={categoria.id}
+                        onSelect={() => toggleCategoria(categoria.id)}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedCategorias.includes(categoria.id)
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        {categoria.nome}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <div id="categoriaIds-error" aria-live="polite" aria-atomic="true">
             <InputError errors={state.errors?.categoriaIds} />
           </div>
         </div>
+
+        {/* Hidden inputs para enviar no form */}
+        {selectedCategorias.map((id) => (
+          <input key={id} type="hidden" name="categoriaIds" value={id} />
+        ))}
 
         {/* Mensagem de erro geral */}
         {state.message && (

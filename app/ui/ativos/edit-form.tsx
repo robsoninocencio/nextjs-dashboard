@@ -56,8 +56,7 @@ export default function EditAtivoForm({
 
   // Garantir que ativo.tipoId não seja null ou undefined para defaultValue
   const tipoIdValue = ativo.tipoId ?? "";
-  // @ts-ignore - Supondo que 'ativo' venha com as categorias relacionadas do banco
-  const categoriaIdsValue =
+  const categoriaIdsValue = // O `ativo` agora inclui as categorias
     ativo.ativo_categorias?.map((ac) => ac.categoriaId) ?? [];
 
   // Estado local para o multi-select
