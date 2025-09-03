@@ -1,5 +1,6 @@
 import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
 import { ButtonLinkDelete } from "@/app/ui/investimentos/buttonLinkDelete";
+import { Badge } from "@/components/ui/badge";
 import {
   formatDateToLocal,
   formatCurrency,
@@ -38,6 +39,13 @@ function MobileInvestimentoRow({ investimento }: { investimento: any }) {
       <div className="flex items-center justify-between pb-1">
         <p className="font-medium">{investimento.bancos.nome}</p>
         <p className="font-medium">{investimento.ativos.nome}</p>
+      </div>
+      <div className="flex flex-wrap items-center gap-1 pb-1">
+        {investimento.ativos.ativo_categorias.map(({ categoria }: any) => (
+          <Badge key={categoria.id} variant="secondary">
+            {categoria.nome}
+          </Badge>
+        ))}
       </div>
       <div className="flex items-center justify-between pb-1">
         <p>Rendimento</p>
@@ -138,7 +146,15 @@ function DesktopInvestimentosTable({
     <table className="hidden min-w-full text-gray-900 md:table">
       <thead className="rounded-lg text-left text-sm font-normal">
         <tr>
-          {["Ano", "Mês", "Cliente", "Banco", "Ativo", "Tipo"].map((header) => (
+          {[
+            "Ano",
+            "Mês",
+            "Cliente",
+            "Banco",
+            "Ativo",
+            "Tipo",
+            "Categorias",
+          ].map((header) => (
             <th
               key={header}
               scope="col"
@@ -246,6 +262,17 @@ function DesktopInvestimentosTable({
             </td>
             <td className="whitespace-nowrap px-2 py-1.5">
               {investimento.ativos.tipos?.nome}
+            </td>
+            <td className="whitespace-nowrap px-2 py-1.5">
+              <div className="flex flex-wrap gap-1">
+                {investimento.ativos.ativo_categorias.map(
+                  ({ categoria }: any) => (
+                    <Badge key={categoria.id} variant="secondary">
+                      {categoria.nome}
+                    </Badge>
+                  )
+                )}
+              </div>
             </td>
             <td className="whitespace-nowrap px-2 py-1.5 text-right">
               {formatCurrency(investimento.rendimentoDoMes)}
@@ -364,7 +391,7 @@ function DesktopInvestimentosTable({
       {investimentos?.length > 0 && (
         <tfoot className="bg-gray-100 text-sm font-medium">
           <tr>
-            <td colSpan={6} className="px-2 py-1.5 text-lg font-medium">
+            <td colSpan={7} className="px-2 py-1.5 text-lg font-medium">
               Totais
             </td>
             <td className="whitespace-nowrap px-2 py-1.5 text-right">

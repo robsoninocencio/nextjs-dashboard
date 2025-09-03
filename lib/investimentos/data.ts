@@ -201,6 +201,16 @@ export async function fetchFilteredInvestimentos(
                 nome: true,
               },
             },
+            ativo_categorias: {
+              select: {
+                categoria: {
+                  select: {
+                    id: true,
+                    nome: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
