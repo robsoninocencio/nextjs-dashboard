@@ -1,4 +1,5 @@
 import prisma from "@/prisma/lib/prisma";
+import { GrupoInvestimento, GrupoInvestimentoItem } from "./definitions";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -215,6 +216,7 @@ export async function fetchFilteredInvestimentos(
         },
       },
       orderBy: [
+        { clientes: { name: "asc" } },
         { ano: "desc" },
         { mes: "desc" },
         { bancos: { nome: "asc" } },
@@ -279,7 +281,9 @@ export async function fetchInvestimentoById(id: string) {
   }
 }
 
-export async function fetchInvestimentoGroupByClienteAnoMes() {
+export async function fetchInvestimentoGroupByClienteAnoMes(): Promise<
+  GrupoInvestimento[]
+> {
   try {
     // Usando o groupBy do Prisma para agrupar os dados corretamente
     const resultado = await prisma.investimentos.groupBy({
@@ -302,12 +306,12 @@ export async function fetchInvestimentoGroupByClienteAnoMes() {
 
     // Estruturando os resultados
     const agrupados = resultado.reduce(
-      (acc: Record<string, any>, investimento) => {
+      (acc: Record<string, GrupoInvestimento>, investimento) => {
         const clienteId = investimento.clienteId;
 
         if (!acc[clienteId]) {
           acc[clienteId] = {
-            Cliente: "", // Inicializa o nome do cliente (vai ser preenchido depois)
+            Cliente: "", // Será preenchido depois
             investimentos: [],
           };
         }
@@ -328,11 +332,11 @@ export async function fetchInvestimentoGroupByClienteAnoMes() {
 
         return acc;
       },
-      {}
+      {} as Record<string, GrupoInvestimento>
     );
 
     // Transformando os resultados para incluir o nome do cliente
-    const resultadoFormatado = await Promise.all(
+    const resultadoFormatado: GrupoInvestimento[] = await Promise.all(
       Object.keys(agrupados).map(async (clienteId) => {
         // Busca o nome do cliente pelo ID
         const cliente = await prisma.clientes.findUnique({

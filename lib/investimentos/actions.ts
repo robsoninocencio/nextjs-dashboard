@@ -38,12 +38,12 @@ const InvestimentoFormSchema = z.object({
     .transform((val) => val.toString().padStart(2, "0")), // Garantindo o mês com 2 dígitos
   rendimentoDoMes: z.coerce.number().optional().default(0),
   dividendosDoMes: z.coerce.number().optional().default(0),
-  valorAplicado: z.coerce.number(),
-  saldoBruto: z.coerce.number(),
-  valorResgatado: z.coerce.number(),
-  impostoIncorrido: z.coerce.number(),
-  impostoPrevisto: z.coerce.number(),
-  saldoLiquido: z.coerce.number(),
+  valorAplicado: z.coerce.number().optional().default(0),
+  saldoBruto: z.coerce.number().optional().default(0),
+  valorResgatado: z.coerce.number().optional().default(0),
+  impostoIncorrido: z.coerce.number().optional().default(0),
+  impostoPrevisto: z.coerce.number().optional().default(0),
+  saldoLiquido: z.coerce.number().optional().default(0),
 });
 
 // tipar explicitamente validatedFields.data
@@ -91,22 +91,31 @@ function getFormValue(formData: FormData, key: string): string | undefined {
   return value?.toString();
 }
 
+// Utils - Função para converter string de moeda para número
+function getCurrencyValue(formData: FormData, key: string): string | undefined {
+  const value = formData.get(key)?.toString();
+  if (!value) return undefined;
+  // Remove o prefixo, os separadores de milhar e substitui a vírgula decimal por ponto
+  return value.replace("R$ ", "").replace(/\./g, "").replace(",", ".");
+}
+
 // Utils - Função para validar os campos do formulário usando Zod
 function parseInvestimentoForm(formData: FormData) {
   return InvestimentoFormSchema.safeParse({
     clienteId: getFormValue(formData, "clienteId"),
     bancoId: getFormValue(formData, "bancoId"),
     ativoId: getFormValue(formData, "ativoId"),
-    ano: getFormValue(formData, "ano"),
-    mes: getFormValue(formData, "mes"),
-    rendimentoDoMes: getFormValue(formData, "rendimentoDoMes"),
-    dividendosDoMes: getFormValue(formData, "dividendosDoMes"),
-    valorAplicado: getFormValue(formData, "valorAplicado"),
-    saldoBruto: getFormValue(formData, "saldoBruto"),
-    valorResgatado: getFormValue(formData, "valorResgatado"),
-    impostoIncorrido: getFormValue(formData, "impostoIncorrido"),
-    impostoPrevisto: getFormValue(formData, "impostoPrevisto"),
-    saldoLiquido: getFormValue(formData, "saldoLiquido"),
+    ano: getFormValue(formData, "ano") || new Date().getFullYear().toString(),
+    mes:
+      getFormValue(formData, "mes") || (new Date().getMonth() + 1).toString(),
+    rendimentoDoMes: getCurrencyValue(formData, "rendimentoDoMes"),
+    dividendosDoMes: getCurrencyValue(formData, "dividendosDoMes"),
+    valorAplicado: getCurrencyValue(formData, "valorAplicado"),
+    saldoBruto: getCurrencyValue(formData, "saldoBruto"),
+    valorResgatado: getCurrencyValue(formData, "valorResgatado"),
+    impostoIncorrido: getCurrencyValue(formData, "impostoIncorrido"),
+    impostoPrevisto: getCurrencyValue(formData, "impostoPrevisto"),
+    saldoLiquido: getCurrencyValue(formData, "saldoLiquido"),
   });
 }
 
@@ -159,8 +168,8 @@ async function saveInvestimentoToDatabase(
   const valorAplicadoInCents = Math.round(data.valorAplicado * 100);
   const saldoBrutoInCents = Math.round(data.saldoBruto * 100);
   const valorResgatadoInCents = Math.round(data.valorResgatado * 100);
-  const impostoIncorridoInCents = data.impostoIncorrido * 100;
-  const impostoPrevistoInCents = data.impostoPrevisto * 100;
+  const impostoIncorridoInCents = Math.round(data.impostoIncorrido * 100);
+  const impostoPrevistoInCents = Math.round(data.impostoPrevisto * 100);
   const saldoLiquidoInCents = Math.round(data.saldoLiquido * 100);
 
   const investimentoAnterior = await fetchInvestimentoAnterior(

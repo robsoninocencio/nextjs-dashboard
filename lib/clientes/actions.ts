@@ -145,6 +145,9 @@ export async function updateCliente(
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
   if (!validatedFields.success) {
+    if (process.env.NODE_ENV === "development") {
+      console.log("validatedFields.error:", validatedFields.error);
+    }
     return handleValidationError(formData, validatedFields);
   }
 

@@ -1,10 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, ChangeEvent } from "react";
 import Link from "next/link";
 import {
-  CurrencyDollarIcon,
   UserCircleIcon,
+  CalendarIcon,
+  CalendarDaysIcon,
+  BuildingLibraryIcon,
+  BriefcaseIcon,
 } from "@heroicons/react/24/outline";
 
 import { Button } from "@/app/ui/shared/button";
@@ -20,7 +23,75 @@ import {
   updateInvestimento,
   InvestimentoFormState,
 } from "@/lib/investimentos/actions";
+import CustomCurrencyInput from "@/app/ui/shared/currency-input";
 import { formatDateToMonth, formatDateToYear } from "@/lib/utils";
+
+// Componente para erros
+function InputError({ errors }: { errors?: string[] }) {
+  if (!errors) return null;
+  return (
+    <>
+      {errors.map((error) => (
+        <p key={error} className="p-2 md:p-4 text-sm text-red-500">
+          {error}
+        </p>
+      ))}
+    </>
+  );
+}
+
+// Componente para selects
+function SelectField({
+  id,
+  label,
+  options,
+  defaultValue,
+  errors,
+  onChange,
+  icon: Icon,
+}: {
+  id: string;
+  label: string;
+  options: { id: string; name: string }[];
+  defaultValue?: string;
+  errors?: string[];
+  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
+  icon: React.ElementType;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="mb-2 block text-sm font-medium">
+        {label}
+      </label>
+      <div className="relative mt-2 rounded-md">
+        <select
+          id={id}
+          name={id}
+          defaultValue={defaultValue ?? ""}
+          required
+          aria-describedby={`${id}-error`}
+          onChange={onChange}
+          className={`peer block w-full cursor-pointer rounded-md border ${
+            errors?.length ? "border-red-500" : "border-gray-200"
+          } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+        >
+          <option value="" disabled>
+            Selecione o {label.toLowerCase()}
+          </option>
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>
+              {id === "mes" ? `${option.id} - ${option.name}` : option.name}
+            </option>
+          ))}
+        </select>
+        <Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div>
+      <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
+        <InputError errors={errors} />
+      </div>
+    </div>
+  );
+}
 
 export default function EditInvestimentoForm({
   investimento,
@@ -43,491 +114,335 @@ export default function EditInvestimentoForm({
     initialState
   );
 
+  // Encontra o ativo inicial para definir o estado dos campos condicionais
+  const initialAtivo = ativos.find(
+    (ativo) => ativo.id === investimento.ativoId
+  );
+
+  const [isRendaVariavel, setIsRendaVariavel] = useState(
+    initialAtivo?.tipos?.nome === "RENDA VARIAVEL"
+  );
+  const [isCdbAutomatico, setCdbAutomatico] = useState(
+    initialAtivo?.nome === "CDB AUTOMATICO"
+  );
+
+  // Função para atualizar o estado com base no ativo selecionado
+  const handleAtivoChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedAtivoId = e.target.value;
+    const selectedAtivo = ativos.find((ativo) => ativo.id === selectedAtivoId);
+    setIsRendaVariavel(selectedAtivo?.tipos?.nome === "RENDA VARIAVEL");
+    setCdbAutomatico(selectedAtivo?.nome === "CDB AUTOMATICO");
+  };
+
+  // Opções para ano e mês (1 a 12)
+  const years = Array.from({ length: 15 }, (_, i) => ({
+    id: (2025 - i).toString(),
+    name: (2025 - i).toString(),
+  }));
+  const months = [
+    { id: "01", name: "Janeiro" },
+    { id: "02", name: "Fevereiro" },
+    { id: "03", name: "Março" },
+    { id: "04", name: "Abril" },
+    { id: "05", name: "Maio" },
+    { id: "06", name: "Junho" },
+    { id: "07", name: "Julho" },
+    { id: "08", name: "Agosto" },
+    { id: "09", name: "Setembro" },
+    { id: "10", name: "Outubro" },
+    { id: "11", name: "Novembro" },
+    { id: "12", name: "Dezembro" },
+  ];
+
   return (
     <form action={formAction}>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Investimento Ano */}
-        <div className="mb-4">
-          <label htmlFor="ano" className="mb-2 block text-sm font-medium">
-            Ano
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
+      <div className="rounded-md bg-gray-50 p-2 md:p-4">
+        {/* 1 Container flexível para Ano, Mês e Cliente */}
+        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+          {/* 1.1 Container para Ano e Mês */}
+          <div className="flex space-x-4 md:w-1/2">
+            {/* 1.1.1 Ano */}
+            <div className="w-1/2">
+              <SelectField
                 id="ano"
-                name="ano"
-                type="ano"
+                label="Ano"
+                options={years}
                 defaultValue={formatDateToYear(investimento.data)}
-                placeholder="Digite o ano"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="ano-error"
+                errors={state.errors?.ano}
+                icon={CalendarDaysIcon}
               />
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
-          </div>
-
-          <div id="ano-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.ano &&
-              state.errors.ano.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento Mês */}
-        <div className="mb-4">
-          <label htmlFor="mes" className="mb-2 block text-sm font-medium">
-            Mes
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
+            {/* 1.1.2 Mês */}
+            <div className="w-1/2">
+              <SelectField
                 id="mes"
-                name="mes"
-                type="mes"
+                label="Mês"
+                options={months}
                 defaultValue={formatDateToMonth(investimento.data)}
-                placeholder="Digite o mes"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="mes-error"
+                errors={state.errors?.mes}
+                icon={CalendarIcon}
               />
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-
-          <div id="mes-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.mes &&
-              state.errors.mes.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Cliente Nome */}
-        <div className="mb-4">
-          <label htmlFor="clienteId" className="mb-2 block text-sm font-medium">
-            Nome do Cliente
-          </label>
-          <div className="relative">
-            <select
+          {/* 1.2 Cliente */}
+          <div className="md:w-1/2 sm:mt-4 md:mt-0">
+            <SelectField
               id="clienteId"
-              name="clienteId"
+              label="Cliente"
+              options={clientes}
               defaultValue={investimento.clienteId}
-              aria-describedby="clienteId-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.clienteId?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-            >
-              <option value="" disabled>
-                Selecione um cliente
-              </option>
-              {clientes.map((cliente) => (
-                <option key={cliente.id} value={cliente.id}>
-                  {cliente.name}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-
-          <div id="clienteId-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.clienteId &&
-              state.errors.clienteId.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+              errors={state.errors?.clienteId}
+              icon={UserCircleIcon}
+            />
           </div>
         </div>
 
-        {/* Banco Nome */}
-        <div className="mb-4">
-          <label htmlFor="bancoId" className="mb-2 block text-sm font-medium">
-            Nome do Banco
-          </label>
-          <div className="relative">
-            <select
+        {/* 2 Container flexivel para Banco e Ativo */}
+        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+          {/* 2.1 Banco */}
+          <div className="md:w-1/2">
+            <SelectField
               id="bancoId"
-              name="bancoId"
+              label="Banco"
+              options={bancos.map((banco) => ({
+                id: banco.id,
+                name: banco.nome,
+              }))}
               defaultValue={investimento.bancoId}
-              aria-describedby="bancoId-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.bancoId?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-            >
-              <option value="" disabled>
-                Selecione um banco
-              </option>
-              {bancos.map((banco) => (
-                <option key={banco.id} value={banco.id}>
-                  {banco.nome}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+              errors={state.errors?.bancoId}
+              icon={BuildingLibraryIcon}
+            />
           </div>
 
-          <div id="bancoId-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.bancoId &&
-              state.errors.bancoId.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Ativo Nome */}
-        <div className="mb-4">
-          <label htmlFor="ativoId" className="mb-2 block text-sm font-medium">
-            Nome do Ativo
-          </label>
-          <div className="relative">
-            <select
+          {/* 2.2 Ativo */}
+          <div className="md:w-1/2 sm:mt-4 md:mt-0">
+            <SelectField
               id="ativoId"
-              name="ativoId"
+              label="Ativo"
+              options={ativos.map((ativo) => ({
+                id: ativo.id,
+                name: `${ativo.nome}${
+                  ativo.tipos ? ` (${ativo.tipos.nome})` : ""
+                }`,
+              }))}
               defaultValue={investimento.ativoId}
-              aria-describedby="ativoId-error"
-              className={`peer block w-full cursor-pointer rounded-md border ${
-                state.errors?.ativoId?.length
-                  ? "border-red-500"
-                  : "border-gray-200"
-              } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
+              errors={state.errors?.ativoId}
+              icon={BriefcaseIcon}
+              onChange={handleAtivoChange}
+            />
+          </div>
+        </div>
+
+        {/* 3 Container flexivel para rendimentoDoMes e dividendosDoMes */}
+        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+          {/* Investimento rendimentoDoMes */}
+          {!isCdbAutomatico && (
+            <div className="md:w-1/2">
+              <label
+                htmlFor="rendimentoDoMes"
+                className="mb-2 block text-sm font-medium"
+              >
+                Rendimento do Mês
+              </label>
+              <div className="relative mt-2 rounded-md">
+                <div className="relative rounded-md">
+                  <CustomCurrencyInput
+                    id="rendimentoDoMes"
+                    name="rendimentoDoMes"
+                    placeholder="Entre com o valor exemplo (99,99)"
+                    defaultValue={investimento.rendimentoDoMes}
+                    aria-describedby="rendimentoDoMes-error"
+                    hasError={!!state.errors?.rendimentoDoMes?.length}
+                  />
+                </div>
+              </div>
+              <div
+                id="rendimentoDoMes-error"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <InputError errors={state.errors?.rendimentoDoMes} />
+              </div>
+            </div>
+          )}
+
+          {/* Investimento dividendosDoMes */}
+          {isRendaVariavel && (
+            <div className="md:w-1/2 sm:mt-4 md:mt-0">
+              <label
+                htmlFor="dividendosDoMes"
+                className="mb-2 block text-sm font-medium"
+              >
+                Dividendos do Mês
+              </label>
+              <div className="relative mt-2 rounded-md">
+                <div className="relative rounded-md">
+                  <CustomCurrencyInput
+                    id="dividendosDoMes"
+                    name="dividendosDoMes"
+                    placeholder="Entre com o valor exemplo (99,99)"
+                    defaultValue={investimento.dividendosDoMes}
+                    aria-describedby="dividendosDoMes-error"
+                    hasError={!!state.errors?.dividendosDoMes?.length}
+                  />
+                </div>
+              </div>
+              <div
+                id="dividendosDoMes-error"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <InputError errors={state.errors?.dividendosDoMes} />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 4 Container flexivel para valorAplicado e valorResgatado */}
+        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+          {/* Investimento valorAplicado */}
+          <div className="md:w-1/2">
+            <label
+              htmlFor="valorAplicado"
+              className="mb-2 block text-sm font-medium"
             >
-              <option value="" disabled>
-                Selecione um Ativo
-              </option>
-              {ativos.map((ativo) => (
-                <option key={ativo.id} value={ativo.id}>
-                  {ativo.nome}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-
-          <div id="ativoId-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.ativoId &&
-              state.errors.ativoId.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento rendimentoDoMes */}
-        <div className="mb-4">
-          <label
-            htmlFor="rendimentoDoMes"
-            className="mb-2 block text-sm font-medium"
-          >
-            Rendimento do Mês
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="rendimentoDoMes"
-                name="rendimentoDoMes"
-                type="number"
-                defaultValue={String(investimento.rendimentoDoMes)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.rendimentoDoMes?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="rendimentoDoMes-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              Valores Aplicados
+            </label>
+            <CustomCurrencyInput
+              id="valorAplicado"
+              name="valorAplicado"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={investimento.valorAplicado}
+              aria-describedby="valorAplicado-error"
+              hasError={!!state.errors?.valorAplicado?.length}
+            />
+            <div id="valorAplicado-error" aria-live="polite" aria-atomic="true">
+              <InputError errors={state.errors?.valorAplicado} />
             </div>
           </div>
 
-          <div id="rendimentoDoMes-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.rendimentoDoMes &&
-              state.errors.rendimentoDoMes.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+          {/* Investimento valorResgatado */}
+          <div className="md:w-1/2 sm:mt-4 md:mt-0">
+            <label
+              htmlFor="valorResgatado"
+              className="mb-2 block text-sm font-medium"
+            >
+              Valores Resgatados
+            </label>
+            <CustomCurrencyInput
+              id="valorResgatado"
+              name="valorResgatado"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={investimento.valorResgatado}
+              aria-describedby="valorResgatado-error"
+              hasError={!!state.errors?.valorResgatado?.length}
+            />
+            <div
+              id="valorResgatado-error"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <InputError errors={state.errors?.valorResgatado} />
+            </div>
           </div>
         </div>
 
-        {/* Investimento dividendosDoMes */}
-        <div className="mb-4">
-          <label
-            htmlFor="dividendosDoMes"
-            className="mb-2 block text-sm font-medium"
-          >
-            Dividendos do Mês
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="dividendosDoMes"
-                name="dividendosDoMes"
-                type="number"
-                defaultValue={String(investimento.dividendosDoMes)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.dividendosDoMes?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="dividendosDoMes-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        {/* 5 Contaniner flexivel para impostoIncorrido e impostoPrevisto */}
+        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+          {/* Investimento impostoIncorrido */}
+          <div className="md:w-1/2">
+            <label
+              htmlFor="impostoIncorrido"
+              className="mb-2 block text-sm font-medium"
+            >
+              Impostos Incorridos
+            </label>
+            <CustomCurrencyInput
+              id="impostoIncorrido"
+              name="impostoIncorrido"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={investimento.impostoIncorrido}
+              aria-describedby="impostoIncorrido-error"
+              hasError={!!state.errors?.impostoIncorrido?.length}
+            />
+            <div
+              id="impostoIncorrido-error"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <InputError errors={state.errors?.impostoIncorrido} />
             </div>
           </div>
 
-          <div id="dividendosDoMes-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.dividendosDoMes &&
-              state.errors.dividendosDoMes.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+          {/* Investimento impostoPrevisto */}
+          <div className="md:w-1/2 sm:mt-4 md:mt-0">
+            <label
+              htmlFor="impostoPrevisto"
+              className="mb-2 block text-sm font-medium"
+            >
+              Impostos Previstos
+            </label>
+            <CustomCurrencyInput
+              id="impostoPrevisto"
+              name="impostoPrevisto"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={investimento.impostoPrevisto}
+              aria-describedby="impostoPrevisto-error"
+              hasError={!!state.errors?.impostoPrevisto?.length}
+            />
+            <div
+              id="impostoPrevisto-error"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <InputError errors={state.errors?.impostoPrevisto} />
+            </div>
           </div>
         </div>
 
-        {/* Investimento valorAplicado */}
-        <div className="mb-4">
-          <label
-            htmlFor="valorAplicado"
-            className="mb-2 block text-sm font-medium"
-          >
-            Valores Aplicados
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="valorAplicado"
-                name="valorAplicado"
-                type="number"
-                defaultValue={String(investimento.valorAplicado)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.valorAplicado?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="valorAplicado-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        {/* 6 Container flexivel para saldoBruto e SaldoLiquido */}
+        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+          {/* Investimento saldoBruto */}
+          <div className="md:w-1/2">
+            <label
+              htmlFor="saldoBruto"
+              className="mb-2 block text-sm font-medium"
+            >
+              Saldo Bruto
+            </label>
+            <CustomCurrencyInput
+              id="saldoBruto"
+              name="saldoBruto"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={investimento.saldoBruto}
+              aria-describedby="saldoBruto-error"
+              hasError={!!state.errors?.saldoBruto?.length}
+            />
+            <div id="saldoBruto-error" aria-live="polite" aria-atomic="true">
+              <InputError errors={state.errors?.saldoBruto} />
             </div>
           </div>
 
-          <div id="valorAplicado-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.valorAplicado &&
-              state.errors.valorAplicado.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento saldoBruto */}
-        <div className="mb-4">
-          <label
-            htmlFor="saldoBruto"
-            className="mb-2 block text-sm font-medium"
-          >
-            Saldo Bruto
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="saldoBruto"
-                name="saldoBruto"
-                type="number"
-                defaultValue={String(investimento.saldoBruto)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.saldoBruto?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="saldoBruto-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+          {/* 6.2 SaldoLiquido */}
+          {/* Investimento saldoLiquido */}
+          <div className="md:w-1/2 sm:mt-4 md:mt-0">
+            <label
+              htmlFor="saldoLiquido"
+              className="mb-2 block text-sm font-medium"
+            >
+              Saldo Líquido
+            </label>
+            <CustomCurrencyInput
+              id="saldoLiquido"
+              name="saldoLiquido"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={investimento.saldoLiquido}
+              aria-describedby="saldoLiquido-error"
+              hasError={!!state.errors?.saldoLiquido?.length}
+            />
+            <div id="saldoLiquido-error" aria-live="polite" aria-atomic="true">
+              <InputError errors={state.errors?.saldoLiquido} />
             </div>
-          </div>
-
-          <div id="saldoBruto-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.saldoBruto &&
-              state.errors.saldoBruto.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento valorResgatado */}
-        <div className="mb-4">
-          <label
-            htmlFor="valorResgatado"
-            className="mb-2 block text-sm font-medium"
-          >
-            Valores Resgatados
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="valorResgatado"
-                name="valorResgatado"
-                type="number"
-                defaultValue={String(investimento.valorResgatado)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.valorResgatado?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="valorResgatado-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-
-          <div id="valorResgatado-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.valorResgatado &&
-              state.errors.valorResgatado.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento impostoIncorrido */}
-        <div className="mb-4">
-          <label
-            htmlFor="impostoIncorrido"
-            className="mb-2 block text-sm font-medium"
-          >
-            Impostos Incorridos
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="impostoIncorrido"
-                name="impostoIncorrido"
-                type="number"
-                defaultValue={String(investimento.impostoIncorrido)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.impostoIncorrido?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="impostoIncorrido-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-
-          <div
-            id="impostoIncorrido-error"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {state.errors?.impostoIncorrido &&
-              state.errors.impostoIncorrido.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento impostoPrevisto */}
-        <div className="mb-4">
-          <label
-            htmlFor="impostoPrevisto"
-            className="mb-2 block text-sm font-medium"
-          >
-            Impostos Previstos
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="impostoPrevisto"
-                name="impostoPrevisto"
-                type="number"
-                defaultValue={String(investimento.impostoPrevisto)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.impostoPrevisto?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="impostoPrevisto-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-
-          <div id="impostoPrevisto-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.impostoPrevisto &&
-              state.errors.impostoPrevisto.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Investimento saldoLiquido */}
-        <div className="mb-4">
-          <label
-            htmlFor="saldoLiquido"
-            className="mb-2 block text-sm font-medium"
-          >
-            Saldo Líquido
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="saldoLiquido"
-                name="saldoLiquido"
-                type="number"
-                defaultValue={String(investimento.saldoLiquido)}
-                step="0.01"
-                placeholder="Entre com o valor exemplo (99,99)"
-                className={`peer block w-full rounded-md border ${
-                  state.errors?.saldoLiquido?.length
-                    ? "border-red-500"
-                    : "border-gray-200"
-                } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-                aria-describedby="saldoLiquido-error"
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-
-          <div id="saldoLiquido-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.saldoLiquido &&
-              state.errors.saldoLiquido.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
           </div>
         </div>
 

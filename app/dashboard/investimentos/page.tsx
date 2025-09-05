@@ -77,14 +77,15 @@ export default async function Page(props: {
         </ButtonLinkCreate>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="mt-4 grid grid-cols-3 gap-4 md:mt-8">
         <SearchCliente placeholder="Buscar Cliente..." />
-        <SearchAno placeholder="Buscar Ano..." />
-        <SearchMes placeholder="Buscar Mes..." />
-        <CategoriaFilter categorias={categorias} /> {/* 🔥 filtro visível */}
+        <div className="flex gap-4">
+          <SearchAno placeholder="Ano..." />
+          <SearchMes placeholder="Mês..." />
+        </div>
+        <CategoriaFilter categorias={categorias} />
       </div>
-
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="mt-4 grid grid-cols-3 gap-4 md:mt-8">
         <SearchBanco placeholder="Buscar Banco..." />
         <SearchAtivo placeholder="Buscar Ativo..." />
         <SearchTipo placeholder="Buscar Tipo..." />

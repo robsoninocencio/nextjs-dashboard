@@ -80,3 +80,21 @@ export type InvestimentoForm = {
   impostoPrevisto: number;
   saldoLiquido: number;
 };
+
+export type GrupoInvestimentoItem = {
+  ano: string;
+  mes: string;
+  rendimentoDoMes: number;
+  dividendosDoMes: number;
+  valorAplicado: number;
+  saldoBruto: number;
+  valorResgatado: number;
+  impostoIncorrido: number;
+  impostoPrevisto: number;
+  saldoLiquido: number;
+};
+
+export type GrupoInvestimento = {
+  Cliente: string;
+  investimentos: GrupoInvestimentoItem[];
+};

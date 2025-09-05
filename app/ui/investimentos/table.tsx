@@ -12,6 +12,10 @@ import {
   fetchFilteredInvestimentos,
   fetchInvestimentoGroupByClienteAnoMes,
 } from "@/lib/investimentos/data";
+import {
+  GrupoInvestimento,
+  GrupoInvestimentoItem,
+} from "@/lib/investimentos/definitions";
 
 // Interface para os props do componente
 interface InvestimentosTableProps {
@@ -469,7 +473,7 @@ function DesktopInvestimentosTable({
 function DesktopGroupedInvestimentosTable({
   grupoInvestimentos,
 }: {
-  grupoInvestimentos: any[];
+  grupoInvestimentos: GrupoInvestimento[];
 }) {
   return (
     <table className="hidden min-w-full text-gray-900 md:table bg-white mt-4">
@@ -492,65 +496,128 @@ function DesktopGroupedInvestimentosTable({
                 <thead className="text-left text-sm font-normal">
                   <tr>
                     {[
-                      "Ano",
-                      "Mês",
-                      "Rendimento",
-                      "Dividendos",
-                      "Valor Aplicado",
-                      "Saldo Bruto",
-                      "Valor Resgatado",
-                      "Imposto Incorrido",
-                      "Imposto Previsto",
-                      "Saldo Líquido",
-                    ].map((header) => (
-                      <th
-                        key={header}
-                        scope="col"
-                        className="px-2 py-1.5 font-medium text-left"
-                      >
-                        {header}
-                      </th>
-                    ))}
+                      { label: "Ano", key: "ano", condition: true },
+                      { label: "Mês", key: "mes", condition: true },
+                      {
+                        label: "Rendimento",
+                        key: "rendimentoDoMes",
+                        condition: true,
+                      },
+
+                      {
+                        label: "Dividendos",
+                        key: "dividendosDoMes",
+                        condition:
+                          grupo.investimentos.reduce(
+                            (acc, inv) => acc + inv.dividendosDoMes,
+                            0
+                          ) > 0,
+                      },
+
+                      {
+                        label: "Valor Aplicado",
+                        key: "valorAplicado",
+                        condition: true,
+                      },
+                      {
+                        label: "Saldo Bruto",
+                        key: "saldoBruto",
+                        condition: true,
+                      },
+                      {
+                        label: "Valor Resgatado",
+                        key: "valorResgatado",
+                        condition: true,
+                      },
+
+                      {
+                        label: "Imposto Incorrido",
+                        key: "impostoIncorrido",
+                        condition:
+                          grupo.investimentos.reduce(
+                            (acc, inv) => acc + inv.impostoIncorrido,
+                            0
+                          ) > 0,
+                      },
+
+                      {
+                        label: "Imposto Previsto",
+                        key: "impostoPrevisto",
+                        condition: true,
+                      },
+                      {
+                        label: "Saldo Líquido",
+                        key: "saldoLiquido",
+                        condition: true,
+                      },
+                    ].map(
+                      ({ label, condition = true }) =>
+                        condition && (
+                          <th
+                            key={label}
+                            scope="col"
+                            className="px-2 py-1.5 font-medium text-left"
+                          >
+                            {label}
+                          </th>
+                        )
+                    )}
                   </tr>
                 </thead>
                 <tbody>
-                  {grupo.investimentos?.map((grupoInvestimento: any) => (
-                    <tr
-                      key={`${grupo.Cliente}-${grupoInvestimento.ano}-${grupoInvestimento.mes}`}
-                      className="border-b text-sm last:border-none"
-                    >
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {grupoInvestimento.ano}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {grupoInvestimento.mes}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.rendimentoDoMes)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.dividendosDoMes)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.valorAplicado)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.saldoBruto)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.valorResgatado)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.impostoIncorrido)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.impostoPrevisto)}
-                      </td>
-                      <td className="whitespace-nowrap px-2 py-1.5">
-                        {formatCurrency(grupoInvestimento.saldoLiquido)}
-                      </td>
-                    </tr>
-                  ))}
+                  {grupo.investimentos?.map(
+                    (grupoInvestimento: GrupoInvestimentoItem) => (
+                      <tr
+                        key={`${grupo.Cliente}-${grupoInvestimento.ano}-${grupoInvestimento.mes}`}
+                        className="border-b text-sm last:border-none"
+                      >
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {grupoInvestimento.ano}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {grupoInvestimento.mes}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {formatCurrency(grupoInvestimento.rendimentoDoMes)}
+                        </td>
+
+                        {grupo.investimentos.reduce(
+                          (acc, inv) => acc + inv.dividendosDoMes,
+                          0
+                        ) > 0 && (
+                          <td className="whitespace-nowrap px-2 py-1.5">
+                            {formatCurrency(grupoInvestimento.dividendosDoMes)}
+                          </td>
+                        )}
+
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {formatCurrency(grupoInvestimento.valorAplicado)}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {formatCurrency(grupoInvestimento.saldoBruto)}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {formatCurrency(grupoInvestimento.valorResgatado)}
+                        </td>
+
+                        {grupo.investimentos.reduce(
+                          (acc, inv) => acc + inv.impostoIncorrido,
+                          0
+                        ) > 0 && (
+                          <td className="whitespace-nowrap px-2 py-1.5">
+                            {formatCurrency(grupoInvestimento.impostoIncorrido)}
+                          </td>
+                        )}
+
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {formatCurrency(grupoInvestimento.impostoPrevisto)}
+                        </td>
+                        <td className="whitespace-nowrap px-2 py-1.5">
+                          {formatCurrency(grupoInvestimento.saldoLiquido)}
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </td>

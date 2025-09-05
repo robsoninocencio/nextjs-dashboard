@@ -1,6 +1,6 @@
 import prisma from "@/prisma/lib/prisma";
 
-import type { Ativo, AtivosTable } from "./definitions";
+import type { Ativo, AtivoField, AtivosTable } from "./definitions";
 
 const ITEMS_PER_PAGE = 30;
 
@@ -139,7 +139,7 @@ export async function fetchFilteredAtivos(
   }
 }
 
-export async function fetchAtivos(): Promise<Ativo[]> {
+export async function fetchAtivos(): Promise<AtivoField[]> {
   try {
     const ativos = await prisma.ativos.findMany({
       select: {
