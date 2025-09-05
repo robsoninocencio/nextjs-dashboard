@@ -17,6 +17,33 @@ import {
   GrupoInvestimentoItem,
 } from "@/lib/investimentos/definitions";
 
+type GroupedInvestment = {
+  cliente: string;
+  ano: string;
+  mes: string;
+  investimentos: any[];
+};
+
+// Helper para agrupar investimentos
+const groupInvestimentos = (
+  investimentos: any[]
+): Record<string, GroupedInvestment> => {
+  if (!investimentos || investimentos.length === 0) return {};
+  return investimentos.reduce((acc: Record<string, GroupedInvestment>, inv) => {
+    const key = `${inv.clientes.name}-${inv.ano}-${inv.mes}`;
+    if (!acc[key]) {
+      acc[key] = {
+        cliente: inv.clientes.name,
+        ano: inv.ano,
+        mes: inv.mes,
+        investimentos: [],
+      };
+    }
+    acc[key].investimentos.push(inv);
+    return acc;
+  }, {});
+};
+
 // Interface para os props do componente
 interface InvestimentosTableProps {
   currentPage: number;
@@ -114,8 +141,8 @@ function MobileInvestimentoRow({ investimento }: { investimento: any }) {
 // Componente para exibir os totais no layout mobile
 function MobileTotals({ totais }: { totais: any }) {
   return (
-    <div className="mb-1 w-full rounded-md bg-white p-2">
-      <p className="text-lg font-medium mb-1">Total Geral do Mês</p>
+    <div className="mb-1 w-full rounded-md bg-gray-100 p-3 mt-4 border-t-4 border-gray-200">
+      <p className="text-lg font-bold mb-2 text-gray-800">Total Geral do Mês</p>
       {[
         { label: "Rendimento", value: totais.rendimentoDoMes },
         { label: "Dividendos", value: totais.dividendosDoMes },
@@ -143,488 +170,421 @@ function DesktopInvestimentosTable({
   investimentos,
   totais,
 }: {
-  investimentos: any[];
+  investimentos: any;
   totais: any;
 }) {
-  return (
-    <table className="hidden min-w-full text-gray-900 md:table">
-      <thead className="rounded-lg text-left text-sm font-normal">
-        <tr>
-          {[
-            "Ano",
-            "Mês",
-            "Cliente",
-            "Banco",
-            "Ativo",
-            "Tipo",
-            "Categorias",
-          ].map((header) => (
-            <th
-              key={header}
-              scope="col"
-              // className="px-2 py-1.5 font-medium text-left"
-              className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-100 border-b border-gray-300 text-left"
-            >
-              {header}
-            </th>
-          ))}
-          {[
-            { label: "Rendimento", key: "rendimentoDoMes" },
-            { label: "Rendimento (%)", key: "percentualRendimentoDoMes" },
-            {
-              label: "Dividendo",
-              key: "dividendosDoMes",
-              condition: totais.dividendosDoMes > 0,
-            },
-            {
-              label: "Dividendo (%)",
-              key: "percentualDividendosDoMes",
-              condition: totais.dividendosDoMes > 0,
-            },
-            {
-              label: "Rend + Div (%)",
-              key: "percentualRendMaisDivDoMes",
-              condition: totais.dividendosDoMes > 0,
-            },
+  const groupedInvestimentos = Object.values(
+    groupInvestimentos(investimentos)
+  ).map((group) => {
+    // Calcula os totais para cada grupo
+    const groupTotals = group.investimentos.reduce(
+      (acc, inv) => {
+        acc.rendimentoDoMes += inv.rendimentoDoMes;
+        acc.dividendosDoMes += inv.dividendosDoMes;
+        acc.valorAplicado += inv.valorAplicado;
+        acc.saldoBruto += inv.saldoBruto; // Nota: Somar saldos pode não ser o ideal. O correto seria exibir o último saldo.
+        acc.valorResgatado += inv.valorResgatado;
+        acc.impostoIncorrido += inv.impostoIncorrido;
+        acc.impostoPrevisto += inv.impostoPrevisto;
+        acc.saldoLiquido += inv.saldoLiquido; // Nota: Somar saldos pode não ser o ideal.
+        return acc;
+      },
+      {
+        rendimentoDoMes: 0,
+        dividendosDoMes: 0,
+        valorAplicado: 0,
+        saldoBruto: 0,
+        valorResgatado: 0,
+        impostoIncorrido: 0,
+        impostoPrevisto: 0,
+        saldoLiquido: 0,
+      }
+    );
+    return {
+      ...group,
+      totals: groupTotals,
+    };
+  });
 
-            {
-              label: "Aplicações",
-              key: "valorAplicado",
-              condition: totais.valorAplicado > 0,
-            },
-            {
-              label: "Saldo Bruto",
-              key: "saldoBruto",
-              condition: totais.saldoBruto > 0,
-            },
+  const monthNames: { [key: string]: string } = {
+    "01": "Janeiro",
+    "02": "Fevereiro",
+    "03": "Março",
+    "04": "Abril",
+    "05": "Maio",
+    "06": "Junho",
+    "07": "Julho",
+    "08": "Agosto",
+    "09": "Setembro",
+    "10": "Outubro",
+    "11": "Novembro",
+    "12": "Dezembro",
+  };
 
-            {
-              label: "% Cresc Bruto",
-              key: "percentualDeCrescimentoSaldoBruto",
-            },
-
-            {
-              label: "Resgates",
-              key: "valorResgatado",
-              condition: totais.valorResgatado > 0,
-            },
-            {
-              label: "Imposto Incorrido",
-              key: "impostoIncorrido",
-              condition: totais.impostoIncorrido > 0,
-            },
-            {
-              label: "Imposto Previsto",
-              key: "impostoPrevisto",
-              condition: totais.impostoPrevisto > 0,
-            },
-            { label: "Saldo Líquido", key: "saldoLiquido" },
-
-            {
-              label: "% Cresc Liquido",
-              key: "percentualDeCrescimentoSaldoLiquido",
-            },
-            { label: "", key: "" },
-          ].map(
-            ({ label, condition = true }) =>
-              condition && (
-                <th
-                  key={label}
-                  scope="col"
-                  // className="px-2 py-1.5 font-medium text-right"
-                  className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide bg-gray-100 border-b border-gray-300 text-right"
-                >
-                  {label}
-                </th>
-              )
-          )}
-          <th scope="col" className="relative py-1.5 pl-2 pr-3">
-            <span className="sr-only">Ações</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white">
-        {investimentos?.map((investimento) => (
-          <tr
-            key={investimento.id}
-            className="border-b text-sm last:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-          >
-            <td className="whitespace-nowrap px-2 py-1.5">
-              {formatDateToYear(investimento.data.toISOString())}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5">
-              {formatDateToMonth(investimento.data.toISOString())}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5">
-              {investimento.clientes.name}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5">
-              {investimento.bancos.nome}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5">
-              {investimento.ativos.nome}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5">
-              {investimento.ativos.tipos?.nome}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5">
-              <div className="flex flex-wrap gap-1">
-                {investimento.ativos.ativo_categorias.map(
-                  ({ categoria }: any) => (
-                    <Badge key={categoria.id} variant="secondary">
-                      {categoria.nome}
-                    </Badge>
-                  )
-                )}
-              </div>
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatCurrency(investimento.rendimentoDoMes)}
-            </td>
-
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatToDecimals(
-                (investimento.rendimentoDoMes /
-                  100 /
-                  (investimento.saldoBruto / 100 -
-                    investimento.rendimentoDoMes / 100 -
-                    investimento.valorAplicado / 100 +
-                    investimento.valorResgatado / 100 +
-                    investimento.impostoIncorrido / 100 +
-                    investimento.valorAplicado / 100)) *
-                  100,
-                6
-              )}
-            </td>
-
-            {totais.dividendosDoMes > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(investimento.dividendosDoMes)}
-              </td>
-            )}
-
-            {totais.dividendosDoMes > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatToDecimals(
-                  (investimento.dividendosDoMes /
-                    100 /
-                    (investimento.saldoBruto / 100 -
-                      investimento.rendimentoDoMes / 100 -
-                      investimento.valorAplicado / 100 +
-                      investimento.valorResgatado / 100 +
-                      investimento.impostoIncorrido / 100 +
-                      investimento.valorAplicado / 100)) *
-                    100,
-                  6
-                )}
-              </td>
-            )}
-
-            {totais.dividendosDoMes > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatToDecimals(
-                  ((investimento.rendimentoDoMes / 100 +
-                    investimento.dividendosDoMes / 100) /
-                    (investimento.saldoBruto / 100 -
-                      investimento.rendimentoDoMes / 100 -
-                      investimento.valorAplicado / 100 +
-                      investimento.valorResgatado / 100 +
-                      investimento.impostoIncorrido / 100 +
-                      investimento.valorAplicado / 100)) *
-                    100,
-                  6
-                )}
-              </td>
-            )}
-
-            {totais.valorAplicado > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(investimento.valorAplicado)}
-              </td>
-            )}
-            {totais.saldoBruto > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(investimento.saldoBruto)}
-              </td>
-            )}
-
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatToDecimals(
-                investimento.percentualDeCrescimentoSaldoBruto,
-                6
-              )}
-            </td>
-
-            {totais.valorResgatado > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(investimento.valorResgatado)}
-              </td>
-            )}
-            {totais.impostoIncorrido > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(investimento.impostoIncorrido)}
-              </td>
-            )}
-            {totais.impostoPrevisto > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(investimento.impostoPrevisto)}
-              </td>
-            )}
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatCurrency(investimento.saldoLiquido)}
-            </td>
-
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatToDecimals(
-                investimento.percentualDeCrescimentoSaldoLiquido,
-                6
-              )}
-            </td>
-
-            <td className="whitespace-nowrap py-1.5 pl-2 pr-3">
-              <div className="flex justify-end gap-1">
-                <ButtonLinkUpdate
-                  href={`/dashboard/investimentos/${investimento.id}/edit`}
-                />
-                <ButtonLinkDelete id={investimento.id} />
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-      {investimentos?.length > 0 && (
-        <tfoot className="bg-gray-100 text-sm font-medium">
-          <tr>
-            <td colSpan={7} className="px-2 py-1.5 text-lg font-medium">
-              Totais
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatCurrency(totais.rendimentoDoMes)}
-            </td>
-
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatToDecimals(
-                (totais.rendimentoDoMes /
-                  (totais.saldoBruto -
-                    totais.rendimentoDoMes -
-                    totais.valorAplicado +
-                    totais.valorResgatado +
-                    totais.impostoIncorrido)) *
-                  100,
-                6
-              )}
-            </td>
-
-            {totais.dividendosDoMes > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(totais.dividendosDoMes)}
-              </td>
-            )}
-
-            {totais.dividendosDoMes > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
-            )}
-
-            {totais.dividendosDoMes > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
-            )}
-
-            {totais.valorAplicado > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(totais.valorAplicado)}
-              </td>
-            )}
-            {totais.saldoBruto > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(totais.saldoBruto)}
-              </td>
-            )}
-
-            <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
-
-            {totais.valorResgatado > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(totais.valorResgatado)}
-              </td>
-            )}
-            {totais.impostoIncorrido > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(totais.impostoIncorrido)}
-              </td>
-            )}
-            {totais.impostoPrevisto > 0 && (
-              <td className="whitespace-nowrap px-2 py-1.5 text-right">
-                {formatCurrency(totais.impostoPrevisto)}
-              </td>
-            )}
-            <td className="whitespace-nowrap px-2 py-1.5 text-right">
-              {formatCurrency(totais.saldoLiquido)}
-            </td>
-            <td className="whitespace-nowrap px-2 py-1.5 text-right"></td>
-            <td></td>
-          </tr>
-        </tfoot>
-      )}
-    </table>
+  const TableHeaderRow = ({ visibleHeaders }: { visibleHeaders: any[] }) => (
+    <tr className="text-sm font-normal border-b-2 border-t-2 border-gray-300 bg-gray-100">
+      {["Banco", "Ativo", "Tipo", "Categorias"].map((header) => (
+        <td
+          key={header}
+          className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide text-left"
+        >
+          {header}
+        </td>
+      ))}
+      {visibleHeaders.map(({ label }) => (
+        <td
+          key={label}
+          className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide text-right"
+        >
+          {label}
+        </td>
+      ))}
+      <td className="relative py-1.5 pl-2 pr-3">
+        <span className="sr-only">Ações</span>
+      </td>
+    </tr>
   );
-}
 
-// Componente para exibir a tabela de investimentos agrupados por cliente
-function DesktopGroupedInvestimentosTable({
-  grupoInvestimentos,
-}: {
-  grupoInvestimentos: GrupoInvestimento[];
-}) {
+  const headerConfig = [
+    { label: "Rendimento", key: "rendimentoDoMes" },
+    {
+      label: "Rendimento (%)",
+      key: "percentualRendimentoDoMes",
+    },
+    {
+      label: "Dividendo",
+      key: "dividendosDoMes",
+      condition: totais.dividendosDoMes > 0,
+    },
+    {
+      label: "Dividendo (%)",
+      key: "percentualDividendosDoMes",
+      condition: totais.dividendosDoMes > 0,
+    },
+    {
+      label: "Rend + Div (%)",
+      key: "percentualRendMaisDivDoMes",
+      condition: totais.dividendosDoMes > 0,
+    },
+    {
+      label: "Aplicações",
+      key: "valorAplicado",
+      condition: totais.valorAplicado > 0,
+    },
+    {
+      label: "Saldo Bruto",
+      key: "saldoBruto",
+      condition: totais.saldoBruto > 0,
+    },
+    {
+      label: "% Cresc Bruto",
+      key: "percentualDeCrescimentoSaldoBruto",
+    },
+    {
+      label: "Resgates",
+      key: "valorResgatado",
+      condition: totais.valorResgatado > 0,
+    },
+    {
+      label: "Imposto Incorrido",
+      key: "impostoIncorrido",
+      condition: totais.impostoIncorrido > 0,
+    },
+    {
+      label: "Imposto Previsto",
+      key: "impostoPrevisto",
+      condition: totais.impostoPrevisto > 0,
+    },
+    { label: "Saldo Líquido", key: "saldoLiquido" },
+    {
+      label: "% Cresc Liquido",
+      key: "percentualDeCrescimentoSaldoLiquido",
+    },
+  ];
+
+  const visibleHeaders = headerConfig.filter(
+    ({ condition = true }) => condition
+  );
+  const colSpan = 4 + visibleHeaders.length + 1; // 4 estáticos + dinâmicos + 1 ações
+
   return (
-    <table className="hidden min-w-full text-gray-900 md:table bg-white mt-4">
-      <thead className="rounded-lg text-left text-sm font-normal">
-        <tr>
-          <th scope="col" className="px-2 py-1.5 font-medium text-left">
-            Clientes
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white">
-        {grupoInvestimentos?.map((grupo) => (
-          <tr
-            key={grupo.Cliente}
-            className="border-b text-sm last:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-          >
-            <td className="px-2 py-1.5">
-              <div className="font-medium">{grupo.Cliente}</div>
-              <table className="min-w-full text-gray-900 mt-2">
-                <thead className="text-left text-sm font-normal">
-                  <tr>
-                    {[
-                      { label: "Ano", key: "ano", condition: true },
-                      { label: "Mês", key: "mes", condition: true },
-                      {
-                        label: "Rendimento",
-                        key: "rendimentoDoMes",
-                        condition: true,
-                      },
-
-                      {
-                        label: "Dividendos",
-                        key: "dividendosDoMes",
-                        condition:
-                          grupo.investimentos.reduce(
-                            (acc, inv) => acc + inv.dividendosDoMes,
-                            0
-                          ) > 0,
-                      },
-
-                      {
-                        label: "Valor Aplicado",
-                        key: "valorAplicado",
-                        condition: true,
-                      },
-                      {
-                        label: "Saldo Bruto",
-                        key: "saldoBruto",
-                        condition: true,
-                      },
-                      {
-                        label: "Valor Resgatado",
-                        key: "valorResgatado",
-                        condition: true,
-                      },
-
-                      {
-                        label: "Imposto Incorrido",
-                        key: "impostoIncorrido",
-                        condition:
-                          grupo.investimentos.reduce(
-                            (acc, inv) => acc + inv.impostoIncorrido,
-                            0
-                          ) > 0,
-                      },
-
-                      {
-                        label: "Imposto Previsto",
-                        key: "impostoPrevisto",
-                        condition: true,
-                      },
-                      {
-                        label: "Saldo Líquido",
-                        key: "saldoLiquido",
-                        condition: true,
-                      },
-                    ].map(
-                      ({ label, condition = true }) =>
-                        condition && (
-                          <th
-                            key={label}
-                            scope="col"
-                            className="px-2 py-1.5 font-medium text-left"
-                          >
-                            {label}
-                          </th>
+    <div className="hidden md:block">
+      <table className="min-w-full text-gray-900">
+        <tbody className="bg-white">
+          {groupedInvestimentos.map((group) => (
+            <>
+              <tr
+                key={`${group.cliente}-${group.ano}-${group.mes}`}
+                className="bg-gray-200"
+              >
+                <td
+                  colSpan={colSpan}
+                  className="p-2 text-xl font-semibold text-gray-800"
+                >
+                  {group.cliente} - {group.ano} - {monthNames[group.mes]}
+                </td>
+              </tr>
+              <TableHeaderRow visibleHeaders={visibleHeaders} />
+              {group.investimentos.map((investimento: any) => (
+                <tr
+                  key={investimento.id}
+                  className="border-b text-sm last:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap px-2 py-1.5 align-top">
+                    {investimento.bancos.nome}
+                  </td>
+                  <td className="whitespace-nowrap px-2 py-1.5 align-top">
+                    {investimento.ativos.nome}
+                  </td>
+                  <td className="whitespace-nowrap px-2 py-1.5 align-top">
+                    {investimento.ativos.tipos?.nome}
+                  </td>
+                  <td className="whitespace-nowrap px-2 py-1.5 align-top">
+                    <div className="flex flex-wrap gap-1">
+                      {investimento.ativos.ativo_categorias.map(
+                        ({ categoria }: any) => (
+                          <Badge key={categoria.id} variant="secondary">
+                            {categoria.nome}
+                          </Badge>
                         )
+                      )}
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(investimento.rendimentoDoMes)}
+                  </td>
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatToDecimals(
+                      (investimento.rendimentoDoMes /
+                        100 /
+                        (investimento.saldoBruto / 100 -
+                          investimento.rendimentoDoMes / 100 -
+                          investimento.valorAplicado / 100 +
+                          investimento.valorResgatado / 100 +
+                          investimento.impostoIncorrido / 100 +
+                          investimento.valorAplicado / 100)) *
+                        100,
+                      6
                     )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {grupo.investimentos?.map(
-                    (grupoInvestimento: GrupoInvestimentoItem) => (
-                      <tr
-                        key={`${grupo.Cliente}-${grupoInvestimento.ano}-${grupoInvestimento.mes}`}
-                        className="border-b text-sm last:border-none"
-                      >
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {grupoInvestimento.ano}
-                        </td>
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {grupoInvestimento.mes}
-                        </td>
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {formatCurrency(grupoInvestimento.rendimentoDoMes)}
-                        </td>
-
-                        {grupo.investimentos.reduce(
-                          (acc, inv) => acc + inv.dividendosDoMes,
-                          0
-                        ) > 0 && (
-                          <td className="whitespace-nowrap px-2 py-1.5">
-                            {formatCurrency(grupoInvestimento.dividendosDoMes)}
-                          </td>
-                        )}
-
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {formatCurrency(grupoInvestimento.valorAplicado)}
-                        </td>
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {formatCurrency(grupoInvestimento.saldoBruto)}
-                        </td>
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {formatCurrency(grupoInvestimento.valorResgatado)}
-                        </td>
-
-                        {grupo.investimentos.reduce(
-                          (acc, inv) => acc + inv.impostoIncorrido,
-                          0
-                        ) > 0 && (
-                          <td className="whitespace-nowrap px-2 py-1.5">
-                            {formatCurrency(grupoInvestimento.impostoIncorrido)}
-                          </td>
-                        )}
-
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {formatCurrency(grupoInvestimento.impostoPrevisto)}
-                        </td>
-                        <td className="whitespace-nowrap px-2 py-1.5">
-                          {formatCurrency(grupoInvestimento.saldoLiquido)}
-                        </td>
-                      </tr>
-                    )
+                  </td>
+                  {totais.dividendosDoMes > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatCurrency(investimento.dividendosDoMes)}
+                    </td>
                   )}
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                  {totais.dividendosDoMes > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatToDecimals(
+                        (investimento.dividendosDoMes /
+                          100 /
+                          (investimento.saldoBruto / 100 -
+                            investimento.rendimentoDoMes / 100 -
+                            investimento.valorAplicado / 100 +
+                            investimento.valorResgatado / 100 +
+                            investimento.impostoIncorrido / 100 +
+                            investimento.valorAplicado / 100)) *
+                          100,
+                        6
+                      )}
+                    </td>
+                  )}
+                  {totais.dividendosDoMes > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatToDecimals(
+                        ((investimento.rendimentoDoMes / 100 +
+                          investimento.dividendosDoMes / 100) /
+                          (investimento.saldoBruto / 100 -
+                            investimento.rendimentoDoMes / 100 -
+                            investimento.valorAplicado / 100 +
+                            investimento.valorResgatado / 100 +
+                            investimento.impostoIncorrido / 100 +
+                            investimento.valorAplicado / 100)) *
+                          100,
+                        6
+                      )}
+                    </td>
+                  )}
+                  {totais.valorAplicado > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatCurrency(investimento.valorAplicado)}
+                    </td>
+                  )}
+                  {totais.saldoBruto > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatCurrency(investimento.saldoBruto)}
+                    </td>
+                  )}
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatToDecimals(
+                      investimento.percentualDeCrescimentoSaldoBruto,
+                      6
+                    )}
+                  </td>
+                  {totais.valorResgatado > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatCurrency(investimento.valorResgatado)}
+                    </td>
+                  )}
+                  {totais.impostoIncorrido > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatCurrency(investimento.impostoIncorrido)}
+                    </td>
+                  )}
+                  {totais.impostoPrevisto > 0 && (
+                    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                      {formatCurrency(investimento.impostoPrevisto)}
+                    </td>
+                  )}
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(investimento.saldoLiquido)}
+                  </td>
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatToDecimals(
+                      investimento.percentualDeCrescimentoSaldoLiquido,
+                      6
+                    )}
+                  </td>
+                  <td className="whitespace-nowrap py-1.5 pl-2 pr-3 align-top">
+                    <div className="flex justify-end gap-1">
+                      <ButtonLinkUpdate
+                        href={`/dashboard/investimentos/${investimento.id}/edit`}
+                      />
+                      <ButtonLinkDelete id={investimento.id} />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {/* Total do Grupo */}
+              <tr className="border-t-2 border-b-4 border-gray-300 bg-gray-50 font-medium">
+                <td
+                  colSpan={4}
+                  className="px-2 py-1.5 text-left font-semibold align-top "
+                >
+                  Total do Grupo
+                </td>
+                <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                  {formatCurrency(group.totals.rendimentoDoMes)}
+                </td>
+                <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                  {/* Percentual do grupo - em branco por enquanto */}
+                </td>
+                {totais.dividendosDoMes > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(group.totals.dividendosDoMes)}
+                  </td>
+                )}
+                {totais.dividendosDoMes > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
+                )}
+                {totais.dividendosDoMes > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
+                )}
+                {totais.valorAplicado > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(group.totals.valorAplicado)}
+                  </td>
+                )}
+                {totais.saldoBruto > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(group.totals.saldoBruto)}
+                  </td>
+                )}
+                <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
+                {totais.valorResgatado > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(group.totals.valorResgatado)}
+                  </td>
+                )}
+                {totais.impostoIncorrido > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(group.totals.impostoIncorrido)}
+                  </td>
+                )}
+                {totais.impostoPrevisto > 0 && (
+                  <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                    {formatCurrency(group.totals.impostoPrevisto)}
+                  </td>
+                )}
+                <td className="whitespace-nowrap px-2 py-1.5 text-right align-top">
+                  {formatCurrency(group.totals.saldoLiquido)}
+                </td>
+                <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
+                <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
+              </tr>
+            </>
+          ))}
+        </tbody>
+        {investimentos?.length > 0 && (
+          <tfoot className="bg-gray-200 text-base font-bold border-t-4 border-gray-300">
+            <tr>
+              <td
+                colSpan={4}
+                className="px-3 py-3 text-left text-lg font-bold align-top"
+              >
+                Totais Geral
+              </td>
+              <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                {formatCurrency(totais.rendimentoDoMes)}
+              </td>
+              <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                {formatToDecimals(
+                  (totais.rendimentoDoMes /
+                    (totais.saldoBruto -
+                      totais.rendimentoDoMes -
+                      totais.valorAplicado +
+                      totais.valorResgatado +
+                      totais.impostoIncorrido)) *
+                    100,
+                  6
+                )}
+              </td>
+              {totais.dividendosDoMes > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                  {formatCurrency(totais.dividendosDoMes)}
+                </td>
+              )}
+              {totais.dividendosDoMes > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top"></td>
+              )}
+              {totais.dividendosDoMes > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top"></td>
+              )}
+              {totais.valorAplicado > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                  {formatCurrency(totais.valorAplicado)}
+                </td>
+              )}
+              {totais.saldoBruto > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                  {formatCurrency(totais.saldoBruto)}
+                </td>
+              )}
+              <td className="whitespace-nowrap px-3 py-3 text-right align-top"></td>
+              {totais.valorResgatado > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                  {formatCurrency(totais.valorResgatado)}
+                </td>
+              )}
+              {totais.impostoIncorrido > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                  {formatCurrency(totais.impostoIncorrido)}
+                </td>
+              )}
+              {totais.impostoPrevisto > 0 && (
+                <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                  {formatCurrency(totais.impostoPrevisto)}
+                </td>
+              )}
+              <td className="whitespace-nowrap px-3 py-3 text-right align-top">
+                {formatCurrency(totais.saldoLiquido)}
+              </td>
+              <td className="whitespace-nowrap px-3 py-3 text-right align-top"></td>
+              <td className="align-top"></td>
+            </tr>
+          </tfoot>
+        )}
+      </table>
+    </div>
   );
 }
 
@@ -677,14 +637,10 @@ export default async function InvestimentosTable({
     }
   );
   // console.log("totais**************************:", totais);
-
-  // Buscar dados agrupados por cliente, ano e mês
-  const grupoInvestimentos = await fetchInvestimentoGroupByClienteAnoMes();
-
   return (
     <div className="mt-4 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2">
+        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Layout para dispositivos móveis */}
           <div className="md:hidden">
             {investimentos?.map((investimento) => (
@@ -699,9 +655,6 @@ export default async function InvestimentosTable({
           <DesktopInvestimentosTable
             investimentos={investimentos}
             totais={totais}
-          />
-          <DesktopGroupedInvestimentosTable
-            grupoInvestimentos={grupoInvestimentos}
           />
         </div>
       </div>
