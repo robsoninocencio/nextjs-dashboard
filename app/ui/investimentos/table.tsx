@@ -1,3 +1,4 @@
+import React from "react";
 import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
 import { ButtonLinkDelete } from "@/app/ui/investimentos/buttonLinkDelete";
 import { Badge } from "@/components/ui/badge";
@@ -312,11 +313,8 @@ function DesktopInvestimentosTable({
       <table className="min-w-full text-gray-900">
         <tbody className="bg-white">
           {groupedInvestimentos.map((group) => (
-            <>
-              <tr
-                key={`${group.cliente}-${group.ano}-${group.mes}`}
-                className="bg-gray-200"
-              >
+            <React.Fragment key={`${group.cliente}-${group.ano}-${group.mes}`}>
+              <tr className="bg-gray-200">
                 <td
                   colSpan={colSpan}
                   className="p-2 text-xl font-semibold text-gray-800"
@@ -511,7 +509,7 @@ function DesktopInvestimentosTable({
                 <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
                 <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
               </tr>
-            </>
+            </React.Fragment>
           ))}
         </tbody>
         {investimentos?.length > 0 && (
