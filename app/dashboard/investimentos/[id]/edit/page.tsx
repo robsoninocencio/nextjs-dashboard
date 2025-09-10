@@ -38,6 +38,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     rendimentoDoMes: investimento.rendimentoDoMes,
     dividendosDoMes: investimento.dividendosDoMes,
     valorAplicado: investimento.valorAplicado,
+    saldoAnterior: investimento.saldoAnterior,
     saldoBruto: investimento.saldoBruto,
     valorResgatado: investimento.valorResgatado,
     impostoIncorrido: investimento.impostoIncorrido,

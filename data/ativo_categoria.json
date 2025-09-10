@@ -1,0 +1,67 @@
+[
+  {
+    "ativoId": "210819a3-8858-440f-a11b-d41ec4aaaf00",
+    "categoriaId": "c76f3964-91e3-4cd6-a07b-f5746f55066f",
+    "createdAt": "2025-09-03T07:34:47.738Z"
+  },
+  {
+    "ativoId": "497f5772-0808-48c9-ad3e-78afc5ad8935",
+    "categoriaId": "c76f3964-91e3-4cd6-a07b-f5746f55066f",
+    "createdAt": "2025-09-03T07:35:18.312Z"
+  },
+  {
+    "ativoId": "7acfcca0-897f-4398-a003-3a9f358a560e",
+    "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-03T17:57:30.952Z"
+  },
+  {
+    "ativoId": "fa4ec5db-f028-485c-bfd6-411eed527727",
+    "categoriaId": "19c565ad-db53-409b-a5c7-750c6e16bae9",
+    "createdAt": "2025-09-04T21:34:19.763Z"
+  },
+  {
+    "ativoId": "fa4ec5db-f028-485c-bfd6-411eed527727",
+    "categoriaId": "6686f761-3bdf-41dd-859d-6940642b3475",
+    "createdAt": "2025-09-04T21:34:19.763Z"
+  },
+  {
+    "ativoId": "e3c1b314-f8ea-462d-90cc-076ce5b843f2",
+    "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-04T22:05:28.979Z"
+  },
+  {
+    "ativoId": "e3c1b314-f8ea-462d-90cc-076ce5b843f2",
+    "categoriaId": "6686f761-3bdf-41dd-859d-6940642b3475",
+    "createdAt": "2025-09-04T22:05:28.979Z"
+  },
+  {
+    "ativoId": "cb060c8c-c326-4951-8b3e-7e3b8f81f4dd",
+    "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-04T22:05:42.787Z"
+  },
+  {
+    "ativoId": "cb060c8c-c326-4951-8b3e-7e3b8f81f4dd",
+    "categoriaId": "6686f761-3bdf-41dd-859d-6940642b3475",
+    "createdAt": "2025-09-04T22:05:42.787Z"
+  },
+  {
+    "ativoId": "ef902a9f-efe1-4739-98fb-65931e1bc785",
+    "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-04T22:06:25.666Z"
+  },
+  {
+    "ativoId": "ef902a9f-efe1-4739-98fb-65931e1bc785",
+    "categoriaId": "c76f3964-91e3-4cd6-a07b-f5746f55066f",
+    "createdAt": "2025-09-04T22:06:25.666Z"
+  },
+  {
+    "ativoId": "f1276d49-19a6-41a5-881f-c58768fce9ca",
+    "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-04T22:10:39.672Z"
+  },
+  {
+    "ativoId": "f1276d49-19a6-41a5-881f-c58768fce9ca",
+    "categoriaId": "6686f761-3bdf-41dd-859d-6940642b3475",
+    "createdAt": "2025-09-04T22:10:39.672Z"
+  }
+]

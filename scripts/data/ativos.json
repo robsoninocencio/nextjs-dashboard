@@ -1,0 +1,121 @@
+[
+  {
+    "id": "8eb06c98-3d67-406b-9677-755bced18e54",
+    "nome": "LETRA CRED.AGNG",
+    "createdAt": "2025-08-19T23:11:10.784Z",
+    "updatedAt": "2025-08-19T23:11:10.784Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "ca43b39a-58a7-45d1-b5a2-fd4df2745851",
+    "nome": "LTN PRE-Tesouro Jan/2026",
+    "createdAt": "2025-08-19T23:11:11.192Z",
+    "updatedAt": "2025-08-19T23:11:11.192Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "148a953e-4dea-4b0c-8009-9bba6730efa5",
+    "nome": "NTN-F-Tesouro Jan/2031",
+    "createdAt": "2025-08-19T23:11:11.646Z",
+    "updatedAt": "2025-08-19T23:11:11.646Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "f36e1c9a-86e8-40be-8815-c94df3780d35",
+    "nome": "SAF AGILITE FI RF CP",
+    "createdAt": "2025-08-19T23:11:12.125Z",
+    "updatedAt": "2025-08-19T23:11:12.125Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "6229b420-f771-4393-ab9f-af895af38fa8",
+    "nome": "CRA Emissão Terceiros CDI",
+    "createdAt": "2025-08-19T23:11:10.362Z",
+    "updatedAt": "2025-09-03T07:23:17.249Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "32be0c4a-76b5-4aa4-a659-acf531d4e811",
+    "nome": "SAF SOB SPECIAL FICFI RF SIMPL",
+    "createdAt": "2025-08-19T23:11:12.645Z",
+    "updatedAt": "2025-09-03T07:23:32.029Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "210819a3-8858-440f-a11b-d41ec4aaaf00",
+    "nome": "CONTA CORRENTE",
+    "createdAt": "2025-08-19T23:11:13.500Z",
+    "updatedAt": "2025-09-03T07:34:47.738Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "497f5772-0808-48c9-ad3e-78afc5ad8935",
+    "nome": "POUPANCA",
+    "createdAt": "2025-09-03T07:30:44.428Z",
+    "updatedAt": "2025-09-03T07:35:18.312Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "7acfcca0-897f-4398-a003-3a9f358a560e",
+    "nome": "FUNDO DE INVESTIMENTO",
+    "createdAt": "2025-09-03T17:57:30.952Z",
+    "updatedAt": "2025-09-03T17:57:30.952Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "e3c1b314-f8ea-462d-90cc-076ce5b843f2",
+    "nome": "CDB 100% CDI - SAFRA",
+    "createdAt": "2025-09-03T08:09:29.503Z",
+    "updatedAt": "2025-09-04T22:05:28.979Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "cb060c8c-c326-4951-8b3e-7e3b8f81f4dd",
+    "nome": "CDB 80% CDI - SANTANDER",
+    "createdAt": "2025-09-03T08:08:51.621Z",
+    "updatedAt": "2025-09-04T22:05:42.787Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "ef902a9f-efe1-4739-98fb-65931e1bc785",
+    "nome": "CDB AUTOMATICO",
+    "createdAt": "2025-08-19T23:11:13.063Z",
+    "updatedAt": "2025-09-04T22:06:25.666Z",
+    "tipoId": "0b66393b-c796-48f9-b841-c1145afa9f4b"
+  },
+  {
+    "id": "f1276d49-19a6-41a5-881f-c58768fce9ca",
+    "nome": "CDB 100% CDI - SANTANDER",
+    "createdAt": "2025-09-04T22:10:39.672Z",
+    "updatedAt": "2025-09-04T22:10:39.672Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "6ccbf909-482b-42b5-9ea9-77d337f1785d",
+    "nome": "LCA - 98,92% CDI - CAIXA",
+    "createdAt": "2025-09-06T08:22:01.768Z",
+    "updatedAt": "2025-09-08T14:23:19.192Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "2b059dea-d13e-46e3-b3c2-d4b71b6e5e4e",
+    "nome": "LCI - 95% CDI - SANTANDER",
+    "createdAt": "2025-09-06T08:26:15.229Z",
+    "updatedAt": "2025-09-08T14:25:50.195Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "fa4ec5db-f028-485c-bfd6-411eed527727",
+    "nome": "LCI - 98% CDI - CAIXA",
+    "createdAt": "2025-09-04T21:30:50.419Z",
+    "updatedAt": "2025-09-08T14:27:11.023Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "ba502c80-80f0-485d-ad44-996ac27f8173",
+    "nome": "LCA - 11,97% PRE - SAFRA",
+    "createdAt": "2025-09-08T15:06:55.197Z",
+    "updatedAt": "2025-09-08T15:06:55.197Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  }
+]

@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const clientes = await fetchClientes();
-  const bancos = await fetchBancos();
-  const ativos = await fetchAtivos();
-
-  // console.log("ativos2:", ativos);
+  const [clientes, bancos, ativos] = await Promise.all([
+    fetchClientes(),
+    fetchBancos(),
+    fetchAtivos(),
+  ]);
 
   return (
     <main>

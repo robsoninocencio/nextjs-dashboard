@@ -1,0 +1,74 @@
+[
+  {
+    "month": "Jan",
+    "revenue": 2000,
+    "createdAt": "2025-08-19T23:11:01.765Z",
+    "updatedAt": "2025-08-19T23:11:33.599Z"
+  },
+  {
+    "month": "Feb",
+    "revenue": 1800,
+    "createdAt": "2025-08-19T23:11:02.334Z",
+    "updatedAt": "2025-08-19T23:11:33.958Z"
+  },
+  {
+    "month": "Mar",
+    "revenue": 2200,
+    "createdAt": "2025-08-19T23:11:02.775Z",
+    "updatedAt": "2025-08-19T23:11:34.337Z"
+  },
+  {
+    "month": "Apr",
+    "revenue": 2500,
+    "createdAt": "2025-08-19T23:11:03.216Z",
+    "updatedAt": "2025-08-19T23:11:34.677Z"
+  },
+  {
+    "month": "May",
+    "revenue": 2300,
+    "createdAt": "2025-08-19T23:11:03.640Z",
+    "updatedAt": "2025-08-19T23:11:35.057Z"
+  },
+  {
+    "month": "Jun",
+    "revenue": 3200,
+    "createdAt": "2025-08-19T23:11:04.048Z",
+    "updatedAt": "2025-08-19T23:11:35.424Z"
+  },
+  {
+    "month": "Jul",
+    "revenue": 3500,
+    "createdAt": "2025-08-19T23:11:04.555Z",
+    "updatedAt": "2025-08-19T23:11:35.793Z"
+  },
+  {
+    "month": "Aug",
+    "revenue": 3700,
+    "createdAt": "2025-08-19T23:11:04.945Z",
+    "updatedAt": "2025-08-19T23:11:36.190Z"
+  },
+  {
+    "month": "Sep",
+    "revenue": 2500,
+    "createdAt": "2025-08-19T23:11:05.339Z",
+    "updatedAt": "2025-08-19T23:11:36.699Z"
+  },
+  {
+    "month": "Oct",
+    "revenue": 2800,
+    "createdAt": "2025-08-19T23:11:05.714Z",
+    "updatedAt": "2025-08-19T23:11:37.044Z"
+  },
+  {
+    "month": "Nov",
+    "revenue": 3000,
+    "createdAt": "2025-08-19T23:11:06.087Z",
+    "updatedAt": "2025-08-19T23:11:37.403Z"
+  },
+  {
+    "month": "Dec",
+    "revenue": 4800,
+    "createdAt": "2025-08-19T23:11:06.456Z",
+    "updatedAt": "2025-08-19T23:11:37.759Z"
+  }
+]

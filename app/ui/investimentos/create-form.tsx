@@ -20,7 +20,7 @@ import {
 import { ClienteField } from "@/lib/clientes/definitions";
 import { BancoField } from "@/lib/bancos/definitions";
 import { AtivoField } from "@/lib/ativos/definitions";
-import CustomCurrencyInput from "@/app/ui/shared/currency-input";
+import { SelectField, CurrencyField } from "@/app/ui/shared/form-fields";
 
 // Interface para props do componente
 interface FormProps {
@@ -40,82 +40,9 @@ function SubmitInvestimentoButton() {
   );
 }
 
-// Componente para erros
-function InputError({ errors }: { errors?: string[] }) {
-  if (!errors) return null;
-  return (
-    <>
-      {errors.map((error) => (
-        <p key={error} className="p-2 md:p-4 text-sm text-red-500">
-          {error}
-        </p>
-      ))}
-    </>
-  );
-}
-
-// Componente para selects
-function SelectField({
-  id,
-  label,
-  options,
-  defaultValue,
-  errors,
-  onChange,
-  icon: Icon,
-}: {
-  id: string;
-  label: string;
-  options: { id: string; name: string }[];
-  defaultValue?: string;
-  errors?: string[];
-  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
-  icon: React.ElementType;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium">
-        {label}
-      </label>
-      <div className="relative mt-2 rounded-md">
-        <select
-          id={id}
-          name={id}
-          defaultValue={defaultValue ?? ""}
-          required
-          aria-describedby={`${id}-error`}
-          onChange={onChange}
-          className={`peer block w-full cursor-pointer rounded-md border ${
-            errors?.length ? "border-red-500" : "border-gray-200"
-          } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-        >
-          <option value="" disabled>
-            Selecione o {label.toLowerCase()}
-          </option>
-          {options.map((option) => (
-            <option key={option.id} value={option.id}>
-              {id === "mes" ? `${option.id} - ${option.name}` : option.name}
-            </option>
-          ))}
-        </select>
-        <Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-      </div>
-      <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
-        <InputError errors={errors} />
-      </div>
-    </div>
-  );
-}
-
 // Formulário principal de criação do investimento
 export default function Form({ clientes, bancos, ativos }: FormProps) {
-  const initialState: InvestimentoFormState = {
-    errors: {},
-    message: "",
-    submittedData: {},
-  };
-
-  // console.log("ativos3:", ativos);
+  const initialState: InvestimentoFormState = { errors: {}, message: null };
 
   const [state, formAction] = useActionState(createInvestimento, initialState);
   const [isRendaVariavel, setIsRendaVariavel] = useState(false);
@@ -162,7 +89,7 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
                 id="ano"
                 label="Ano"
                 options={years}
-                defaultValue={state.submittedData?.ano?.toString()}
+                defaultValue={state.submittedData?.ano}
                 errors={state.errors?.ano}
                 icon={CalendarDaysIcon}
               />
@@ -173,7 +100,7 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
                 id="mes"
                 label="Mês"
                 options={months}
-                defaultValue={state.submittedData?.mes?.toString()}
+                defaultValue={state.submittedData?.mes}
                 errors={state.errors?.mes}
                 icon={CalendarIcon}
               />
@@ -233,64 +160,37 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
           {/* 3.1 rendimentoDoMes */}
           {!isCdbAutomatico && (
             <div className="md:w-1/2">
-              <label
-                htmlFor="rendimentoDoMes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Rendimento do Mês
-              </label>
-              <div className="relative rounded-md">
-                <div className="relative">
-                  <CustomCurrencyInput
-                    id="rendimentoDoMes"
-                    name="rendimentoDoMes"
-                    placeholder="Entre com o valor exemplo (99,99)"
-                    defaultValue={state.submittedData?.rendimentoDoMes}
-                    aria-describedby="rendimentoDoMes-error"
-                    hasError={!!state.errors?.rendimentoDoMes?.length}
-                  />
-                </div>
-              </div>
-
-              <div
-                id="rendimentoDoMes-error"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <InputError errors={state.errors?.rendimentoDoMes} />
-              </div>
+              <CurrencyField
+                id="rendimentoDoMes"
+                label="Rendimento do Mês"
+                placeholder="Entre com o valor exemplo (99,99)"
+                defaultValue={state.submittedData?.rendimentoDoMes}
+                errors={state.errors?.rendimentoDoMes}
+              />
             </div>
           )}
+
+          {/* 3.3 saldoAnterior */}
+          <div className="md:w-1/2">
+            <CurrencyField
+              id="saldoAnterior"
+              label="Saldo Anterior"
+              placeholder="Entre com o saldo anterior (99,99)"
+              defaultValue={state.submittedData?.saldoAnterior}
+              errors={state.errors?.saldoAnterior}
+            />
+          </div>
 
           {/* 3.2 dividendosDoMes */}
           {isRendaVariavel && (
             <div className="md:w-1/2 sm:mt-4 md:mt-0">
-              <label
-                htmlFor="dividendosDoMes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Dividendos do Mês
-              </label>
-              <div className="relative rounded-md">
-                <div className="relative">
-                  <CustomCurrencyInput
-                    id="dividendosDoMes"
-                    name="dividendosDoMes"
-                    placeholder="Entre com o valor exemplo (99,99)"
-                    defaultValue={state.submittedData?.dividendosDoMes}
-                    aria-describedby="dividendosDoMes-error"
-                    hasError={!!state.errors?.dividendosDoMes?.length}
-                  />
-                </div>
-              </div>
-
-              <div
-                id="dividendosDoMes-error"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <InputError errors={state.errors?.dividendosDoMes} />
-              </div>
+              <CurrencyField
+                id="dividendosDoMes"
+                label="Dividendos do Mês"
+                placeholder="Entre com o valor exemplo (99,99)"
+                defaultValue={state.submittedData?.dividendosDoMes}
+                errors={state.errors?.dividendosDoMes}
+              />
             </div>
           )}
         </div>
@@ -299,58 +199,24 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
           {/* 4.1 valorAplicado */}
           <div className="md:w-1/2">
-            <label
-              htmlFor="valorAplicado"
-              className="mb-2 block text-sm font-medium"
-            >
-              Valores Aplicados
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <CustomCurrencyInput
-                  id="valorAplicado"
-                  name="valorAplicado"
-                  placeholder="Entre com o valor exemplo (99,99)"
-                  defaultValue={state.submittedData?.valorAplicado}
-                  aria-describedby="valorAplicado-error"
-                  hasError={!!state.errors?.valorAplicado?.length}
-                />
-              </div>
-            </div>
-
-            <div id="valorAplicado-error" aria-live="polite" aria-atomic="true">
-              <InputError errors={state.errors?.valorAplicado} />
-            </div>
+            <CurrencyField
+              id="valorAplicado"
+              label="Valores Aplicados"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={state.submittedData?.valorAplicado}
+              errors={state.errors?.valorAplicado}
+            />
           </div>
 
           {/* 4.2 valorResgatado */}
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <label
-              htmlFor="valorResgatado"
-              className="mb-2 block text-sm font-medium"
-            >
-              Valores Resgatados
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <CustomCurrencyInput
-                  id="valorResgatado"
-                  name="valorResgatado"
-                  placeholder="Entre com o valor exemplo (99,99)"
-                  defaultValue={state.submittedData?.valorResgatado}
-                  aria-describedby="valorResgatado-error"
-                  hasError={!!state.errors?.valorResgatado?.length}
-                />
-              </div>
-            </div>
-
-            <div
-              id="valorResgatado-error"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <InputError errors={state.errors?.valorResgatado} />
-            </div>
+            <CurrencyField
+              id="valorResgatado"
+              label="Valores Resgatados"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={state.submittedData?.valorResgatado}
+              errors={state.errors?.valorResgatado}
+            />
           </div>
         </div>
 
@@ -358,62 +224,24 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
           {/* 5.1 impostoIncorrido */}
           <div className="md:w-1/2">
-            <label
-              htmlFor="impostoIncorrido"
-              className="mb-2 block text-sm font-medium"
-            >
-              Impostos Incorridos
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <CustomCurrencyInput
-                  id="impostoIncorrido"
-                  name="impostoIncorrido"
-                  placeholder="Entre com o valor exemplo (99,99)"
-                  defaultValue={state.submittedData?.impostoIncorrido}
-                  aria-describedby="impostoIncorrido-error"
-                  hasError={!!state.errors?.impostoIncorrido?.length}
-                />
-              </div>
-            </div>
-
-            <div
-              id="impostoIncorrido-error"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <InputError errors={state.errors?.impostoIncorrido} />
-            </div>
+            <CurrencyField
+              id="impostoIncorrido"
+              label="Impostos Incorridos"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={state.submittedData?.impostoIncorrido}
+              errors={state.errors?.impostoIncorrido}
+            />
           </div>
 
           {/* 5.2 impostoPrevisto */}
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <label
-              htmlFor="impostoPrevisto"
-              className="mb-2 block text-sm font-medium"
-            >
-              Impostos Previstos
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <CustomCurrencyInput
-                  id="impostoPrevisto"
-                  name="impostoPrevisto"
-                  placeholder="Entre com o valor exemplo (99,99)"
-                  defaultValue={state.submittedData?.impostoPrevisto}
-                  aria-describedby="impostoPrevisto-error"
-                  hasError={!!state.errors?.impostoPrevisto?.length}
-                />
-              </div>
-            </div>
-
-            <div
-              id="impostoPrevisto-error"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <InputError errors={state.errors?.impostoPrevisto} />
-            </div>
+            <CurrencyField
+              id="impostoPrevisto"
+              label="Impostos Previstos"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={state.submittedData?.impostoPrevisto}
+              errors={state.errors?.impostoPrevisto}
+            />
           </div>
         </div>
 
@@ -421,54 +249,24 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
           {/* 6.1 saldoBruto */}
           <div className="md:w-1/2">
-            <label
-              htmlFor="saldoBruto"
-              className="mb-2 block text-sm font-medium"
-            >
-              Saldo Bruto
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <CustomCurrencyInput
-                  id="saldoBruto"
-                  name="saldoBruto"
-                  placeholder="Entre com o valor exemplo (99,99)"
-                  defaultValue={state.submittedData?.saldoBruto}
-                  aria-describedby="saldoBruto-error"
-                  hasError={!!state.errors?.saldoBruto?.length}
-                />
-              </div>
-            </div>
-
-            <div id="saldoBruto-error" aria-live="polite" aria-atomic="true">
-              <InputError errors={state.errors?.saldoBruto} />
-            </div>
+            <CurrencyField
+              id="saldoBruto"
+              label="Saldo Bruto"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={state.submittedData?.saldoBruto}
+              errors={state.errors?.saldoBruto}
+            />
           </div>
 
           {/* 6.2 SaldoLiquido */}
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <label
-              htmlFor="saldoLiquido"
-              className="mb-2 block text-sm font-medium"
-            >
-              Saldo Líquido
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <CustomCurrencyInput
-                  id="saldoLiquido"
-                  name="saldoLiquido"
-                  placeholder="Entre com o valor exemplo (99,99)"
-                  defaultValue={state.submittedData?.saldoLiquido}
-                  aria-describedby="saldoLiquido-error"
-                  hasError={!!state.errors?.saldoLiquido?.length}
-                />
-              </div>
-            </div>
-
-            <div id="saldoLiquido-error" aria-live="polite" aria-atomic="true">
-              <InputError errors={state.errors?.saldoLiquido} />
-            </div>
+            <CurrencyField
+              id="saldoLiquido"
+              label="Saldo Líquido"
+              placeholder="Entre com o valor exemplo (99,99)"
+              defaultValue={state.submittedData?.saldoLiquido}
+              errors={state.errors?.saldoLiquido}
+            />
           </div>
         </div>
 

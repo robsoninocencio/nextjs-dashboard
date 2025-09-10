@@ -65,22 +65,22 @@ model invoices {
 }
 
 model investimentos {
-  id                                  String   @id @default(uuid()) @db.Uuid
-  data                                DateTime @db.Date
-  ano                                 String   @db.VarChar(4)
-  mes                                 String   @db.VarChar(2)
-  rendimentoDoMes                     Int
-  dividendosDoMes                     Int
-  valorAplicado                       Int
-  saldoBruto                          Int
-  percentualDeCrescimentoSaldoBruto   Float?
-  valorResgatado                      Int
-  impostoIncorrido                    Int
-  impostoPrevisto                     Int
-  saldoLiquido                        Int
-  percentualDeCrescimentoSaldoLiquido Float?
-  createdAt                           DateTime @default(now())
-  updatedAt                           DateTime @updatedAt
+  id                                String   @id @default(uuid()) @db.Uuid
+  data                              DateTime @db.Date
+  ano                               String   @db.VarChar(4)
+  mes                               String   @db.VarChar(2)
+  rendimentoDoMes                   Int
+  dividendosDoMes                   Int
+  valorAplicado                     Int
+  saldoBruto                        Int
+  saldoAnterior                     Int      @default(0)
+  percentualDeCrescimentoSaldoBruto Float?
+  valorResgatado                    Int
+  impostoIncorrido                  Int
+  impostoPrevisto                   Int
+  saldoLiquido                      Int
+  createdAt                         DateTime @default(now())
+  updatedAt                         DateTime @updatedAt
 
   clientes  clientes @relation(fields: [clienteId], references: [id])
   clienteId String   @db.Uuid

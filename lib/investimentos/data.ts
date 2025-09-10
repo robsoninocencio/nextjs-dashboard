@@ -1,25 +1,31 @@
 import prisma from "@/prisma/lib/prisma";
+import { Prisma } from "../../generated/prisma";
 import { GrupoInvestimento, GrupoInvestimentoItem } from "./definitions";
 
-const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_PAGE = 100;
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
  */
 async function getCategoriaIds(categoriaId: string): Promise<string[]> {
-  if (!categoriaId) return [];
-  const categoria = await prisma.categorias.findUnique({
-    where: { id: categoriaId },
-    include: { subCategories: true },
-  });
+  if (!categoriaId) {
+    return [];
+  }
 
-  if (!categoria) return [];
-
-  const subIds = await Promise.all(
-    categoria.subCategories.map((sub) => getCategoriaIds(sub.id))
+  // Usando uma CTE recursiva para buscar todos os IDs de subcategorias de forma eficiente
+  const result = await prisma.$queryRaw<Array<{ id: string }>>(
+    Prisma.sql`
+      WITH RECURSIVE SubCategories AS (
+        SELECT id FROM "categorias" WHERE id = ${categoriaId}::uuid
+        UNION ALL
+        SELECT c.id FROM "categorias" c
+        INNER JOIN SubCategories sc ON c."parentId" = sc.id
+      )
+      SELECT id FROM SubCategories;
+    `
   );
 
-  return [categoria.id, ...subIds.flat()];
+  return result.map((r) => r.id);
 }
 
 function buildInvestimentosFilters(
@@ -53,27 +59,22 @@ function buildInvestimentosFilters(
     });
   }
 
-  if (queryAtivo || queryTipo) {
-    filters.push({
-      ativos: {
-        ...(queryAtivo && {
-          nome: { contains: queryAtivo, mode: "insensitive" },
-        }),
-        ...(queryTipo && {
-          tipos: { nome: { contains: queryTipo, mode: "insensitive" } },
-        }),
-      },
-    });
+  const ativosFilter: Record<string, any> = {};
+  if (queryAtivo) {
+    ativosFilter.nome = { contains: queryAtivo, mode: "insensitive" };
+  }
+  if (queryTipo) {
+    ativosFilter.tipos = { nome: { contains: queryTipo, mode: "insensitive" } };
   }
 
   if (categoriaIds && categoriaIds.length > 0) {
-    filters.push({
-      ativos: {
-        ativo_categorias: {
-          some: { categoriaId: { in: categoriaIds } },
-        },
-      },
-    });
+    ativosFilter.ativo_categorias = {
+      some: { categoriaId: { in: categoriaIds } },
+    };
+  }
+
+  if (Object.keys(ativosFilter).length > 0) {
+    filters.push({ ativos: ativosFilter });
   }
 
   return filters.length > 0 ? { AND: filters } : {};
@@ -250,6 +251,7 @@ export async function fetchInvestimentoById(id: string) {
         dividendosDoMes: true,
         valorAplicado: true,
         saldoBruto: true,
+        saldoAnterior: true,
         valorResgatado: true,
         impostoIncorrido: true,
         impostoPrevisto: true,
@@ -270,6 +272,7 @@ export async function fetchInvestimentoById(id: string) {
       dividendosDoMes: investimento.dividendosDoMes / 100,
       valorAplicado: investimento.valorAplicado / 100,
       saldoBruto: investimento.saldoBruto / 100,
+      saldoAnterior: investimento.saldoAnterior / 100,
       valorResgatado: investimento.valorResgatado / 100,
       impostoIncorrido: investimento.impostoIncorrido / 100,
       impostoPrevisto: investimento.impostoPrevisto / 100,
@@ -293,6 +296,7 @@ export async function fetchInvestimentoGroupByClienteAnoMes(): Promise<
         dividendosDoMes: true,
         valorAplicado: true,
         saldoBruto: true,
+        saldoAnterior: true,
         valorResgatado: true,
         impostoIncorrido: true,
         impostoPrevisto: true,
@@ -324,6 +328,7 @@ export async function fetchInvestimentoGroupByClienteAnoMes(): Promise<
           dividendosDoMes: investimento._sum.dividendosDoMes ?? 0,
           valorAplicado: investimento._sum.valorAplicado ?? 0,
           saldoBruto: investimento._sum.saldoBruto ?? 0,
+          saldoAnterior: investimento._sum.saldoAnterior ?? 0,
           valorResgatado: investimento._sum.valorResgatado ?? 0,
           impostoIncorrido: investimento._sum.impostoIncorrido ?? 0,
           impostoPrevisto: investimento._sum.impostoPrevisto ?? 0,

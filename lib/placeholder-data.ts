@@ -19,38 +19,38 @@ const usersData = [
 const bancosData = [
   {
     id: "14d431b5-d8bb-4093-a067-5c67e67e2e40",
-    nome: "Caixa Economica Federal",
+    nome: "CAIXA",
   },
   {
     id: "b567da52-a347-40a0-831e-b0ae0a3b4d3a",
-    nome: "Santander",
+    nome: "SANTANDER",
   },
   {
     id: "e95a1482-ae01-4338-b228-00050be58cf0",
-    nome: "Safra",
+    nome: "SAFRA",
   },
   {
     id: "8fb18392-13a8-444b-b825-05a1b5ad9e06",
-    nome: "Rico",
+    nome: "RICO",
   },
 ];
 
 const tiposData = [
   {
     id: "0348832b-8e22-4413-a503-dd518883b401",
-    nome: "Renda Fixa",
+    nome: "RENDA FIXA",
   },
   {
     id: "057909d7-7901-4a0a-99b1-732c97aa4086",
-    nome: "Renda Variável",
+    nome: "RENDA VARIAVEL",
   },
   {
     id: "0b66393b-c796-48f9-b841-c1145afa9f4b",
-    nome: "Curto Prazo",
+    nome: "CURTO PRAZO",
   },
   {
     id: "17564b20-b032-487e-a5e7-6badfc9d591e",
-    nome: "Conta Corrente",
+    nome: "CONTA CORRENTE",
   },
 ];
 
@@ -67,12 +67,12 @@ const clientesData = [
   },
   {
     id: "f6928b6d-2de6-4cfd-91f5-f017af8da2af",
-    name: "Robson Inocencio",
+    name: "ROBSON INOCENCIO",
     email: "robson.inocencio@gmail.com",
   },
   {
     id: "0d3831d2-1156-4867-bdbd-57d3675685d9",
-    name: "Elsa Inocencio",
+    name: "ELSA INOCENCIO",
     email: "elsacrente@gmailcom",
   },
   {

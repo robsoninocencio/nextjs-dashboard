@@ -1,0 +1,132 @@
+[
+  {
+    "id": "05decddc-fa47-4877-95ca-d73eeb4897fb",
+    "amount": 15795,
+    "status": "pendente",
+    "date": "2022-12-06T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:55.288Z",
+    "updatedAt": "2025-08-19T23:10:55.288Z",
+    "cliente_id": "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
+    "usersId": null
+  },
+  {
+    "id": "2d2417c1-a638-46cd-a51b-abc821616897",
+    "amount": 20348,
+    "status": "pendente",
+    "date": "2022-11-14T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:55.747Z",
+    "updatedAt": "2025-08-19T23:10:55.747Z",
+    "cliente_id": "3958dc9e-712f-4377-85e9-fec4b6a6442a",
+    "usersId": null
+  },
+  {
+    "id": "317d0a43-c844-4c09-8edf-cf96a75594f9",
+    "amount": 3040,
+    "status": "pago",
+    "date": "2022-10-29T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:56.349Z",
+    "updatedAt": "2025-08-19T23:10:56.349Z",
+    "cliente_id": "cc27c14a-0acf-4f4a-a6c9-d45682c144b9",
+    "usersId": null
+  },
+  {
+    "id": "360d3f92-df24-4b26-87f5-2f7daca43a3f",
+    "amount": 44800,
+    "status": "pago",
+    "date": "2023-09-10T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:56.970Z",
+    "updatedAt": "2025-08-19T23:10:56.970Z",
+    "cliente_id": "76d65c26-f784-44a2-ac19-586678f7c2f2",
+    "usersId": null
+  },
+  {
+    "id": "51455604-025a-4be2-919b-65c87c3ee95d",
+    "amount": 34577,
+    "status": "pendente",
+    "date": "2023-08-05T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:57.544Z",
+    "updatedAt": "2025-08-19T23:10:57.544Z",
+    "cliente_id": "13d07535-c59e-4157-a011-f8d2ef4e0cbb",
+    "usersId": null
+  },
+  {
+    "id": "5c271905-4c6a-432b-8719-7609c7e50a3a",
+    "amount": 54246,
+    "status": "pendente",
+    "date": "2023-07-16T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:58.072Z",
+    "updatedAt": "2025-08-19T23:10:58.072Z",
+    "cliente_id": "3958dc9e-742f-4377-85e9-fec4b6a6442a",
+    "usersId": null
+  },
+  {
+    "id": "6901a607-2760-45fb-903b-d3e86e95fb1d",
+    "amount": 666,
+    "status": "pendente",
+    "date": "2023-06-27T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:58.559Z",
+    "updatedAt": "2025-08-19T23:10:58.559Z",
+    "cliente_id": "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
+    "usersId": null
+  },
+  {
+    "id": "7ec7bb11-605b-4631-8f8a-2c1bee2d29a2",
+    "amount": 32545,
+    "status": "pago",
+    "date": "2023-06-09T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:58.976Z",
+    "updatedAt": "2025-08-19T23:10:58.976Z",
+    "cliente_id": "76d65c26-f784-44a2-ac19-586678f7c2f2",
+    "usersId": null
+  },
+  {
+    "id": "91f7cc3e-a0c3-40e5-96e9-6e50318ac43f",
+    "amount": 1250,
+    "status": "pago",
+    "date": "2023-06-17T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:59.377Z",
+    "updatedAt": "2025-08-19T23:10:59.377Z",
+    "cliente_id": "cc27c14a-0acf-4f4a-a6c9-d45682c144b9",
+    "usersId": null
+  },
+  {
+    "id": "ccaed837-2101-42e6-aba1-2720a8abc3fc",
+    "amount": 8546,
+    "status": "pago",
+    "date": "2023-06-07T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:10:59.816Z",
+    "updatedAt": "2025-08-19T23:10:59.816Z",
+    "cliente_id": "13d07535-c59e-4157-a011-f8d2ef4e0cbb",
+    "usersId": null
+  },
+  {
+    "id": "dd3660a2-3a63-4519-a500-113f1e3cf189",
+    "amount": 500,
+    "status": "pago",
+    "date": "2023-08-19T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:11:00.245Z",
+    "updatedAt": "2025-08-19T23:11:00.245Z",
+    "cliente_id": "3958dc9e-712f-4377-85e9-fec4b6a6442a",
+    "usersId": null
+  },
+  {
+    "id": "e4b6a632-cc0a-44fb-be21-e1ff65c8d372",
+    "amount": 8945,
+    "status": "pago",
+    "date": "2023-06-03T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:11:00.729Z",
+    "updatedAt": "2025-08-19T23:11:00.729Z",
+    "cliente_id": "13d07535-c59e-4157-a011-f8d2ef4e0cbb",
+    "usersId": null
+  },
+  {
+    "id": "ef902a9f-efe1-4739-98fb-65931e1bc785",
+    "amount": 1000,
+    "status": "pago",
+    "date": "2022-06-05T00:00:00.000Z",
+    "createdAt": "2025-08-19T23:11:01.184Z",
+    "updatedAt": "2025-08-19T23:11:01.184Z",
+    "cliente_id": "3958dc9e-742f-4377-85e9-fec4b6a6442a",
+    "usersId": null
+  }
+]

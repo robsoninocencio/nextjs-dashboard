@@ -23,75 +23,8 @@ import {
   updateInvestimento,
   InvestimentoFormState,
 } from "@/lib/investimentos/actions";
-import CustomCurrencyInput from "@/app/ui/shared/currency-input";
 import { formatDateToMonth, formatDateToYear } from "@/lib/utils";
-
-// Componente para erros
-function InputError({ errors }: { errors?: string[] }) {
-  if (!errors) return null;
-  return (
-    <>
-      {errors.map((error) => (
-        <p key={error} className="p-2 md:p-4 text-sm text-red-500">
-          {error}
-        </p>
-      ))}
-    </>
-  );
-}
-
-// Componente para selects
-function SelectField({
-  id,
-  label,
-  options,
-  defaultValue,
-  errors,
-  onChange,
-  icon: Icon,
-}: {
-  id: string;
-  label: string;
-  options: { id: string; name: string }[];
-  defaultValue?: string;
-  errors?: string[];
-  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
-  icon: React.ElementType;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium">
-        {label}
-      </label>
-      <div className="relative mt-2 rounded-md">
-        <select
-          id={id}
-          name={id}
-          defaultValue={defaultValue ?? ""}
-          required
-          aria-describedby={`${id}-error`}
-          onChange={onChange}
-          className={`peer block w-full cursor-pointer rounded-md border ${
-            errors?.length ? "border-red-500" : "border-gray-200"
-          } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-        >
-          <option value="" disabled>
-            Selecione o {label.toLowerCase()}
-          </option>
-          {options.map((option) => (
-            <option key={option.id} value={option.id}>
-              {id === "mes" ? `${option.id} - ${option.name}` : option.name}
-            </option>
-          ))}
-        </select>
-        <Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-      </div>
-      <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
-        <InputError errors={errors} />
-      </div>
-    </div>
-  );
-}
+import { SelectField, CurrencyField } from "@/app/ui/shared/form-fields";
 
 export default function EditInvestimentoForm({
   investimento,
@@ -167,7 +100,10 @@ export default function EditInvestimentoForm({
                 id="ano"
                 label="Ano"
                 options={years}
-                defaultValue={formatDateToYear(investimento.data)}
+                defaultValue={
+                  state.submittedData?.ano ??
+                  formatDateToYear(investimento.data)
+                }
                 errors={state.errors?.ano}
                 icon={CalendarDaysIcon}
               />
@@ -178,7 +114,10 @@ export default function EditInvestimentoForm({
                 id="mes"
                 label="Mês"
                 options={months}
-                defaultValue={formatDateToMonth(investimento.data)}
+                defaultValue={
+                  state.submittedData?.mes ??
+                  formatDateToMonth(investimento.data)
+                }
                 errors={state.errors?.mes}
                 icon={CalendarIcon}
               />
@@ -190,7 +129,9 @@ export default function EditInvestimentoForm({
               id="clienteId"
               label="Cliente"
               options={clientes}
-              defaultValue={investimento.clienteId}
+              defaultValue={
+                state.submittedData?.clienteId ?? investimento.clienteId
+              }
               errors={state.errors?.clienteId}
               icon={UserCircleIcon}
             />
@@ -208,7 +149,9 @@ export default function EditInvestimentoForm({
                 id: banco.id,
                 name: banco.nome,
               }))}
-              defaultValue={investimento.bancoId}
+              defaultValue={
+                state.submittedData?.bancoId ?? investimento.bancoId
+              }
               errors={state.errors?.bancoId}
               icon={BuildingLibraryIcon}
             />
@@ -225,7 +168,9 @@ export default function EditInvestimentoForm({
                   ativo.tipos ? ` (${ativo.tipos.nome})` : ""
                 }`,
               }))}
-              defaultValue={investimento.ativoId}
+              defaultValue={
+                state.submittedData?.ativoId ?? investimento.ativoId
+              }
               errors={state.errors?.ativoId}
               icon={BriefcaseIcon}
               onChange={handleAtivoChange}
@@ -238,211 +183,128 @@ export default function EditInvestimentoForm({
           {/* Investimento rendimentoDoMes */}
           {!isCdbAutomatico && (
             <div className="md:w-1/2">
-              <label
-                htmlFor="rendimentoDoMes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Rendimento do Mês
-              </label>
-              <div className="relative mt-2 rounded-md">
-                <div className="relative rounded-md">
-                  <CustomCurrencyInput
-                    id="rendimentoDoMes"
-                    name="rendimentoDoMes"
-                    placeholder="Entre com o valor exemplo (99,99)"
-                    defaultValue={investimento.rendimentoDoMes}
-                    aria-describedby="rendimentoDoMes-error"
-                    hasError={!!state.errors?.rendimentoDoMes?.length}
-                  />
-                </div>
-              </div>
-              <div
-                id="rendimentoDoMes-error"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <InputError errors={state.errors?.rendimentoDoMes} />
-              </div>
+              <CurrencyField
+                id="rendimentoDoMes"
+                label="Rendimento do Mês"
+                placeholder="Entre com o valor exemplo (99,99)"
+                defaultValue={
+                  state.submittedData?.rendimentoDoMes ??
+                  investimento.rendimentoDoMes
+                }
+                errors={state.errors?.rendimentoDoMes}
+              />
             </div>
           )}
+
+          {/* 3.3 saldoAnterior */}
+          <div className="md:w-1/2">
+            <CurrencyField
+              id="saldoAnterior"
+              label="Saldo Anterior"
+              placeholder="Entre com o saldo anterior (99,99)"
+              defaultValue={
+                state.submittedData?.["saldoAnterior"] ??
+                investimento.saldoAnterior
+              }
+              errors={state.errors?.["saldoAnterior"]}
+            />
+          </div>
 
           {/* Investimento dividendosDoMes */}
           {isRendaVariavel && (
             <div className="md:w-1/2 sm:mt-4 md:mt-0">
-              <label
-                htmlFor="dividendosDoMes"
-                className="mb-2 block text-sm font-medium"
-              >
-                Dividendos do Mês
-              </label>
-              <div className="relative mt-2 rounded-md">
-                <div className="relative rounded-md">
-                  <CustomCurrencyInput
-                    id="dividendosDoMes"
-                    name="dividendosDoMes"
-                    placeholder="Entre com o valor exemplo (99,99)"
-                    defaultValue={investimento.dividendosDoMes}
-                    aria-describedby="dividendosDoMes-error"
-                    hasError={!!state.errors?.dividendosDoMes?.length}
-                  />
-                </div>
-              </div>
-              <div
-                id="dividendosDoMes-error"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <InputError errors={state.errors?.dividendosDoMes} />
-              </div>
+              <CurrencyField
+                id="dividendosDoMes"
+                label="Dividendos do Mês"
+                placeholder="Entre com o valor exemplo (99,99)"
+                defaultValue={
+                  state.submittedData?.dividendosDoMes ??
+                  investimento.dividendosDoMes
+                }
+                errors={state.errors?.dividendosDoMes}
+              />
             </div>
           )}
         </div>
 
         {/* 4 Container flexivel para valorAplicado e valorResgatado */}
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          {/* Investimento valorAplicado */}
           <div className="md:w-1/2">
-            <label
-              htmlFor="valorAplicado"
-              className="mb-2 block text-sm font-medium"
-            >
-              Valores Aplicados
-            </label>
-            <CustomCurrencyInput
+            <CurrencyField
               id="valorAplicado"
-              name="valorAplicado"
+              label="Valores Aplicados"
               placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={investimento.valorAplicado}
-              aria-describedby="valorAplicado-error"
-              hasError={!!state.errors?.valorAplicado?.length}
+              defaultValue={
+                state.submittedData?.valorAplicado ?? investimento.valorAplicado
+              }
+              errors={state.errors?.valorAplicado}
             />
-            <div id="valorAplicado-error" aria-live="polite" aria-atomic="true">
-              <InputError errors={state.errors?.valorAplicado} />
-            </div>
           </div>
-
-          {/* Investimento valorResgatado */}
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <label
-              htmlFor="valorResgatado"
-              className="mb-2 block text-sm font-medium"
-            >
-              Valores Resgatados
-            </label>
-            <CustomCurrencyInput
+            <CurrencyField
               id="valorResgatado"
-              name="valorResgatado"
+              label="Valores Resgatados"
               placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={investimento.valorResgatado}
-              aria-describedby="valorResgatado-error"
-              hasError={!!state.errors?.valorResgatado?.length}
+              defaultValue={
+                state.submittedData?.valorResgatado ??
+                investimento.valorResgatado
+              }
+              errors={state.errors?.valorResgatado}
             />
-            <div
-              id="valorResgatado-error"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <InputError errors={state.errors?.valorResgatado} />
-            </div>
           </div>
         </div>
 
         {/* 5 Contaniner flexivel para impostoIncorrido e impostoPrevisto */}
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          {/* Investimento impostoIncorrido */}
           <div className="md:w-1/2">
-            <label
-              htmlFor="impostoIncorrido"
-              className="mb-2 block text-sm font-medium"
-            >
-              Impostos Incorridos
-            </label>
-            <CustomCurrencyInput
+            <CurrencyField
               id="impostoIncorrido"
-              name="impostoIncorrido"
+              label="Impostos Incorridos"
               placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={investimento.impostoIncorrido}
-              aria-describedby="impostoIncorrido-error"
-              hasError={!!state.errors?.impostoIncorrido?.length}
+              defaultValue={
+                state.submittedData?.impostoIncorrido ??
+                investimento.impostoIncorrido
+              }
+              errors={state.errors?.impostoIncorrido}
             />
-            <div
-              id="impostoIncorrido-error"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <InputError errors={state.errors?.impostoIncorrido} />
-            </div>
           </div>
-
-          {/* Investimento impostoPrevisto */}
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <label
-              htmlFor="impostoPrevisto"
-              className="mb-2 block text-sm font-medium"
-            >
-              Impostos Previstos
-            </label>
-            <CustomCurrencyInput
+            <CurrencyField
               id="impostoPrevisto"
-              name="impostoPrevisto"
+              label="Impostos Previstos"
               placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={investimento.impostoPrevisto}
-              aria-describedby="impostoPrevisto-error"
-              hasError={!!state.errors?.impostoPrevisto?.length}
+              defaultValue={
+                state.submittedData?.impostoPrevisto ??
+                investimento.impostoPrevisto
+              }
+              errors={state.errors?.impostoPrevisto}
             />
-            <div
-              id="impostoPrevisto-error"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <InputError errors={state.errors?.impostoPrevisto} />
-            </div>
           </div>
         </div>
 
         {/* 6 Container flexivel para saldoBruto e SaldoLiquido */}
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          {/* Investimento saldoBruto */}
           <div className="md:w-1/2">
-            <label
-              htmlFor="saldoBruto"
-              className="mb-2 block text-sm font-medium"
-            >
-              Saldo Bruto
-            </label>
-            <CustomCurrencyInput
+            <CurrencyField
               id="saldoBruto"
-              name="saldoBruto"
+              label="Saldo Bruto"
               placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={investimento.saldoBruto}
-              aria-describedby="saldoBruto-error"
-              hasError={!!state.errors?.saldoBruto?.length}
+              defaultValue={
+                state.submittedData?.saldoBruto ?? investimento.saldoBruto
+              }
+              errors={state.errors?.saldoBruto}
             />
-            <div id="saldoBruto-error" aria-live="polite" aria-atomic="true">
-              <InputError errors={state.errors?.saldoBruto} />
-            </div>
           </div>
-
-          {/* 6.2 SaldoLiquido */}
-          {/* Investimento saldoLiquido */}
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <label
-              htmlFor="saldoLiquido"
-              className="mb-2 block text-sm font-medium"
-            >
-              Saldo Líquido
-            </label>
-            <CustomCurrencyInput
+            <CurrencyField
               id="saldoLiquido"
-              name="saldoLiquido"
+              label="Saldo Líquido"
               placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={investimento.saldoLiquido}
-              aria-describedby="saldoLiquido-error"
-              hasError={!!state.errors?.saldoLiquido?.length}
+              defaultValue={
+                state.submittedData?.saldoLiquido ?? investimento.saldoLiquido
+              }
+              errors={state.errors?.saldoLiquido}
             />
-            <div id="saldoLiquido-error" aria-live="polite" aria-atomic="true">
-              <InputError errors={state.errors?.saldoLiquido} />
-            </div>
           </div>
         </div>
 

@@ -5,6 +5,7 @@ export type Investimento = {
   dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
+  saldoAnterior: number;
   valorResgatado: number;
   impostoIncorrido: number;
   impostoPrevisto: number;
@@ -43,6 +44,7 @@ export type LatestInvestimentoRaw = Omit<
   dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
+  saldoAnterior: number;
   valorResgatado: number;
   impostoIncorrido: number;
   impostoPrevisto: number;
@@ -75,6 +77,7 @@ export type InvestimentoForm = {
   dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
+  saldoAnterior: number;
   valorResgatado: number;
   impostoIncorrido: number;
   impostoPrevisto: number;
@@ -88,6 +91,7 @@ export type GrupoInvestimentoItem = {
   dividendosDoMes: number;
   valorAplicado: number;
   saldoBruto: number;
+  saldoAnterior: number;
   valorResgatado: number;
   impostoIncorrido: number;
   impostoPrevisto: number;
