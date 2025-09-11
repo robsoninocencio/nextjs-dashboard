@@ -26,7 +26,9 @@ function MobileCategoriaRow({ categoria }: { categoria: CategoriaComPai }) {
       <div className="flex items-center justify-end">
         <div className="flex justify-end gap-1">
           <ButtonLinkUpdate
-            href={`/dashboard/categorias/${categoria.id}/edit`}
+            href={{
+              pathname: `/dashboard/categorias/${categoria.id}/edit`,
+            }}
           />
           <ButtonLinkDelete id={categoria.id} />
         </div>
@@ -82,7 +84,9 @@ function DesktopCategoriasTable({
             <td className="whitespace-nowrap py-1.5 pl-2 pr-3">
               <div className="flex justify-end gap-1">
                 <ButtonLinkUpdate
-                  href={`/dashboard/categorias/${categoria.id}/edit`}
+                  href={{
+                    pathname: `/dashboard/categorias/${categoria.id}/edit`,
+                  }}
                 />
                 <ButtonLinkDelete id={categoria.id} />
               </div>

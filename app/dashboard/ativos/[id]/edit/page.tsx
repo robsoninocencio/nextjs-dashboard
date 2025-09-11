@@ -16,9 +16,13 @@ export const metadata: Metadata = {
   title: "Ativos",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   if (!id) {
     notFound();
   }
@@ -39,7 +43,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: "Ativos", href: "/dashboard/ativos" },
           {
             label: "Atualizar Ativos",
-            href: `/dashboard/ativos/${id}/edit`,
+            href: {
+              pathname: `/dashboard/ativos/${id}/edit`,
+            },
             active: true,
           },
         ]}

@@ -34,7 +34,9 @@ export default async function BancosTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div className="flex justify-end gap-2">
                     <ButtonLinkUpdate
-                      href={`/dashboard/bancos/${banco.id}/edit`}
+                      href={{
+                        pathname: `/dashboard/bancos/${banco.id}/edit`,
+                      }}
                     />
                     <DeleteBanco id={banco.id} />
                   </div>
@@ -68,7 +70,11 @@ export default async function BancosTable({
 
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateBanco id={banco.id} />
+                      <ButtonLinkUpdate
+                        href={{
+                          pathname: `/dashboard/bancos/${banco.id}/edit`,
+                        }}
+                      />
                       <DeleteBanco id={banco.id} />
                     </div>
                   </td>

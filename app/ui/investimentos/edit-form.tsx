@@ -19,11 +19,13 @@ export default function EditInvestimentoForm({
   clientes,
   bancos,
   ativos,
+  searchParams,
 }: {
   investimento: InvestimentoForm;
   clientes: ClienteField[];
   bancos: BancoField[];
   ativos: AtivoField[];
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const initialState: InvestimentoFormState = { message: "", errors: {} };
   const updateInvestimentoWithId = updateInvestimento.bind(
@@ -40,6 +42,7 @@ export default function EditInvestimentoForm({
       initialState={initialState}
       buttonText="Atualizar Investimento"
       investimento={investimento}
+      searchParams={searchParams}
     />
   );
 }

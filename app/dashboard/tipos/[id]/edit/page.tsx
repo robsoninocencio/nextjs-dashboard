@@ -15,19 +15,18 @@ export const metadata: Metadata = {
   title: "Tipos",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   const [tipo, tipos] = await Promise.all([fetchTipoById(id), fetchTipos()]);
 
   if (!tipo) {
     notFound();
   }
-
-  const typedInvoice: Tipo = {
-    id: tipo.id,
-    nome: tipo.nome,
-  };
 
   return (
     <main>
@@ -36,12 +35,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: "Tipos", href: "/dashboard/tipos" },
           {
             label: "Atualizar Tipo",
-            href: `/dashboard/tipos/${id}/edit`,
+            href: {
+              pathname: `/dashboard/tipos/${id}/edit`,
+            },
             active: true,
           },
         ]}
       />
-      <Form tipo={typedInvoice} tipos={tipos} />
+      <Form tipo={tipo} tipos={tipos} />
     </main>
   );
 }

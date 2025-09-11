@@ -51,7 +51,9 @@ export default async function AtivosTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div className="flex justify-end gap-2">
                     <ButtonLinkUpdate
-                      href={`/dashboard/ativos/${ativo.id}/edit`}
+                      href={{
+                        pathname: `/dashboard/ativos/${ativo.id}/edit`,
+                      }}
                     />
                     <ButtonLinkDelete id={ativo.id} />
                   </div>
@@ -103,7 +105,9 @@ export default async function AtivosTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <ButtonLinkUpdate
-                        href={`/dashboard/ativos/${ativo.id}/edit`}
+                        href={{
+                          pathname: `/dashboard/ativos/${ativo.id}/edit`,
+                        }}
                       />
                       <ButtonLinkDelete id={ativo.id} />
                     </div>

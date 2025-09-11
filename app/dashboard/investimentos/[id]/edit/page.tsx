@@ -17,9 +17,19 @@ export const metadata: Metadata = {
   title: "Investimentos",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams:
+    | Promise<{ [key: string]: string | string[] | undefined }>
+    | undefined;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+
   const [investimento, clientes, bancos, ativos] = await Promise.all([
     fetchInvestimentoById(id),
     fetchClientes(),
@@ -34,14 +44,21 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   // The `fetchInvestimentoById` function already returns the data in the expected format.
   const typedInvestimento: Investimento = investimento;
 
+  const breadcrumbHref = {
+    pathname: "/dashboard/investimentos",
+    query: resolvedSearchParams,
+  };
+
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Investimentos", href: "/dashboard/investimentos" },
+          { label: "Investimentos", href: breadcrumbHref },
           {
             label: "Atualizar Investimento",
-            href: `/dashboard/investimentos/${id}/edit`,
+            href: {
+              pathname: `/dashboard/investimentos/${id}/edit`,
+            },
             active: true,
           },
         ]}
@@ -51,6 +68,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         clientes={clientes}
         bancos={bancos}
         ativos={ativos}
+        searchParams={resolvedSearchParams}
       />
     </main>
   );

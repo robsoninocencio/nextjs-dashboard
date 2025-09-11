@@ -45,6 +45,19 @@ export default async function Table({
     categoriaId
   );
 
+  // Recria o objeto searchParams para passar aos componentes filhos.
+  // Isso é necessário para que os links de edição e cancelamento preservem os filtros.
+  const searchParams = {
+    page: currentPage.toString(),
+    queryAno,
+    queryMes,
+    queryCliente,
+    queryBanco,
+    queryAtivo,
+    queryTipo,
+    categoriaId,
+  };
+
   // Calcular totais
   const totais: Totais = (investimentos || []).reduce(
     (acc, investimento) => ({
@@ -90,6 +103,7 @@ export default async function Table({
               <MobileInvestimentoRow
                 key={investimento.id}
                 investimento={investimento}
+                searchParams={searchParams}
               />
             ))}
             {investimentos?.length > 0 && <MobileTotals totais={totais} />}
@@ -98,6 +112,7 @@ export default async function Table({
           <DesktopInvestimentosTable
             investimentos={investimentos}
             totais={totais}
+            searchParams={searchParams}
           />
         </div>
       </div>

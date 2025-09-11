@@ -15,9 +15,13 @@ export const metadata: Metadata = {
   title: "Bancos",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   const [banco, bancos] = await Promise.all([
     fetchBancoById(id),
     fetchBancos(),
@@ -27,11 +31,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     notFound();
   }
 
-  const typedInvoice: Banco = {
-    id: banco.id,
-    nome: banco.nome,
-  };
-
   return (
     <main>
       <Breadcrumbs
@@ -39,12 +38,12 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: "Bancos", href: "/dashboard/bancos" },
           {
             label: "Atualizar banco",
-            href: `/dashboard/bancos/${id}/edit`,
+            href: { pathname: `/dashboard/bancos/${id}/edit` },
             active: true,
           },
         ]}
       />
-      <Form banco={typedInvoice} bancos={bancos} />
+      <Form banco={banco} bancos={bancos} />
     </main>
   );
 }

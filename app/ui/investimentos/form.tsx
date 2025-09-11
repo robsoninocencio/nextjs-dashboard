@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, ChangeEvent, useTransition } from "react";
+import { useActionState, useState, ChangeEvent } from "react";
 import Link from "next/link";
 import {
   UserCircleIcon,
@@ -31,7 +31,7 @@ type InvestmentFormProps = {
   initialState: InvestimentoFormState;
   buttonText: string;
   investimento?: InvestimentoForm;
-  searchParams?: { [key: string]: string | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 export default function InvestmentForm({
@@ -45,7 +45,6 @@ export default function InvestmentForm({
   searchParams,
 }: InvestmentFormProps) {
   const [state, formAction] = useActionState(action, initialState);
-  const [isPending, startTransition] = useTransition();
 
   const initialAtivo = ativos.find(
     (ativo) => ativo.id === (investimento?.ativoId ?? "")
@@ -85,23 +84,20 @@ export default function InvestmentForm({
     { id: "12", name: "Dezembro" },
   ];
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    startTransition(() => {
-      formAction(formData);
-    });
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form action={formAction}>
       {/* Hidden inputs to preserve search params on redirect */}
       {searchParams &&
         Object.entries(searchParams).map(([key, value]) => {
-          if (value) {
+          if (Array.isArray(value)) {
+            return value.map((v, i) => (
+              <input key={`${key}-${i}`} type="hidden" name={key} value={v} />
+            ));
+          }
+          if (typeof value === "string") {
             return <input type="hidden" key={key} name={key} value={value} />;
           }
-          return null;
+          return null; // Ignora valores undefined ou outros tipos
         })}
       <div className="rounded-md bg-gray-50 p-2 md:p-4">
         <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
@@ -313,14 +309,15 @@ export default function InvestmentForm({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/investimentos"
+          href={{
+            pathname: "/dashboard/investimentos",
+            query: searchParams,
+          }}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancelar
         </Link>
-        <Button type="submit" aria-disabled={isPending} disabled={isPending}>
-          {isPending ? "Salvando..." : buttonText}
-        </Button>
+        <Button type="submit">{buttonText}</Button>
       </div>
     </form>
   );

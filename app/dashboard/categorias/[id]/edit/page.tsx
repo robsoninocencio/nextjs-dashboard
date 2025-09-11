@@ -15,9 +15,13 @@ export const metadata: Metadata = {
   title: "Categorias",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   const [categoria, categorias] = await Promise.all([
     fetchCategoriaById(id),
     fetchCategorias(),
@@ -27,13 +31,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     notFound();
   }
 
-  // Garantir que categoria tenha o tipo correto
-  const typedCategoria: Categoria = {
-    id: categoria.id,
-    nome: categoria.nome,
-    parentId: categoria.parentId,
-  };
-
   return (
     <main>
       <Breadcrumbs
@@ -41,12 +38,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: "Categorias", href: "/dashboard/categorias" },
           {
             label: "Atualizar Categoria",
-            href: `/dashboard/categorias/${id}/edit`,
+            href: {
+              pathname: `/dashboard/categorias/${id}/edit`,
+            },
             active: true,
           },
         ]}
       />
-      <Form categoria={typedCategoria} categorias={categorias} />
+      <Form categoria={categoria} categorias={categorias} />
     </main>
   );
 }

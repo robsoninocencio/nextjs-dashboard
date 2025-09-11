@@ -68,8 +68,10 @@ const FinancialDataList = ({
 // Componente para exibir uma linha de investimento no layout mobile
 export function MobileInvestimentoRow({
   investimento,
+  searchParams,
 }: {
   investimento: InvestimentoComRelacoes;
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   return (
     <div
@@ -119,7 +121,10 @@ export function MobileInvestimentoRow({
         </div>
         <div className="flex justify-end gap-2">
           <ButtonLinkUpdate
-            href={`/dashboard/investimentos/${investimento.id}/edit`}
+            href={{
+              pathname: `/dashboard/investimentos/${investimento.id}/edit`,
+              query: searchParams,
+            }}
           />
           <ButtonLinkDelete id={investimento.id} />
         </div>

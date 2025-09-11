@@ -239,8 +239,30 @@ async function saveInvestimento(
     };
   }
 
+  // Build the redirect URL with filters
+  const searchParams = new URLSearchParams();
+  const filterKeys = [
+    "query",
+    "queryCliente",
+    "queryAno",
+    "queryMes",
+    "queryBanco",
+    "queryAtivo",
+    "queryTipo",
+    "categoriaId",
+    "page",
+  ];
+
+  for (const key of filterKeys) {
+    const value = formData.get(key);
+    if (value) {
+      searchParams.set(key, value.toString());
+    }
+  }
+  const redirectUrl = `/dashboard/investimentos?${searchParams.toString()}`;
+
   revalidatePath("/dashboard/investimentos");
-  redirect("/dashboard/investimentos");
+  redirect(redirectUrl);
 }
 
 /**

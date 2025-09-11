@@ -17,16 +17,21 @@ export const metadata: Metadata = {
   title: "Categorias",
 };
 
-export default async function Page(props: {
-  searchParams?: Promise<{
-    queryCategoria?: string;
-    page?: string;
-  }>;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams:
+    | Promise<{
+        queryCategoria?: string;
+        page?: string;
+      }>
+    | undefined;
 }) {
-  const searchParams = await props.searchParams;
-  const currentPage = Number(searchParams?.page) || 1;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
 
-  const queryCategoria = searchParams?.queryCategoria || "";
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+
+  const queryCategoria = resolvedSearchParams.queryCategoria || "";
 
   const totalPages = await fetchCategoriasPages(queryCategoria);
 

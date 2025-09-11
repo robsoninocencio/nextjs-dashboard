@@ -15,9 +15,13 @@ export const metadata: Metadata = {
   title: "Faturas",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   const [invoice, clientes] = await Promise.all([
     fetchInvoiceById(id),
     fetchClientes(),
@@ -46,7 +50,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: "Faturas", href: "/dashboard/invoices" },
           {
             label: "Atualizar Fatura",
-            href: `/dashboard/invoices/${id}/edit`,
+            href: {
+              pathname: `/dashboard/invoices/${id}/edit`,
+            },
             active: true,
           },
         ]}

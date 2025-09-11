@@ -24,36 +24,40 @@ export const metadata: Metadata = {
   title: "Investimentos",
 };
 
-export default async function Page(props: {
-  searchParams?: Promise<{
-    page?: string;
-    query?: string;
-    queryCliente?: string;
-    queryAno?: string;
-    queryMes?: string;
-    queryBanco?: string;
-    queryAtivo?: string;
-    queryTipo?: string;
-    categoriaId?: string;
-  }>;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams:
+    | Promise<{
+        page?: string;
+        query?: string;
+        queryCliente?: string;
+        queryAno?: string;
+        queryMes?: string;
+        queryBanco?: string;
+        queryAtivo?: string;
+        queryTipo?: string;
+        categoriaId?: string;
+      }>
+    | undefined;
 }) {
-  const searchParams = await props.searchParams;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
 
-  const currentPage = Number(searchParams?.page) || 1;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
 
-  const query = searchParams?.query || "";
+  const query = resolvedSearchParams.query || "";
 
-  const queryCliente = searchParams?.queryCliente || "";
-  const queryAno = searchParams?.queryAno || "";
-  let queryMes = searchParams?.queryMes || "";
+  const queryCliente = resolvedSearchParams.queryCliente || "";
+  const queryAno = resolvedSearchParams.queryAno || "";
+  let queryMes = resolvedSearchParams.queryMes || "";
   if (queryMes) {
     queryMes = queryMes.padStart(2, "0"); // transforma "1" em "01"
   }
-  const categoriaId = searchParams?.categoriaId || "";
+  const categoriaId = resolvedSearchParams.categoriaId || "";
 
-  const queryBanco = searchParams?.queryBanco || "";
-  const queryAtivo = searchParams?.queryAtivo || "";
-  const queryTipo = searchParams?.queryTipo || "";
+  const queryBanco = resolvedSearchParams.queryBanco || "";
+  const queryAtivo = resolvedSearchParams.queryAtivo || "";
+  const queryTipo = resolvedSearchParams.queryTipo || "";
 
   const [{ totalPages, totalItems }, categorias] = await Promise.all([
     fetchInvestimentosPages(

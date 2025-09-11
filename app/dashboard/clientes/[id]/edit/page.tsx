@@ -15,9 +15,13 @@ export const metadata: Metadata = {
   title: "Clientes",
 };
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   const [cliente, clientes] = await Promise.all([
     fetchClienteById(id),
     fetchClientes(),
@@ -27,12 +31,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     notFound();
   }
 
-  const typedInvoice: Cliente = {
-    id: cliente.id,
-    name: cliente.name,
-    email: cliente.email,
-  };
-
   return (
     <main>
       <Breadcrumbs
@@ -40,12 +38,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: "Clientes", href: "/dashboard/clientes" },
           {
             label: "Atualizar cliente",
-            href: `/dashboard/clientes/${id}/edit`,
+            href: {
+              pathname: `/dashboard/clientes/${id}/edit`,
+            },
             active: true,
           },
         ]}
       />
-      <Form cliente={typedInvoice} clientes={clientes} />
+      <Form cliente={cliente} clientes={clientes} />
     </main>
   );
 }

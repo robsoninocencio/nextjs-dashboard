@@ -34,7 +34,9 @@ export default async function TiposTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div className="flex justify-end gap-2">
                     <ButtonLinkUpdate
-                      href={`/dashboard/tipos/${tipo.id}/edit`}
+                      href={{
+                        pathname: `/dashboard/tipos/${tipo.id}/edit`,
+                      }}
                     />
                     <DeleteTipo id={tipo.id} />
                   </div>
@@ -68,7 +70,11 @@ export default async function TiposTable({
 
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateTipo id={tipo.id} />
+                      <ButtonLinkUpdate
+                        href={{
+                          pathname: `/dashboard/tipos/${tipo.id}/edit`,
+                        }}
+                      />
                       <DeleteTipo id={tipo.id} />
                     </div>
                   </td>

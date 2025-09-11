@@ -171,9 +171,11 @@ const DynamicDataCells = ({
 const InvestmentRow = ({
   investimento,
   visibleHeaders,
+  searchParams,
 }: {
   investimento: InvestimentoComRelacoes;
   visibleHeaders: HeaderConfig[];
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) => (
   <tr
     key={investimento.id}
@@ -206,7 +208,10 @@ const InvestmentRow = ({
     <td className="whitespace-nowrap py-1.5 pl-2 pr-3 align-top">
       <div className="flex justify-end gap-1">
         <ButtonLinkUpdate
-          href={`/dashboard/investimentos/${investimento.id}/edit`}
+          href={{
+            pathname: `/dashboard/investimentos/${investimento.id}/edit`,
+            query: searchParams,
+          }}
         />
         <ButtonLinkDelete id={investimento.id} />
       </div>
@@ -264,11 +269,13 @@ const GrandTotalRow = ({
 type DesktopTableProps = {
   investimentos: InvestimentoComRelacoes[];
   totais: Totais;
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 export default function DesktopInvestimentosTable({
   investimentos,
   totais,
+  searchParams,
 }: DesktopTableProps) {
   const groupedInvestimentos: GrupoInvestimentoComTotais[] = useMemo(() => {
     if (!investimentos) {
@@ -437,6 +444,7 @@ export default function DesktopInvestimentosTable({
                   key={investimento.id}
                   investimento={investimento}
                   visibleHeaders={visibleHeaders}
+                  searchParams={searchParams}
                 />
               ))}
               <GroupTotalRow

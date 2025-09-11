@@ -17,15 +17,20 @@ export const metadata: Metadata = {
   title: "Tipos",
 };
 
-export default async function Page(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams:
+    | Promise<{
+        query?: string;
+        page?: string;
+      }>
+    | undefined;
 }) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+
+  const query = resolvedSearchParams.query || "";
+  const currentPage = Number(resolvedSearchParams.page) || 1;
 
   const totalPages = await fetchTiposPages(query);
 

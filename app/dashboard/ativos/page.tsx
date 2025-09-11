@@ -19,19 +19,23 @@ export const metadata: Metadata = {
   title: "Ativos",
 };
 
-export default async function Page(props: {
-  searchParams: Promise<{
-    page?: string;
-    query?: string;
-    categoriaId?: string;
-  }>;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams:
+    | Promise<{
+        page?: string;
+        query?: string;
+        categoriaId?: string;
+      }>
+    | undefined;
 }) {
-  const searchParams = await props.searchParams;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
 
-  const currentPage = Number(searchParams?.page) || 1;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
 
-  const query = searchParams?.query || "";
-  const categoriaId = searchParams?.categoriaId || "";
+  const query = resolvedSearchParams.query || "";
+  const categoriaId = resolvedSearchParams.categoriaId || "";
 
   const [{ totalPages, totalItems }, categorias] = await Promise.all([
     fetchAtivosPages(query, categoriaId),

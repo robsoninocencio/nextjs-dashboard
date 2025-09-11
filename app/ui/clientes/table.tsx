@@ -35,7 +35,9 @@ export default async function ClientesTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div className="flex justify-end gap-2">
                     <ButtonLinkUpdate
-                      href={`/dashboard/clientes/${cliente.id}/edit`}
+                      href={{
+                        pathname: `/dashboard/clientes/${cliente.id}/edit`,
+                      }}
                     />
                     <DeleteCliente id={cliente.id} />
                   </div>
@@ -74,7 +76,11 @@ export default async function ClientesTable({
 
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateCliente id={cliente.id} />
+                      <ButtonLinkUpdate
+                        href={{
+                          pathname: `/dashboard/clientes/${cliente.id}/edit`,
+                        }}
+                      />
                       <DeleteCliente id={cliente.id} />
                     </div>
                   </td>

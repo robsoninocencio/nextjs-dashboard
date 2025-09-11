@@ -1,10 +1,10 @@
 import { clsx } from "clsx";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import { lusitana } from "@/app/ui/shared/fonts";
 
 interface Breadcrumb {
   label: string;
-  href: string | { pathname: string }; // Ajustado para aceitar string ou UrlObject
+  href: LinkProps<string>["href"];
   active?: boolean;
 }
 
@@ -18,25 +18,13 @@ export default function Breadcrumbs({
       <ol className={clsx(lusitana.className, "flex text-xl md:text-2xl")}>
         {breadcrumbs.map((breadcrumb, index) => (
           <li
-            key={
-              typeof breadcrumb.href === "string"
-                ? breadcrumb.href
-                : breadcrumb.href.pathname
-            } // Certifique-se de que `href` seja único
+            key={breadcrumb.label}
             aria-current={breadcrumb.active}
             className={clsx(
               breadcrumb.active ? "text-gray-900" : "text-gray-500"
             )}
           >
-            <Link
-              href={
-                typeof breadcrumb.href === "string"
-                  ? { pathname: breadcrumb.href } // Converte string para UrlObject
-                  : breadcrumb.href
-              }
-            >
-              {breadcrumb.label}
-            </Link>
+            <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
             {index < breadcrumbs.length - 1 ? (
               <span className="mx-3 inline-block">/</span>
             ) : null}
