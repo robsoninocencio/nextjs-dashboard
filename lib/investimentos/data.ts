@@ -267,6 +267,7 @@ export async function fetchInvestimentoById(id: string) {
 
     return {
       ...investimento,
+      data: investimento.data.toISOString(),
       rendimentoDoMes: investimento.rendimentoDoMes / 100,
       dividendosDoMes: investimento.dividendosDoMes / 100,
       valorAplicado: investimento.valorAplicado / 100,

@@ -31,23 +31,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     notFound();
   }
 
-  // Garantir que investimento tenha o tipo correto
-  const typedInvestimento: Investimento = {
-    id: investimento.id,
-    data: investimento.data.toISOString(),
-    rendimentoDoMes: investimento.rendimentoDoMes,
-    dividendosDoMes: investimento.dividendosDoMes,
-    valorAplicado: investimento.valorAplicado,
-    saldoAnterior: investimento.saldoAnterior,
-    saldoBruto: investimento.saldoBruto,
-    valorResgatado: investimento.valorResgatado,
-    impostoIncorrido: investimento.impostoIncorrido,
-    impostoPrevisto: investimento.impostoPrevisto,
-    saldoLiquido: investimento.saldoLiquido,
-    clienteId: investimento.clienteId,
-    bancoId: investimento.bancoId,
-    ativoId: investimento.ativoId,
-  };
+  // The `fetchInvestimentoById` function already returns the data in the expected format.
+  const typedInvestimento: Investimento = investimento;
 
   return (
     <main>
