@@ -146,26 +146,6 @@ async function calculateRendimentoCDB(
   );
 }
 
-/**
- * Calcula os percentuais de crescimento do saldo bruto e líquido.
- */
-function calculateGrowthPercentages(
-  data: InvestimentoData,
-  investimentoAnterior: { saldoBruto: number; saldoLiquido: number } | null
-): { percentualDeCrescimentoSaldoBruto: number | null } {
-  let percentualDeCrescimentoSaldoBruto = null;
-  if (investimentoAnterior && investimentoAnterior.saldoBruto !== 0) {
-    percentualDeCrescimentoSaldoBruto =
-      ((data.saldoBruto - investimentoAnterior.saldoBruto) /
-        investimentoAnterior.saldoBruto) *
-      100;
-  }
-
-  return {
-    percentualDeCrescimentoSaldoBruto,
-  };
-}
-
 // ===================================================================
 // 3. LÓGICA DE BANCO DE DADOS
 // ===================================================================
@@ -193,11 +173,6 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     dadosAnterioresParaCalculo
   );
 
-  const { percentualDeCrescimentoSaldoBruto } = calculateGrowthPercentages(
-    data,
-    dadosAnterioresParaCalculo
-  );
-
   const payload = {
     rendimentoDoMes: toCents(rendimentoDoMes),
     dividendosDoMes: toCents(data.dividendosDoMes),
@@ -208,7 +183,6 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     impostoIncorrido: toCents(data.impostoIncorrido),
     impostoPrevisto: toCents(data.impostoPrevisto),
     saldoLiquido: toCents(data.saldoLiquido),
-    percentualDeCrescimentoSaldoBruto,
     clienteId: data.clienteId,
     bancoId: data.bancoId,
     ativoId: data.ativoId,

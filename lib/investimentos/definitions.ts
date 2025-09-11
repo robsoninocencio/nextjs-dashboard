@@ -32,7 +32,6 @@ export type Totais = {
   impostoIncorrido: number;
   impostoPrevisto: number;
   saldoLiquido: number;
-  percentualDeCrescimentoSaldoBruto?: number | null;
 };
 
 export type GrupoInvestimento = {

@@ -1,6 +1,5 @@
 import prisma from "@/prisma/lib/prisma";
 import { Prisma } from "../../generated/prisma";
-import { GrupoInvestimento, GrupoInvestimentoItem } from "./definitions";
 
 const ITEMS_PER_PAGE = 100;
 
@@ -281,85 +280,6 @@ export async function fetchInvestimentoById(id: string) {
   } catch (error) {
     console.error(`Erro ao buscar investimento com ID ${id}:`, error);
     throw new Error("Erro ao buscar a investimento.");
-  }
-}
-
-export async function fetchInvestimentoGroupByClienteAnoMes(): Promise<
-  GrupoInvestimento[]
-> {
-  try {
-    // Usando o groupBy do Prisma para agrupar os dados corretamente
-    const resultado = await prisma.investimentos.groupBy({
-      by: ["clienteId", "ano", "mes"], // Agrupar por clienteId, ano e mês
-      _sum: {
-        rendimentoDoMes: true,
-        dividendosDoMes: true,
-        valorAplicado: true,
-        saldoBruto: true,
-        saldoAnterior: true,
-        valorResgatado: true,
-        impostoIncorrido: true,
-        impostoPrevisto: true,
-        saldoLiquido: true,
-      },
-      _count: {
-        id: true,
-      },
-      orderBy: [{ clienteId: "asc" }, { ano: "desc" }, { mes: "desc" }],
-    });
-
-    // Estruturando os resultados
-    const agrupados = resultado.reduce(
-      (acc: Record<string, GrupoInvestimento>, investimento) => {
-        const clienteId = investimento.clienteId;
-
-        if (!acc[clienteId]) {
-          acc[clienteId] = {
-            Cliente: "", // Será preenchido depois
-            investimentos: [],
-          };
-        }
-
-        // Adicionando os dados de cada investimento ao cliente
-        acc[clienteId].investimentos.push({
-          ano: investimento.ano,
-          mes: investimento.mes,
-          rendimentoDoMes: investimento._sum.rendimentoDoMes ?? 0,
-          dividendosDoMes: investimento._sum.dividendosDoMes ?? 0,
-          valorAplicado: investimento._sum.valorAplicado ?? 0,
-          saldoBruto: investimento._sum.saldoBruto ?? 0,
-          saldoAnterior: investimento._sum.saldoAnterior ?? 0,
-          valorResgatado: investimento._sum.valorResgatado ?? 0,
-          impostoIncorrido: investimento._sum.impostoIncorrido ?? 0,
-          impostoPrevisto: investimento._sum.impostoPrevisto ?? 0,
-          saldoLiquido: investimento._sum.saldoLiquido ?? 0,
-        });
-
-        return acc;
-      },
-      {} as Record<string, GrupoInvestimento>
-    );
-
-    // Transformando os resultados para incluir o nome do cliente
-    const resultadoFormatado: GrupoInvestimento[] = await Promise.all(
-      Object.keys(agrupados).map(async (clienteId) => {
-        // Busca o nome do cliente pelo ID
-        const cliente = await prisma.clientes.findUnique({
-          where: { id: clienteId },
-          select: { name: true },
-        });
-
-        // Adicionando o nome do cliente ao resultado
-        agrupados[clienteId].Cliente = cliente?.name ?? "Cliente Desconhecido";
-
-        return agrupados[clienteId];
-      })
-    );
-
-    return resultadoFormatado;
-  } catch (error) {
-    console.error("Erro ao buscar os investimentos agrupados:", error);
-    throw new Error("Erro ao buscar os investimentos agrupados.");
   }
 }
 

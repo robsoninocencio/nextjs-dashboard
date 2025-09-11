@@ -386,12 +386,6 @@ export default function DesktopInvestimentosTable({
         label: "% Cresc Bruto",
         key: "percentualDeCrescimentoSaldoBruto",
         render: (data, type) => {
-          if (type === "investment") {
-            return formatToDecimals(
-              data.percentualDeCrescimentoSaldoBruto ?? 0,
-              6
-            );
-          }
           const base =
             type === "grand"
               ? data.saldoAnterior
