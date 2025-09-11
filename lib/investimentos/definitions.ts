@@ -1,3 +1,5 @@
+import { fetchFilteredInvestimentos } from "@/lib/investimentos/data";
+
 export type Investimento = {
   id: string;
   data: string;
@@ -14,6 +16,33 @@ export type Investimento = {
   bancoId: string;
   ativoId: string;
 };
+
+// Tipagem inferida da função de busca para garantir consistência
+export type InvestimentoComRelacoes = Awaited<
+  ReturnType<typeof fetchFilteredInvestimentos>
+>[number];
+
+export type Totais = {
+  rendimentoDoMes: number;
+  dividendosDoMes: number;
+  valorAplicado: number;
+  saldoAnterior: number;
+  saldoBruto: number;
+  valorResgatado: number;
+  impostoIncorrido: number;
+  impostoPrevisto: number;
+  saldoLiquido: number;
+  percentualDeCrescimentoSaldoBruto?: number | null;
+};
+
+export type GrupoInvestimento = {
+  cliente: string;
+  ano: string;
+  mes: string;
+  investimentos: InvestimentoComRelacoes[];
+};
+
+export type GrupoInvestimentoComTotais = GrupoInvestimento & { totals: Totais };
 
 export type LatestInvestimento = {
   id: string;
@@ -82,23 +111,4 @@ export type InvestimentoForm = {
   impostoIncorrido: number;
   impostoPrevisto: number;
   saldoLiquido: number;
-};
-
-export type GrupoInvestimentoItem = {
-  ano: string;
-  mes: string;
-  rendimentoDoMes: number;
-  dividendosDoMes: number;
-  valorAplicado: number;
-  saldoBruto: number;
-  saldoAnterior: number;
-  valorResgatado: number;
-  impostoIncorrido: number;
-  impostoPrevisto: number;
-  saldoLiquido: number;
-};
-
-export type GrupoInvestimento = {
-  Cliente: string;
-  investimentos: GrupoInvestimentoItem[];
 };
