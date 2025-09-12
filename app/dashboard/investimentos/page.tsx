@@ -18,6 +18,8 @@ import { fetchCategorias } from "@/lib/categorias/data";
 
 import { fetchInvestimentosPages } from "@/lib/investimentos/data";
 
+import { Card, CardContent } from "@/components/ui/card";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -81,19 +83,23 @@ export default async function Page({
         </ButtonLinkCreate>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-4 md:mt-8">
-        <SearchCliente placeholder="Buscar Cliente..." />
-        <div className="flex gap-4">
-          <SearchAno placeholder="Ano..." />
-          <SearchMes placeholder="Mês..." />
-        </div>
-        <CategoriaFilter categorias={categorias} />
-      </div>
-      <div className="mt-4 grid grid-cols-3 gap-4 md:mt-8">
-        <SearchBanco placeholder="Buscar Banco..." />
-        <SearchAtivo placeholder="Buscar Ativo..." />
-        <SearchTipo placeholder="Buscar Tipo..." />
-      </div>
+      <Card className="mt-4">
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4 md:mt-8">
+            <SearchCliente placeholder="Buscar Cliente..." />
+            <div className="flex gap-4">
+              <SearchAno placeholder="Ano..." />
+              <SearchMes placeholder="Mês..." />
+            </div>
+            <CategoriaFilter categorias={categorias} />
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-4 md:mt-8">
+            <SearchBanco placeholder="Buscar Banco..." />
+            <SearchAtivo placeholder="Buscar Ativo..." />
+            <SearchTipo placeholder="Buscar Tipo..." />
+          </div>
+        </CardContent>
+      </Card>
 
       <Suspense
         key={

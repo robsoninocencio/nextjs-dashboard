@@ -1,5 +1,14 @@
 import React, { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableFooter,
+} from "@/components/ui/table";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
 import { formatCurrency, formatToDecimals } from "@/lib/utils";
 import {
@@ -72,21 +81,21 @@ const HeaderIndicator = ({
 }) => {
   const isPositive = value >= 0;
   return (
-    <span>
-      {label}:{" "}
+    <div className="flex items-center gap-1">
+      <span className="text-sm text-muted-foreground">{label}:</span>
       <span
-        className={`font-semibold ${
-          isPositive ? "text-green-700" : "text-red-700"
+        className={`font-semibold flex items-center gap-1 ${
+          isPositive ? "text-green-600" : "text-red-600"
         }`}
       >
         {isPositive ? (
-          <ArrowUpIcon className="mr-1 inline-block h-4 w-4" />
+          <ArrowUpIcon className="h-4 w-4" />
         ) : (
-          <ArrowDownIcon className="mr-1 inline-block h-4 w-4" />
+          <ArrowDownIcon className="h-4 w-4" />
         )}
         {formatCurrency(Math.abs(value))}
       </span>
-    </span>
+    </div>
   );
 };
 
@@ -101,19 +110,23 @@ const GroupHeaderRow = ({
   const movimentacao = group.totals.valorAplicado - group.totals.valorResgatado;
 
   return (
-    <tr className="border-y-2 border-gray-300 bg-gray-100">
-      <td colSpan={colSpan} className="p-3 text-lg">
-        <span className="font-bold text-gray-900">{group.cliente}</span>
-        <span className="mx-2 text-gray-400">|</span>
-        <span className="font-medium text-gray-700">
-          {monthNames[group.mes]} de {group.ano}
-        </span>
-        <span className="float-right flex gap-6">
-          <HeaderIndicator label="Evolução" value={evolucao} />
-          <HeaderIndicator label="Movimentação" value={movimentacao} />
-        </span>
-      </td>
-    </tr>
+    <TableRow className="border-y-2 border-muted bg-muted/50 hover:bg-muted/70 transition-colors">
+      <TableCell colSpan={colSpan} className="p-4 text-lg font-semibold">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-foreground font-bold">{group.cliente}</span>
+            <span className="text-muted-foreground">•</span>
+            <span className="text-muted-foreground font-medium">
+              {monthNames[group.mes]} de {group.ano}
+            </span>
+          </div>
+          <div className="flex gap-6">
+            <HeaderIndicator label="Evolução" value={evolucao} />
+            <HeaderIndicator label="Movimentação" value={movimentacao} />
+          </div>
+        </div>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -122,32 +135,29 @@ const TableHeaderRow = ({
 }: {
   visibleHeaders: HeaderConfig[];
 }) => (
-  <tr className="text-sm font-normal border-b-2 border-t-2 border-gray-300 bg-gray-100">
+  <TableRow className="border-b-2 border-muted bg-muted/30 hover:bg-muted/50 transition-colors">
     {["Banco", "Ativo", "Tipo", "Categorias"].map((header) => (
-      <th
+      <TableHead
         key={header}
-        scope="col"
-        className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide text-left"
+        className="px-4 py-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide text-left"
       >
         {header}
-      </th>
+      </TableHead>
     ))}
     {visibleHeaders.map(({ label }) => (
-      <th
+      <TableHead
         key={label}
-        scope="col"
-        className="align-top px-3 py-2 text-sm font-semibold text-gray-700 uppercase tracking-wide text-right"
+        className="px-4 py-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide text-right"
       >
         {label}
-      </th>
+      </TableHead>
     ))}
-    <th scope="col" className="relative py-1.5 pl-2 pr-3">
+    <TableHead className="px-4 py-3 text-right">
       <span className="sr-only">Ações</span>
-    </th>
-  </tr>
+    </TableHead>
+  </TableRow>
 );
 
-// Componente para renderizar as células de dados dinâmicas de uma linha
 const DynamicDataCells = ({
   data,
   visibleHeaders,
@@ -161,9 +171,9 @@ const DynamicDataCells = ({
 }) => (
   <>
     {visibleHeaders.map((header) => (
-      <td key={header.key} className={cellClassName}>
+      <TableCell key={header.key} className={cellClassName}>
         {header.render(data, type)}
-      </td>
+      </TableCell>
     ))}
   </>
 );
@@ -177,20 +187,20 @@ const InvestmentRow = ({
   visibleHeaders: HeaderConfig[];
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => (
-  <tr
+  <TableRow
     key={investimento.id}
-    className="border-b text-sm last:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+    className="border-b text-sm last:border-none rounded-none first:rounded-tl-lg first:rounded-tr-lg last:rounded-bl-lg last:rounded-br-lg"
   >
-    <td className="whitespace-nowrap px-2 py-1.5 align-top">
+    <TableCell className="whitespace-nowrap px-2 py-1.5 align-top">
       {investimento.bancos.nome}
-    </td>
-    <td className="whitespace-nowrap px-2 py-1.5 align-top">
+    </TableCell>
+    <TableCell className="whitespace-nowrap px-2 py-1.5 align-top">
       {investimento.ativos.nome}
-    </td>
-    <td className="whitespace-nowrap px-2 py-1.5 align-top">
+    </TableCell>
+    <TableCell className="whitespace-nowrap px-2 py-1.5 align-top">
       {investimento.ativos.tipos?.nome}
-    </td>
-    <td className="whitespace-nowrap px-2 py-1.5 align-top">
+    </TableCell>
+    <TableCell className="whitespace-nowrap px-2 py-1.5 align-top">
       <div className="flex flex-wrap gap-1">
         {investimento.ativos.ativo_categorias.map(({ categoria }) => (
           <Badge key={categoria.id} variant="secondary">
@@ -198,14 +208,14 @@ const InvestmentRow = ({
           </Badge>
         ))}
       </div>
-    </td>
+    </TableCell>
     <DynamicDataCells
       data={investimento}
       visibleHeaders={visibleHeaders}
       type="investment"
       cellClassName="whitespace-nowrap px-2 py-1.5 text-right align-top"
     />
-    <td className="whitespace-nowrap py-1.5 pl-2 pr-3 align-top">
+    <TableCell className="whitespace-nowrap py-1.5 pl-2 pr-3 align-top">
       <div className="flex justify-end gap-1">
         <ButtonLinkUpdate
           href={{
@@ -215,8 +225,8 @@ const InvestmentRow = ({
         />
         <ButtonLinkDelete id={investimento.id} />
       </div>
-    </td>
-  </tr>
+    </TableCell>
+  </TableRow>
 );
 
 const GroupTotalRow = ({
@@ -226,18 +236,21 @@ const GroupTotalRow = ({
   groupTotals: Totais;
   visibleHeaders: HeaderConfig[];
 }) => (
-  <tr className="border-t-2 border-b-4 border-gray-300 bg-gray-50 font-medium">
-    <td colSpan={4} className="px-2 py-1.5 text-left font-semibold align-top ">
+  <TableRow className="border-t-2 border-b-4 border-muted bg-accent/20 font-semibold hover:bg-accent/50 transition-colors">
+    <TableCell
+      colSpan={4}
+      className="px-2 py-1.5 text-left font-bold align-top text-accent-foreground"
+    >
       Total do Grupo
-    </td>
+    </TableCell>
     <DynamicDataCells
       data={groupTotals}
       visibleHeaders={visibleHeaders}
       type="group"
-      cellClassName="whitespace-nowrap px-2 py-1.5 text-right align-top"
+      cellClassName="whitespace-nowrap px-2 py-1.5 text-right align-top font-semibold"
     />
-    <td className="whitespace-nowrap px-2 py-1.5 text-right align-top"></td>
-  </tr>
+    <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top"></TableCell>
+  </TableRow>
 );
 
 const GrandTotalRow = ({
@@ -247,23 +260,23 @@ const GrandTotalRow = ({
   totais: Totais;
   visibleHeaders: HeaderConfig[];
 }) => (
-  <tfoot className="bg-gray-200 text-base font-bold border-t-4 border-gray-300">
-    <tr>
-      <td
+  <TableFooter className="bg-primary/5 text-base font-bold border-t-4 border-primary/20">
+    <TableRow className="hover:bg-primary/10 transition-colors">
+      <TableCell
         colSpan={4}
-        className="px-3 py-3 text-left text-lg font-bold align-top"
+        className="px-2 py-4 text-left font-bold text-lg align-top text-primary"
       >
         Totais Geral
-      </td>
+      </TableCell>
       <DynamicDataCells
         data={totais}
         visibleHeaders={visibleHeaders}
         type="grand"
-        cellClassName="whitespace-nowrap px-3 py-3 text-right align-top"
+        cellClassName="whitespace-nowrap px-4 py-4 text-right align-top font-bold text-primary"
       />
-      <td className="align-top"></td>
-    </tr>
-  </tfoot>
+      <TableCell className="whitespace-nowrap px-4 py-4 text-right align-top"></TableCell>
+    </TableRow>
+  </TableFooter>
 );
 
 type DesktopTableProps = {
@@ -433,8 +446,8 @@ export default function DesktopInvestimentosTable({
 
   return (
     <div className="hidden md:block">
-      <table className="min-w-full text-gray-900">
-        <tbody className="bg-white">
+      <Table className="min-w-full text-gray-900">
+        <TableBody className="bg-white">
           {groupedInvestimentos.map((group) => (
             <React.Fragment key={`${group.cliente}-${group.ano}-${group.mes}`}>
               <GroupHeaderRow group={group} colSpan={colSpan} />
@@ -453,11 +466,11 @@ export default function DesktopInvestimentosTable({
               />
             </React.Fragment>
           ))}
-        </tbody>
+        </TableBody>
         {investimentos?.length > 0 && (
           <GrandTotalRow totais={totais} visibleHeaders={visibleHeaders} />
         )}
-      </table>
+      </Table>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   MobileTotals,
 } from "@/app/ui/investimentos/mobile-table";
 import DesktopInvestimentosTable from "@/app/ui/investimentos/desktop-table";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Interface para os props do componente
 interface InvestimentosTableProps {
@@ -96,25 +97,27 @@ export default async function Table({
   return (
     <div className="mt-4 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          {/* Layout para dispositivos móveis */}
-          <div className="md:hidden">
-            {investimentos.map((investimento) => (
-              <MobileInvestimentoRow
-                key={investimento.id}
-                investimento={investimento}
-                searchParams={searchParams}
-              />
-            ))}
-            {investimentos?.length > 0 && <MobileTotals totais={totais} />}
-          </div>
-          {/* Layout para desktop */}
-          <DesktopInvestimentosTable
-            investimentos={investimentos}
-            totais={totais}
-            searchParams={searchParams}
-          />
-        </div>
+        <Card>
+          <CardContent className="p-2 md:pt-0">
+            {/* Layout para dispositivos móveis */}
+            <div className="md:hidden">
+              {investimentos.map((investimento) => (
+                <MobileInvestimentoRow
+                  key={investimento.id}
+                  investimento={investimento}
+                  searchParams={searchParams}
+                />
+              ))}
+              {investimentos?.length > 0 && <MobileTotals totais={totais} />}
+            </div>
+            {/* Layout para desktop */}
+            <DesktopInvestimentosTable
+              investimentos={investimentos}
+              totais={totais}
+              searchParams={searchParams}
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

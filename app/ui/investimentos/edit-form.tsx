@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, CardContent } from "@/components/ui/card";
 import { InvestimentoForm } from "@/lib/investimentos/definitions";
 import { ClienteField } from "@/lib/clientes/definitions";
 import { BancoField } from "@/lib/bancos/definitions";
@@ -34,15 +35,19 @@ export default function EditInvestimentoForm({
   );
 
   return (
-    <InvestmentForm
-      clientes={clientes}
-      bancos={bancos}
-      ativos={ativos}
-      action={updateInvestimentoWithId}
-      initialState={initialState}
-      buttonText="Atualizar Investimento"
-      investimento={investimento}
-      searchParams={searchParams}
-    />
+    <Card>
+      <CardContent>
+        <InvestmentForm
+          clientes={clientes}
+          bancos={bancos}
+          ativos={ativos}
+          action={updateInvestimentoWithId}
+          initialState={initialState}
+          buttonText="Atualizar Investimento"
+          investimento={investimento}
+          searchParams={searchParams}
+        />
+      </CardContent>
+    </Card>
   );
 }

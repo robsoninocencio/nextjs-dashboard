@@ -10,7 +10,7 @@ import {
   BriefcaseIcon,
 } from "@heroicons/react/24/outline";
 
-import { Button } from "@/app/ui/shared/button";
+import { Button } from "@/components/ui/button";
 import { SelectField, CurrencyField } from "@/app/ui/shared/form-fields";
 
 import { InvestimentoForm } from "@/lib/investimentos/definitions";
@@ -99,213 +99,206 @@ export default function InvestmentForm({
           }
           return null; // Ignora valores undefined ou outros tipos
         })}
-      <div className="rounded-md bg-gray-50 p-2 md:p-4">
-        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          <div className="flex space-x-4 md:w-1/2">
-            <div className="w-1/2">
-              <SelectField
-                id="ano"
-                label="Ano"
-                options={years}
-                defaultValue={
-                  state.submittedData?.ano ??
-                  (investimento ? formatDateToYear(investimento.data) : "")
-                }
-                errors={state.errors?.ano}
-                icon={CalendarDaysIcon}
-              />
-            </div>
-            <div className="w-1/2">
-              <SelectField
-                id="mes"
-                label="Mês"
-                options={months}
-                defaultValue={
-                  state.submittedData?.mes ??
-                  (investimento ? formatDateToMonth(investimento.data) : "")
-                }
-                errors={state.errors?.mes}
-                icon={CalendarIcon}
-              />
-            </div>
-          </div>
-          <div className="md:w-1/2 sm:mt-4 md:mt-0">
+      <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+        <div className="flex space-x-4 md:w-1/2">
+          <div className="w-1/2">
             <SelectField
-              id="clienteId"
-              label="Cliente"
-              options={clientes}
+              id="ano"
+              label="Ano"
+              options={years}
               defaultValue={
-                state.submittedData?.clienteId ?? investimento?.clienteId
+                state.submittedData?.ano ??
+                (investimento ? formatDateToYear(investimento.data) : "")
               }
-              errors={state.errors?.clienteId}
-              icon={UserCircleIcon}
+              errors={state.errors?.ano}
+              icon={CalendarDaysIcon}
             />
           </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          <div className="md:w-1/2">
+          <div className="w-1/2">
             <SelectField
-              id="bancoId"
-              label="Banco"
-              options={bancos.map((banco) => ({
-                id: banco.id,
-                name: banco.nome,
-              }))}
+              id="mes"
+              label="Mês"
+              options={months}
               defaultValue={
-                state.submittedData?.bancoId ?? investimento?.bancoId
+                state.submittedData?.mes ??
+                (investimento ? formatDateToMonth(investimento.data) : "")
               }
-              errors={state.errors?.bancoId}
-              icon={BuildingLibraryIcon}
-            />
-          </div>
-          <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <SelectField
-              id="ativoId"
-              label="Ativo"
-              options={ativos.map((ativo) => ({
-                id: ativo.id,
-                name: `${ativo.nome}${
-                  ativo.tipos ? ` (${ativo.tipos.nome})` : ""
-                }`,
-              }))}
-              defaultValue={
-                state.submittedData?.ativoId ?? investimento?.ativoId
-              }
-              errors={state.errors?.ativoId}
-              icon={BriefcaseIcon}
-              onChange={handleAtivoChange}
+              errors={state.errors?.mes}
+              icon={CalendarIcon}
             />
           </div>
         </div>
+        <div className="md:w-1/2 sm:mt-4 md:mt-0">
+          <SelectField
+            id="clienteId"
+            label="Cliente"
+            options={clientes}
+            defaultValue={
+              state.submittedData?.clienteId ?? investimento?.clienteId
+            }
+            errors={state.errors?.clienteId}
+            icon={UserCircleIcon}
+          />
+        </div>
+      </div>
 
-        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          {!isCdbAutomatico && (
-            <div className="md:w-1/2">
-              <CurrencyField
-                id="rendimentoDoMes"
-                label="Rendimento do Mês"
-                placeholder="Entre com o valor exemplo (99,99)"
-                defaultValue={
-                  state.submittedData?.rendimentoDoMes ??
-                  investimento?.rendimentoDoMes
-                }
-                errors={state.errors?.rendimentoDoMes}
-              />
-            </div>
-          )}
+      <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+        <div className="md:w-1/2">
+          <SelectField
+            id="bancoId"
+            label="Banco"
+            options={bancos.map((banco) => ({
+              id: banco.id,
+              name: banco.nome,
+            }))}
+            defaultValue={state.submittedData?.bancoId ?? investimento?.bancoId}
+            errors={state.errors?.bancoId}
+            icon={BuildingLibraryIcon}
+          />
+        </div>
+        <div className="md:w-1/2 sm:mt-4 md:mt-0">
+          <SelectField
+            id="ativoId"
+            label="Ativo"
+            options={ativos.map((ativo) => ({
+              id: ativo.id,
+              name: `${ativo.nome}${
+                ativo.tipos ? ` (${ativo.tipos.nome})` : ""
+              }`,
+            }))}
+            defaultValue={state.submittedData?.ativoId ?? investimento?.ativoId}
+            errors={state.errors?.ativoId}
+            icon={BriefcaseIcon}
+            onChange={handleAtivoChange}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+        {!isCdbAutomatico && (
           <div className="md:w-1/2">
             <CurrencyField
-              id="saldoAnterior"
-              label="Saldo Anterior"
-              placeholder="Entre com o saldo anterior (99,99)"
-              defaultValue={
-                state.submittedData?.["saldoAnterior"] ??
-                investimento?.saldoAnterior
-              }
-              errors={state.errors?.["saldoAnterior"]}
-            />
-          </div>
-          {isRendaVariavel && (
-            <div className="md:w-1/2 sm:mt-4 md:mt-0">
-              <CurrencyField
-                id="dividendosDoMes"
-                label="Dividendos do Mês"
-                placeholder="Entre com o valor exemplo (99,99)"
-                defaultValue={
-                  state.submittedData?.dividendosDoMes ??
-                  investimento?.dividendosDoMes
-                }
-                errors={state.errors?.dividendosDoMes}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          <div className="md:w-1/2">
-            <CurrencyField
-              id="valorAplicado"
-              label="Valores Aplicados"
+              id="rendimentoDoMes"
+              label="Rendimento do Mês"
               placeholder="Entre com o valor exemplo (99,99)"
               defaultValue={
-                state.submittedData?.valorAplicado ??
-                investimento?.valorAplicado
+                state.submittedData?.rendimentoDoMes ??
+                investimento?.rendimentoDoMes
               }
-              errors={state.errors?.valorAplicado}
+              errors={state.errors?.rendimentoDoMes}
             />
           </div>
+        )}
+        <div className="md:w-1/2">
+          <CurrencyField
+            id="saldoAnterior"
+            label="Saldo Anterior"
+            placeholder="Entre com o saldo anterior (99,99)"
+            defaultValue={
+              state.submittedData?.["saldoAnterior"] ??
+              investimento?.saldoAnterior
+            }
+            errors={state.errors?.["saldoAnterior"]}
+          />
+        </div>
+        {isRendaVariavel && (
           <div className="md:w-1/2 sm:mt-4 md:mt-0">
             <CurrencyField
-              id="valorResgatado"
-              label="Valores Resgatados"
+              id="dividendosDoMes"
+              label="Dividendos do Mês"
               placeholder="Entre com o valor exemplo (99,99)"
               defaultValue={
-                state.submittedData?.valorResgatado ??
-                investimento?.valorResgatado
+                state.submittedData?.dividendosDoMes ??
+                investimento?.dividendosDoMes
               }
-              errors={state.errors?.valorResgatado}
+              errors={state.errors?.dividendosDoMes}
             />
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          <div className="md:w-1/2">
-            <CurrencyField
-              id="impostoIncorrido"
-              label="Impostos Incorridos"
-              placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={
-                state.submittedData?.impostoIncorrido ??
-                investimento?.impostoIncorrido
-              }
-              errors={state.errors?.impostoIncorrido}
-            />
-          </div>
-          <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <CurrencyField
-              id="impostoPrevisto"
-              label="Impostos Previstos"
-              placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={
-                state.submittedData?.impostoPrevisto ??
-                investimento?.impostoPrevisto
-              }
-              errors={state.errors?.impostoPrevisto}
-            />
-          </div>
+      <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+        <div className="md:w-1/2">
+          <CurrencyField
+            id="valorAplicado"
+            label="Valores Aplicados"
+            placeholder="Entre com o valor exemplo (99,99)"
+            defaultValue={
+              state.submittedData?.valorAplicado ?? investimento?.valorAplicado
+            }
+            errors={state.errors?.valorAplicado}
+          />
         </div>
+        <div className="md:w-1/2 sm:mt-4 md:mt-0">
+          <CurrencyField
+            id="valorResgatado"
+            label="Valores Resgatados"
+            placeholder="Entre com o valor exemplo (99,99)"
+            defaultValue={
+              state.submittedData?.valorResgatado ??
+              investimento?.valorResgatado
+            }
+            errors={state.errors?.valorResgatado}
+          />
+        </div>
+      </div>
 
-        <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
-          <div className="md:w-1/2">
-            <CurrencyField
-              id="saldoBruto"
-              label="Saldo Bruto"
-              placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={
-                state.submittedData?.saldoBruto ?? investimento?.saldoBruto
-              }
-              errors={state.errors?.saldoBruto}
-            />
-          </div>
-          <div className="md:w-1/2 sm:mt-4 md:mt-0">
-            <CurrencyField
-              id="saldoLiquido"
-              label="Saldo Líquido"
-              placeholder="Entre com o valor exemplo (99,99)"
-              defaultValue={
-                state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido
-              }
-              errors={state.errors?.saldoLiquido}
-            />
-          </div>
+      <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+        <div className="md:w-1/2">
+          <CurrencyField
+            id="impostoIncorrido"
+            label="Impostos Incorridos"
+            placeholder="Entre com o valor exemplo (99,99)"
+            defaultValue={
+              state.submittedData?.impostoIncorrido ??
+              investimento?.impostoIncorrido
+            }
+            errors={state.errors?.impostoIncorrido}
+          />
         </div>
+        <div className="md:w-1/2 sm:mt-4 md:mt-0">
+          <CurrencyField
+            id="impostoPrevisto"
+            label="Impostos Previstos"
+            placeholder="Entre com o valor exemplo (99,99)"
+            defaultValue={
+              state.submittedData?.impostoPrevisto ??
+              investimento?.impostoPrevisto
+            }
+            errors={state.errors?.impostoPrevisto}
+          />
+        </div>
+      </div>
 
-        <div aria-live="polite" aria-atomic="true">
-          {state.message ? (
-            <p className="my-6 text-sm text-red-700">{state.message}</p>
-          ) : null}
+      <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
+        <div className="md:w-1/2">
+          <CurrencyField
+            id="saldoBruto"
+            label="Saldo Bruto"
+            placeholder="Entre com o valor exemplo (99,99)"
+            defaultValue={
+              state.submittedData?.saldoBruto ?? investimento?.saldoBruto
+            }
+            errors={state.errors?.saldoBruto}
+          />
         </div>
+        <div className="md:w-1/2 sm:mt-4 md:mt-0">
+          <CurrencyField
+            id="saldoLiquido"
+            label="Saldo Líquido"
+            placeholder="Entre com o valor exemplo (99,99)"
+            defaultValue={
+              state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido
+            }
+            errors={state.errors?.saldoLiquido}
+          />
+        </div>
+      </div>
+
+      <div aria-live="polite" aria-atomic="true">
+        {state.message ? (
+          <p className="my-6 text-sm text-red-700">{state.message}</p>
+        ) : null}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link

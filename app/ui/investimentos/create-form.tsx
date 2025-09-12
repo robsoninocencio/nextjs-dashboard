@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, CardContent } from "@/components/ui/card";
 import {
   createInvestimento,
   InvestimentoFormState,
@@ -24,13 +25,17 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
   const initialState: InvestimentoFormState = { errors: {}, message: null };
 
   return (
-    <InvestmentForm
-      clientes={clientes}
-      bancos={bancos}
-      ativos={ativos}
-      action={createInvestimento}
-      initialState={initialState}
-      buttonText="Cadastrar Investimento"
-    />
+    <Card>
+      <CardContent>
+        <InvestmentForm
+          clientes={clientes}
+          bancos={bancos}
+          ativos={ativos}
+          action={createInvestimento}
+          initialState={initialState}
+          buttonText="Cadastrar Investimento"
+        />
+      </CardContent>
+    </Card>
   );
 }
