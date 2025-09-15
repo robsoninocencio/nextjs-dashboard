@@ -236,10 +236,10 @@ const GroupTotalRow = ({
   groupTotals: Totais;
   visibleHeaders: HeaderConfig[];
 }) => (
-  <TableRow className="border-t-2 border-b-4 border-muted bg-accent/20 font-semibold hover:bg-accent/50 transition-colors">
+  <TableRow className="border-t-2 border-b-4 border-muted bg-accent/20 font-semibold hover:bg-accent/80 transition-colors">
     <TableCell
       colSpan={4}
-      className="px-2 py-1.5 text-left font-bold align-top text-accent-foreground"
+      className="px-2 py-4 text-left font-bold align-top text-accent-foreground"
     >
       Total do Grupo
     </TableCell>
@@ -247,9 +247,9 @@ const GroupTotalRow = ({
       data={groupTotals}
       visibleHeaders={visibleHeaders}
       type="group"
-      cellClassName="whitespace-nowrap px-2 py-1.5 text-right align-top font-semibold"
+      cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-semibold"
     />
-    <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top"></TableCell>
+    <TableCell className="whitespace-nowrap px-2 py-2 text-right align-top"></TableCell>
   </TableRow>
 );
 
@@ -272,9 +272,9 @@ const GrandTotalRow = ({
         data={totais}
         visibleHeaders={visibleHeaders}
         type="grand"
-        cellClassName="whitespace-nowrap px-4 py-4 text-right align-top font-bold text-primary"
+        cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-bold text-primary"
       />
-      <TableCell className="whitespace-nowrap px-4 py-4 text-right align-top"></TableCell>
+      <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top"></TableCell>
     </TableRow>
   </TableFooter>
 );
