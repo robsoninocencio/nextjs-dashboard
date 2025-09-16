@@ -4,6 +4,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SearchCliente({
   placeholder,
@@ -31,12 +32,12 @@ export default function SearchCliente({
 
   return (
     <div className="flex flex-1 flex-col">
-      <label
+      <Label
         htmlFor="searchCliente"
         className="mb-1 text-sm font-medium text-gray-700"
       >
         Buscar Cliente
-      </label>
+      </Label>
       <div className="relative flex flex-1 flex-shrink-0">
         <Input
           id="searchCliente"

@@ -1,6 +1,6 @@
 import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
-import prisma from "../prisma/lib/prisma"; // ajuste o caminho se necessário
+import { prisma } from "@/lib/prisma";
 
 async function exportDB() {
   const outputDir = path.join(__dirname, "data");

@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import prisma from "@/prisma/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import {
   usersData,

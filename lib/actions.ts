@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 
-import { signIn } from "auth";
+import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 
-import prisma from "@/prisma/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function deleteCliente(id: string) {
   await prisma.clientes.delete({

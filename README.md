@@ -95,3 +95,5 @@ npx prisma migrate dev --name init // init para primeira migrate ou descreva a a
 https://console.prisma.io/cm92du7tm010j20ttnxtixomg/overview
 
 npx shadcn@latest add badge
+
+npx shadcn@latest add label

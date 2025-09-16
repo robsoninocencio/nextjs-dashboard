@@ -1,4 +1,4 @@
-import prisma from "@/prisma/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "../utils";
 
 export async function fetchCardData() {

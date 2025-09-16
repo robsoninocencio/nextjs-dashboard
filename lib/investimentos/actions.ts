@@ -5,7 +5,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import prisma from "@/prisma/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { fetchInvestimentoAnterior } from "@/lib/investimentos/data";
 import { fetchAtivos } from "@/lib/ativos/data";
 

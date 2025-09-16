@@ -1,0 +1,8 @@
+{
+  "ignores": [
+    "@prisma/client",
+    "autoprefixer",
+    "postcss",
+    "tsx"
+  ]
+}

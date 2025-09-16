@@ -1,4 +1,4 @@
-import prisma from "@/prisma/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 import type { Ativo, AtivoField, AtivosTable } from "./definitions";
 

@@ -5,26 +5,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 
-import prisma from "@/prisma/lib/prisma";
-import type { User } from "@/lib/shared/definitions";
-
-async function getUser(email: string): Promise<User | undefined> {
-  try {
-    const user = await prisma.users.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        password: true,
-      },
-    });
-    return user ?? undefined;
-  } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
-  }
-}
+import { getUser } from "@/lib/users/data";
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -37,11 +18,15 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
+          const user = await getUser(email); // Fetches the full user object
+          if (!user || !user.password) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (passwordsMatch) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, ...userWithoutPassword } = user;
+            return userWithoutPassword; // IMPORTANT: Never return the password hash
+          }
         }
 
         console.log("Invalid credentials");

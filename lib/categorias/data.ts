@@ -1,5 +1,5 @@
-import prisma from "@/prisma/lib/prisma";
-import { Prisma } from "../../generated/prisma";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma";
 import type { CategoriaComPai, CategoriaField } from "./definitions"; // Supondo que CategoriaComPai foi movido para definitions
 
 const ITEMS_PER_PAGE = 50;
@@ -36,38 +36,39 @@ export async function fetchFilteredCategorias(
     let categorias: CategoriaComPai[];
 
     if (queryCategoria) {
+      const searchTerm = `%${queryCategoria}%`;
       // Query com filtro
-      categorias = await prisma.$queryRaw<CategoriaComPai[]>`
+      categorias = await prisma.$queryRaw<CategoriaComPai[]>(Prisma.sql`
         SELECT
           c.id,
           c.nome,
           c."parentId",
           c."createdAt",
           c."updatedAt",
-          p.nome as "nomePai"
+          p.nome AS "nomePai"
         FROM "categorias" c
         LEFT JOIN "categorias" p ON c."parentId" = p.id
-        WHERE c.nome ILIKE ${`%${queryCategoria}%`}
+        WHERE c.nome ILIKE ${searchTerm}
         ORDER BY LOWER(c.nome) ASC
         LIMIT ${ITEMS_PER_PAGE}
         OFFSET ${offset}
-      `;
+      `);
     } else {
       // Query sem filtro
-      categorias = await prisma.$queryRaw<CategoriaComPai[]>`
+      categorias = await prisma.$queryRaw<CategoriaComPai[]>(Prisma.sql`
         SELECT
           c.id,
           c.nome,
           c."parentId",
           c."createdAt",
           c."updatedAt",
-          p.nome as "nomePai"
+          p.nome AS "nomePai"
         FROM "categorias" c
         LEFT JOIN "categorias" p ON c."parentId" = p.id
         ORDER BY LOWER(c.nome) ASC
         LIMIT ${ITEMS_PER_PAGE}
         OFFSET ${offset}
-      `;
+      `);
     }
 
     return categorias;
@@ -116,11 +117,7 @@ export async function fetchCategorias(): Promise<CategoriaField[]> {
 
     // console.log("categorias:", categorias);
 
-    return categorias.map((categoria) => ({
-      id: categoria.id,
-      nome: categoria.nome,
-      parentId: categoria.parentId,
-    }));
+    return categorias;
   } catch (error) {
     console.error("Erro ao buscar categorias:", error);
     throw new Error("Não foi possível buscar os categorias.");

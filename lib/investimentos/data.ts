@@ -1,5 +1,5 @@
-import prisma from "@/prisma/lib/prisma";
-import { Prisma } from "../../generated/prisma";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma";
 
 const ITEMS_PER_PAGE = 100;
 
