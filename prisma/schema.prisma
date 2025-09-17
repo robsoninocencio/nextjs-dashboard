@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -189,11 +188,3 @@ model revenue {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-// // Enum's
-// enum Indexador {
-//   CDI
-//   IPCA
-//   SELIC
-//   PREFIXADO
-// }

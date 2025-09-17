@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@/generated/prisma";
+import { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 import type { CategoriaComPai, CategoriaField } from "./definitions"; // Supondo que CategoriaComPai foi movido para definitions
 
 const ITEMS_PER_PAGE = 50;
@@ -104,22 +105,23 @@ export async function fetchCategoriaById(id: string) {
   }
 }
 
-export async function fetchCategorias(): Promise<CategoriaField[]> {
-  try {
-    const categorias = await prisma.categorias.findMany({
-      select: {
-        id: true,
-        nome: true,
-        parentId: true,
-      },
-      orderBy: { nome: "asc" },
-    });
-
-    // console.log("categorias:", categorias);
-
-    return categorias;
-  } catch (error) {
-    console.error("Erro ao buscar categorias:", error);
-    throw new Error("Não foi possível buscar os categorias.");
-  }
-}
+export const fetchCategorias = unstable_cache(
+  async (): Promise<CategoriaField[]> => {
+    try {
+      const categorias = await prisma.categorias.findMany({
+        select: {
+          id: true,
+          nome: true,
+          parentId: true,
+        },
+        orderBy: { nome: "asc" },
+      });
+      return categorias;
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error);
+      throw new Error("Não foi possível buscar as categorias.");
+    }
+  },
+  ["categorias"], // Chave do cache
+  { tags: ["categorias"] } // Tag para revalidação sob demanda
+);

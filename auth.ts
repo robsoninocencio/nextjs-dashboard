@@ -7,13 +7,18 @@ import { authConfig } from "./auth.config";
 
 import { getUser } from "@/lib/users/data";
 
+const PASSWORD_MIN_LENGTH = 6;
+
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
+          .object({
+            email: z.string().email(),
+            password: z.string().min(PASSWORD_MIN_LENGTH),
+          })
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
