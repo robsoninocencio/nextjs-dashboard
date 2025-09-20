@@ -209,7 +209,7 @@ const InvestmentRow = ({
 }) => (
   <TableRow
     key={investimento.id}
-    className="border-b border-gray-100 text-sm hover:bg-gray-50/80 hover:shadow-sm transition-all duration-200 group animate-in fade-in slide-in-from-bottom duration-300"
+    className="border-b border-gray-100 text-sm hover:bg-gray-50/80 hover:shadow-sm transition-all group animate-in fade-in slide-in-from-bottom duration-300"
   >
     <TableCell className="whitespace-nowrap px-3 py-3 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150">
       <span className="inline-block hover:translate-x-1 transition-transform duration-200">
@@ -232,7 +232,7 @@ const InvestmentRow = ({
           <Badge
             key={categoria.id}
             variant="secondary"
-            className="text-xs px-3 py-1 font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 cursor-default animate-in zoom-in duration-300"
+            className="text-xs px-3 py-1 font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default animate-in zoom-in duration-300"
             style={{ animationDelay: `${index * 50}ms` }}
           >
             {categoria.nome}
@@ -387,41 +387,6 @@ export default function DesktopInvestimentosTable({
   searchParams,
   isLoading = false,
 }: DesktopTableProps) {
-  if (isLoading) {
-    return <LoadingSkeleton />;
-  }
-
-  if (!investimentos || investimentos.length === 0) {
-    return (
-      <div className="hidden md:block w-full">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-          <div className="p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Nenhum investimento encontrado
-            </h3>
-            <p className="text-gray-500">
-              Não há investimentos para exibir no momento.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
   const groupedInvestimentos: GrupoInvestimentoComTotais[] = useMemo(() => {
     if (!investimentos) {
       return [];
@@ -587,6 +552,42 @@ export default function DesktopInvestimentosTable({
     const colSpan = 4 + visibleHeaders.length + 1; // 4 estáticos + dinâmicos + 1 ações
     return { visibleHeaders, colSpan };
   }, [totais]);
+
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (!investimentos || investimentos.length === 0) {
+    return (
+      <div className="hidden md:block w-full">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div className="p-12 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <svg
+                className="w-8 h-8 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Nenhum investimento encontrado
+            </h3>
+            <p className="text-gray-500">
+              Não há investimentos para exibir no momento.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
