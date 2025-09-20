@@ -21,31 +21,94 @@
     "updatedAt": "2025-09-03T07:29:41.089Z"
   },
   {
-    "id": "c76f3964-91e3-4cd6-a07b-f5746f55066f",
-    "nome": "CURTO PRAZO",
-    "parentId": null,
-    "createdAt": "2025-09-03T07:33:33.447Z",
-    "updatedAt": "2025-09-03T07:33:33.447Z"
-  },
-  {
-    "id": "7037c105-c527-4f27-8f8f-910263c34ff1",
-    "nome": "PRE FIXADO",
-    "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
-    "createdAt": "2025-09-03T08:11:43.362Z",
-    "updatedAt": "2025-09-03T08:11:43.362Z"
-  },
-  {
-    "id": "6686f761-3bdf-41dd-859d-6940642b3475",
-    "nome": "POS FIXADO",
-    "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
-    "createdAt": "2025-09-03T08:11:56.862Z",
-    "updatedAt": "2025-09-04T22:04:56.164Z"
-  },
-  {
     "id": "19c565ad-db53-409b-a5c7-750c6e16bae9",
     "nome": "ISENTO DE IR",
     "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
     "createdAt": "2025-09-04T21:33:36.799Z",
     "updatedAt": "2025-09-05T20:23:26.432Z"
+  },
+  {
+    "id": "bc11c784-0048-4052-a6f7-3626c630d112",
+    "nome": "OP. ESTRUTURADAS",
+    "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
+    "createdAt": "2025-09-17T22:30:00.956Z",
+    "updatedAt": "2025-09-17T22:30:00.956Z"
+  },
+  {
+    "id": "3e15c818-bd59-4ee7-86fd-307c8189c3a8",
+    "nome": "ACOES",
+    "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
+    "createdAt": "2025-09-18T17:34:46.642Z",
+    "updatedAt": "2025-09-18T17:34:46.642Z"
+  },
+  {
+    "id": "f6247525-67a6-4a7c-acd8-2a9bb30dc5e9",
+    "nome": "FUNDO IMOBILIARIO",
+    "parentId": "04854073-f6dd-463a-8110-7bf990456712",
+    "createdAt": "2025-09-18T16:15:28.568Z",
+    "updatedAt": "2025-09-18T17:56:12.986Z"
+  },
+  {
+    "id": "6686f761-3bdf-41dd-859d-6940642b3475",
+    "nome": "POS FIXADO",
+    "parentId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-03T08:11:56.862Z",
+    "updatedAt": "2025-09-18T18:01:01.730Z"
+  },
+  {
+    "id": "5b1918ea-e8ed-4a75-bf99-d9f3649e5320",
+    "nome": "CDB",
+    "parentId": null,
+    "createdAt": "2025-09-18T18:23:41.469Z",
+    "updatedAt": "2025-09-18T18:25:29.284Z"
+  },
+  {
+    "id": "c76f3964-91e3-4cd6-a07b-f5746f55066f",
+    "nome": "CURTO PRAZO",
+    "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
+    "createdAt": "2025-09-03T07:33:33.447Z",
+    "updatedAt": "2025-09-18T18:37:01.174Z"
+  },
+  {
+    "id": "f182db0d-bc62-4070-a533-089cd9daf5eb",
+    "nome": "CONTA CORRENTE",
+    "parentId": null,
+    "createdAt": "2025-09-18T18:37:50.739Z",
+    "updatedAt": "2025-09-18T18:37:50.739Z"
+  },
+  {
+    "id": "a32b08b5-475c-4c0d-8f5b-200d8cba6f6d",
+    "nome": "POUPANCA",
+    "parentId": null,
+    "createdAt": "2025-09-18T18:38:54.494Z",
+    "updatedAt": "2025-09-18T18:38:54.494Z"
+  },
+  {
+    "id": "7037c105-c527-4f27-8f8f-910263c34ff1",
+    "nome": "PRE FIXADO",
+    "parentId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-03T08:11:43.362Z",
+    "updatedAt": "2025-09-18T18:40:23.136Z"
+  },
+  {
+    "id": "802e78f0-5b01-4658-af65-a3615b092c87",
+    "nome": "TESOURO DIRETO",
+    "parentId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-18T17:35:09.456Z",
+    "updatedAt": "2025-09-18T18:40:59.637Z"
+  },
+  {
+    "id": "c7edcfe4-acbd-4781-9df5-c3fa8ef21610",
+    "nome": "LCI",
+    "parentId": null,
+    "createdAt": "2025-09-18T18:41:34.281Z",
+    "updatedAt": "2025-09-18T18:41:34.281Z"
+  },
+  {
+    "id": "f91e4ba2-25f2-4ab2-b4e3-7f096059c83a",
+    "nome": "LCA",
+    "parentId": null,
+    "createdAt": "2025-09-18T18:41:41.921Z",
+    "updatedAt": "2025-09-18T18:41:41.921Z"
   }
 ]
