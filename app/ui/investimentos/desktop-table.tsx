@@ -141,7 +141,7 @@ const TableHeaderRow = ({
     {["Banco", "Ativo", "Tipo", "Categorias"].map((header) => (
       <TableHead
         key={header}
-        className="px-4 py-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide text-left"
+        className="py-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide text-left"
       >
         {header}
       </TableHead>
@@ -149,7 +149,7 @@ const TableHeaderRow = ({
     {visibleHeaders.map(({ label }) => (
       <TableHead
         key={label}
-        className="px-4 py-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide text-right"
+        className="py-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide text-right"
       >
         {label}
       </TableHead>
@@ -234,43 +234,57 @@ const InvestmentRow = ({
 const GroupTotalRow = ({
   groupTotals,
   visibleHeaders,
+  colSpan,
 }: {
   groupTotals: Totais;
   visibleHeaders: HeaderConfig[];
-}) => (
-  <TableRow className="border-t-2 border-b-4 border-muted bg-accent/20 font-semibold hover:bg-accent/80 transition-colors">
-    <TableCell
-      colSpan={4}
-      className="px-2 py-4 text-left font-bold align-top text-accent-foreground"
-    >
-      Total do Grupo
-    </TableCell>
-    <DynamicDataCells
-      data={groupTotals}
-      visibleHeaders={visibleHeaders}
-      type="group"
-      cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-semibold"
-    />
-    <TableCell className="whitespace-nowrap px-2 py-2 text-right align-top"></TableCell>
-  </TableRow>
-);
+  colSpan: number;
+}) => {
+  return (
+    <>
+      {/* Linha de espaçamento para separar visualmente dos investimentos */}
+      <TableRow className="h-3 border-0 bg-transparent hover:bg-transparent">
+        <TableCell colSpan={colSpan} className="p-0 border-0" />
+      </TableRow>
+      <TableRow className="border-t-2 border-b-4 border-muted bg-primary/5 font-semibold hover:bg-primary/10 transition-colors">
+        <TableCell
+          colSpan={4}
+          className="px-2 py-4 text-left font-bold align-top text-accent-foreground"
+        >
+          Total do Grupo
+        </TableCell>
+        <DynamicDataCells
+          data={groupTotals}
+          visibleHeaders={visibleHeaders}
+          type="group"
+          cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-semibold"
+        />
+        <TableCell className="whitespace-nowrap px-2 py-2 text-right align-top"></TableCell>
+      </TableRow>
+      {/* Linha de espaçamento para separar visualmente dos investimentos */}
+      <TableRow className="h-8 border-0 bg-transparent hover:bg-transparent">
+        <TableCell colSpan={colSpan} className="p-0 border-0" />
+      </TableRow>
+    </>
+  );
+};
 
 const GrandTotalRow = ({
   totais,
   visibleHeaders,
+  colSpan,
 }: {
   totais: Totais;
   visibleHeaders: HeaderConfig[];
+  colSpan: number;
 }) => (
-  <TableFooter className="bg-primary/5 text-base font-bold border-t-4 border-primary/20">
-    <TableRow className="hover:bg-primary/10 transition-colors">
-      {/* <Card>
-        <CardContent> */}
+  <TableFooter>
+    <TableRow className="bg-primary/15 text-base font-bold border-t-4 border-muted hover:bg-primary/20 transition-colors">
       <TableCell
         colSpan={4}
-        className="px-2 py-4 text-left font-bold text-lg align-top text-primary"
+        className="px-2 py-4 text-left font-bold text-lg align-top text-primary rounded-bl-lg"
       >
-        Totais Geral
+        Total Geral
       </TableCell>
       <DynamicDataCells
         data={totais}
@@ -278,9 +292,7 @@ const GrandTotalRow = ({
         type="grand"
         cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-bold text-primary"
       />
-      <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top"></TableCell>
-      {/* </CardContent>
-      </Card> */}
+      <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top rounded-br-lg"></TableCell>
     </TableRow>
   </TableFooter>
 );
@@ -481,12 +493,17 @@ export default function DesktopInvestimentosTable({
               <GroupTotalRow
                 groupTotals={group.totals}
                 visibleHeaders={visibleHeaders}
+                colSpan={colSpan}
               />
             </React.Fragment>
           ))}
         </TableBody>
         {investimentos?.length > 0 && (
-          <GrandTotalRow totais={totais} visibleHeaders={visibleHeaders} />
+          <GrandTotalRow
+            totais={totais}
+            visibleHeaders={visibleHeaders}
+            colSpan={colSpan}
+          />
         )}
       </Table>
     </div>
