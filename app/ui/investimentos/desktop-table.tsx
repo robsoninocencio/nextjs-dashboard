@@ -277,25 +277,43 @@ const GrandTotalRow = ({
   totais: Totais;
   visibleHeaders: HeaderConfig[];
   colSpan: number;
-}) => (
-  <TableFooter>
-    <TableRow className="bg-primary/15 text-base font-bold border-t-4 border-muted hover:bg-primary/20 transition-colors">
-      <TableCell
-        colSpan={4}
-        className="px-2 py-4 text-left font-bold text-lg align-top text-primary rounded-bl-lg"
-      >
-        Total Geral
-      </TableCell>
-      <DynamicDataCells
-        data={totais}
-        visibleHeaders={visibleHeaders}
-        type="grand"
-        cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-bold text-primary"
-      />
-      <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top rounded-br-lg"></TableCell>
-    </TableRow>
-  </TableFooter>
-);
+}) => {
+  const evolucao = totais.saldoBruto - totais.saldoAnterior;
+  const movimentacao = totais.valorAplicado - totais.valorResgatado;
+
+  return (
+    <TableFooter>
+      <TableRow className="border-b-2 border-muted bg-muted/50 hover:bg-muted/70 transition-colors">
+        <TableCell colSpan={colSpan} className="p-4 text-lg font-semibold">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-foreground font-bold">Sumário Geral</span>
+            </div>
+            <div className="flex gap-6">
+              <HeaderIndicator label="Evolução" value={evolucao} />
+              <HeaderIndicator label="Movimentação" value={movimentacao} />
+            </div>
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow className="bg-primary/15 text-base font-bold hover:bg-primary/20 transition-colors">
+        <TableCell
+          colSpan={4}
+          className="px-2 py-4 text-left font-bold text-lg align-top text-primary rounded-bl-lg"
+        >
+          Total Geral
+        </TableCell>
+        <DynamicDataCells
+          data={totais}
+          visibleHeaders={visibleHeaders}
+          type="grand"
+          cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-bold text-primary"
+        />
+        <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top rounded-br-lg"></TableCell>
+      </TableRow>
+    </TableFooter>
+  );
+};
 
 type DesktopTableProps = {
   investimentos: InvestimentoCompleto[];
