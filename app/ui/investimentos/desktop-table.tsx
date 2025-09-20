@@ -20,6 +20,8 @@ import {
 import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
 import { ButtonLinkDelete } from "@/app/ui/investimentos/buttonLinkDelete";
 
+import { Card, CardContent } from "@/components/ui/card";
+
 type HeaderConfig = {
   label: string;
   key: string;
@@ -262,6 +264,8 @@ const GrandTotalRow = ({
 }) => (
   <TableFooter className="bg-primary/5 text-base font-bold border-t-4 border-primary/20">
     <TableRow className="hover:bg-primary/10 transition-colors">
+      {/* <Card>
+        <CardContent> */}
       <TableCell
         colSpan={4}
         className="px-2 py-4 text-left font-bold text-lg align-top text-primary"
@@ -275,6 +279,8 @@ const GrandTotalRow = ({
         cellClassName="whitespace-nowrap px-2 py-4 text-right align-top font-bold text-primary"
       />
       <TableCell className="whitespace-nowrap px-2 py-1.5 text-right align-top"></TableCell>
+      {/* </CardContent>
+      </Card> */}
     </TableRow>
   </TableFooter>
 );
@@ -328,12 +334,18 @@ export default function DesktopInvestimentosTable({
     });
   }, [investimentos]);
 
+  // A função render recebe o type da linha como argumento ("investment" | "group" | "grand").
+  // Você pode usar esse parâmetro para decidir o que renderizar em cada caso.
+
   const { visibleHeaders, colSpan } = useMemo(() => {
     const headerConfig: HeaderConfig[] = [
       {
         label: "Saldo Anterior",
         key: "saldoAnterior",
-        render: (data) => formatCurrency(data.saldoAnterior),
+        render: (data, type) => {
+          if (type === "grand") return "";
+          return formatCurrency(data.saldoAnterior);
+        },
       },
       {
         label: "Rendimento",
@@ -400,7 +412,10 @@ export default function DesktopInvestimentosTable({
         label: "Saldo Bruto",
         key: "saldoBruto",
         condition: totais.saldoBruto > 0,
-        render: (data) => formatCurrency(data.saldoBruto),
+        render: (data, type) => {
+          if (type === "grand") return "";
+          return formatCurrency(data.saldoBruto);
+        },
       },
       {
         label: "% Cresc Bruto",
@@ -433,7 +448,10 @@ export default function DesktopInvestimentosTable({
       {
         label: "Saldo Líquido",
         key: "saldoLiquido",
-        render: (data) => formatCurrency(data.saldoLiquido),
+        render: (data, type) => {
+          if (type === "grand") return "";
+          return formatCurrency(data.saldoLiquido);
+        },
       },
     ];
 
