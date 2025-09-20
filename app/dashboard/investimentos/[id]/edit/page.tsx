@@ -9,7 +9,7 @@ import { fetchAtivos } from "@/lib/ativos/data";
 import Form from "@/app/ui/investimentos/edit-form";
 
 import { fetchInvestimentoById } from "@/lib/investimentos/data";
-import type { Investimento } from "@/lib/investimentos/definitions";
+import type { InvestimentoForm } from "@/lib/investimentos/definitions";
 
 import { Metadata } from "next";
 
@@ -42,7 +42,7 @@ export default async function Page({
   }
 
   // The `fetchInvestimentoById` function already returns the data in the expected format.
-  const typedInvestimento: Investimento = investimento;
+  const typedInvestimento: InvestimentoForm = investimento;
 
   const breadcrumbHref = {
     pathname: "/dashboard/investimentos",

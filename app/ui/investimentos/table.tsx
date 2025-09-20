@@ -1,62 +1,47 @@
 import React from "react";
+
+import { Totais } from "@/lib/investimentos/definitions";
 import {
-  InvestimentoComRelacoes,
-  Totais,
-} from "@/lib/investimentos/definitions";
-import { fetchFilteredInvestimentos } from "@/lib/investimentos/data";
+  fetchFilteredInvestimentos,
+  InvestmentFiltersParams,
+} from "@/lib/investimentos/data";
+
+import { InvestimentoCompleto } from "@/lib/types";
+
+import DesktopInvestimentosTable from "@/app/ui/investimentos/desktop-table";
 import {
   MobileInvestimentoRow,
   MobileTotals,
 } from "@/app/ui/investimentos/mobile-table";
-import DesktopInvestimentosTable from "@/app/ui/investimentos/desktop-table";
+
 import { Card, CardContent } from "@/components/ui/card";
 
 // Interface para os props do componente
 interface InvestimentosTableProps {
   currentPage: number;
-  queryAno: string;
-  queryMes: string;
-  queryCliente: string;
-  queryBanco: string;
-  queryAtivo: string;
-  queryTipo: string;
-  categoriaId?: string;
+  filters: InvestmentFiltersParams;
 }
 
 // Componente principal
 export default async function Table({
   currentPage,
-  queryAno,
-  queryMes,
-  queryCliente,
-  queryBanco,
-  queryAtivo,
-  queryTipo,
-  categoriaId,
+  filters,
 }: InvestimentosTableProps) {
   // Buscar dados de investimentos
-  const investimentos = await fetchFilteredInvestimentos(
-    currentPage,
-    queryAno,
-    queryMes,
-    queryCliente,
-    queryBanco,
-    queryAtivo,
-    queryTipo,
-    categoriaId
-  );
+  const investimentos: InvestimentoCompleto[] =
+    await fetchFilteredInvestimentos(filters, currentPage);
 
   // Recria o objeto searchParams para passar aos componentes filhos.
   // Isso é necessário para que os links de edição e cancelamento preservem os filtros.
   const searchParams = {
     page: currentPage.toString(),
-    queryAno,
-    queryMes,
-    queryCliente,
-    queryBanco,
-    queryAtivo,
-    queryTipo,
-    categoriaId,
+    queryAno: filters.ano,
+    queryMes: filters.mes,
+    queryCliente: filters.cliente,
+    queryBanco: filters.banco,
+    queryAtivo: filters.ativo,
+    queryTipo: filters.tipo,
+    categoriaId: filters.categoriaId,
   };
 
   // Calcular totais

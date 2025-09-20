@@ -1,8 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  InvestimentoComRelacoes,
-  Totais,
-} from "@/lib/investimentos/definitions";
+import { Totais } from "@/lib/investimentos/definitions";
+import { InvestimentoCompleto } from "@/lib/types";
 import {
   formatCurrency,
   formatDateToMonth,
@@ -13,7 +11,7 @@ import { ButtonLinkUpdate } from "@/app/ui/shared/buttonLinkUpdate";
 
 // Tipos e dados para a lista financeira do card mobile
 type FinancialDataKey = keyof Pick<
-  InvestimentoComRelacoes,
+  InvestimentoCompleto,
   | "saldoAnterior"
   | "rendimentoDoMes"
   | "dividendosDoMes"
@@ -44,7 +42,7 @@ const financialDataFields: FinancialDataField[] = [
 const FinancialDataList = ({
   investimento,
 }: {
-  investimento: InvestimentoComRelacoes;
+  investimento: InvestimentoCompleto;
 }) => (
   <div className="space-y-2 text-sm">
     {financialDataFields.map(({ key, label, isSeparator }) => {
@@ -70,7 +68,7 @@ export function MobileInvestimentoRow({
   investimento,
   searchParams,
 }: {
-  investimento: InvestimentoComRelacoes;
+  investimento: InvestimentoCompleto;
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   return (

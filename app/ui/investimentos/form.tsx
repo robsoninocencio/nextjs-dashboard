@@ -87,18 +87,13 @@ export default function InvestmentForm({
   return (
     <form action={formAction}>
       {/* Hidden inputs to preserve search params on redirect */}
-      {searchParams &&
-        Object.entries(searchParams).map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value.map((v, i) => (
-              <input key={`${key}-${i}`} type="hidden" name={key} value={v} />
-            ));
-          }
-          if (typeof value === "string") {
-            return <input type="hidden" key={key} name={key} value={value} />;
-          }
-          return null; // Ignora valores undefined ou outros tipos
-        })}
+      {searchParams && (
+        <input
+          type="hidden"
+          name="searchParams"
+          value={JSON.stringify(searchParams)}
+        />
+      )}
       <div className="flex flex-col md:flex-row md:space-x-4 p-2 md:p-4">
         <div className="flex space-x-4 md:w-1/2">
           <div className="w-1/2">

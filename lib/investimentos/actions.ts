@@ -20,10 +20,9 @@ const currentYear = new Date().getFullYear();
  */
 const currencyStringToNumber = z.preprocess((val) => {
   if (typeof val !== "string" || !val) return 0;
-  const cleanedVal = val
-    .replace("R$ ", "")
-    .replace(/\./g, "")
-    .replace(",", ".");
+  // Remove todos os caracteres que não são dígitos, vírgula ou sinal de menos.
+  // Em seguida, substitui a vírgula por ponto para a conversão.
+  const cleanedVal = val.replace(/[^\d,-]/g, "").replace(",", ".");
   return parseFloat(cleanedVal) || 0;
 }, z.number().default(0));
 
@@ -212,7 +211,12 @@ async function saveInvestimento(
   formData: FormData
 ): Promise<InvestimentoFormState> {
   const rawFormData = Object.fromEntries(formData.entries());
+
+  console.log("rawFormData:", rawFormData);
+
   const validatedFields = InvestimentoFormSchema.safeParse(rawFormData);
+
+  console.log("validatedFields.data:", validatedFields.data);
 
   if (!validatedFields.success) {
     return {
@@ -240,26 +244,23 @@ async function saveInvestimento(
   }
 
   // Build the redirect URL with filters
-  const searchParams = new URLSearchParams();
-  const filterKeys = [
-    "query",
-    "queryCliente",
-    "queryAno",
-    "queryMes",
-    "queryBanco",
-    "queryAtivo",
-    "queryTipo",
-    "categoriaId",
-    "page",
-  ];
-
-  for (const key of filterKeys) {
-    const value = formData.get(key);
-    if (value) {
-      searchParams.set(key, value.toString());
+  const searchParamsString = formData.get("searchParams");
+  let queryString = "";
+  if (typeof searchParamsString === "string" && searchParamsString) {
+    try {
+      // Filtra chaves com valores nulos ou indefinidos antes de criar a query string
+      const params = JSON.parse(searchParamsString);
+      const cleanedParams = Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v != null)
+      );
+      queryString = new URLSearchParams(
+        cleanedParams as Record<string, string>
+      ).toString();
+    } catch (e) {
+      console.error("Failed to parse searchParams for redirect", e);
     }
   }
-  const redirectUrl = `/dashboard/investimentos?${searchParams.toString()}`;
+  const redirectUrl = `/dashboard/investimentos?${queryString}`;
 
   revalidatePath("/dashboard/investimentos");
   redirect(redirectUrl);

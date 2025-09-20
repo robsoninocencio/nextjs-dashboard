@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/table";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
 import { formatCurrency, formatToDecimals } from "@/lib/utils";
+import { InvestimentoCompleto } from "@/lib/types";
 import {
-  InvestimentoComRelacoes,
   Totais,
   GrupoInvestimento,
   GrupoInvestimentoComTotais,
@@ -25,14 +25,14 @@ type HeaderConfig = {
   key: string;
   condition?: boolean;
   render: (
-    data: InvestimentoComRelacoes | Totais,
+    data: InvestimentoCompleto | Totais,
     type: "investment" | "group" | "grand"
   ) => React.ReactNode;
 };
 
 // Helper para agrupar investimentos
 const groupInvestimentos = (
-  investimentos: InvestimentoComRelacoes[]
+  investimentos: InvestimentoCompleto[]
 ): Record<string, GrupoInvestimento> => {
   const grouped: Record<string, GrupoInvestimento> = {};
   if (!investimentos) return grouped;
@@ -164,7 +164,7 @@ const DynamicDataCells = ({
   type,
   cellClassName,
 }: {
-  data: InvestimentoComRelacoes | Totais;
+  data: InvestimentoCompleto | Totais;
   visibleHeaders: HeaderConfig[];
   type: "investment" | "group" | "grand";
   cellClassName: string;
@@ -183,7 +183,7 @@ const InvestmentRow = ({
   visibleHeaders,
   searchParams,
 }: {
-  investimento: InvestimentoComRelacoes;
+  investimento: InvestimentoCompleto;
   visibleHeaders: HeaderConfig[];
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => (
@@ -280,7 +280,7 @@ const GrandTotalRow = ({
 );
 
 type DesktopTableProps = {
-  investimentos: InvestimentoComRelacoes[];
+  investimentos: InvestimentoCompleto[];
   totais: Totais;
   searchParams?: { [key: string]: string | string[] | undefined };
 };

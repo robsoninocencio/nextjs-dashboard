@@ -1,27 +1,11 @@
 import { fetchFilteredInvestimentos } from "@/lib/investimentos/data";
-
-export type Investimento = {
-  id: string;
-  data: string;
-  rendimentoDoMes: number;
-  dividendosDoMes: number;
-  valorAplicado: number;
-  saldoBruto: number;
-  saldoAnterior: number;
-  valorResgatado: number;
-  impostoIncorrido: number;
-  impostoPrevisto: number;
-  saldoLiquido: number;
-  clienteId: string;
-  bancoId: string;
-  ativoId: string;
-};
+import { InvestimentoCompleto } from "@/lib/types";
 
 // Tipagem inferida da função de busca para garantir consistência
-export type InvestimentoComRelacoes = Awaited<
-  ReturnType<typeof fetchFilteredInvestimentos>
->[number];
-
+// Este tipo é agora obsoleto e foi substituído por InvestimentoCompleto de @/lib/types
+// export type InvestimentoComRelacoes = Awaited<
+//   ReturnType<typeof fetchFilteredInvestimentos>
+// >[number];
 export type Totais = {
   rendimentoDoMes: number;
   dividendosDoMes: number;
@@ -38,7 +22,7 @@ export type GrupoInvestimento = {
   cliente: string;
   ano: string;
   mes: string;
-  investimentos: InvestimentoComRelacoes[];
+  investimentos: InvestimentoCompleto[];
 };
 
 export type GrupoInvestimentoComTotais = GrupoInvestimento & { totals: Totais };

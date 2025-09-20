@@ -1,7 +1,18 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { InvestimentoCompleto } from "@/lib/types"; // Importando o tipo gerado pelo Prisma
 
-const ITEMS_PER_PAGE = 100;
+export type InvestmentFiltersParams = {
+  ano: string;
+  mes: string;
+  cliente: string;
+  banco: string;
+  ativo: string;
+  tipo: string;
+  categoriaId?: string;
+};
+
+const ITEMS_PER_PAGE = 200;
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
@@ -28,42 +39,38 @@ async function getCategoriaIds(categoriaId: string): Promise<string[]> {
 }
 
 function buildInvestimentosFilters(
-  queryAno: string,
-  queryMes: string,
-  queryCliente: string,
-  queryBanco: string,
-  queryAtivo: string,
-  queryTipo: string,
+  filters: InvestmentFiltersParams,
   categoriaIds?: string[]
-): Record<string, any> {
-  const filters: Record<string, any>[] = [];
+): Prisma.investimentosWhereInput {
+  const { cliente, ano, mes, banco, ativo, tipo } = filters;
+  const whereConditions: Prisma.investimentosWhereInput[] = [];
 
-  if (queryCliente) {
-    filters.push({
-      clientes: { name: { contains: queryCliente, mode: "insensitive" } },
+  if (cliente) {
+    whereConditions.push({
+      clientes: { name: { contains: cliente, mode: "insensitive" } },
     });
   }
 
-  if (queryAno) {
-    filters.push({ ano: { equals: queryAno } });
+  if (ano) {
+    whereConditions.push({ ano: { equals: ano } });
   }
 
-  if (queryMes) {
-    filters.push({ mes: { equals: queryMes } });
+  if (mes) {
+    whereConditions.push({ mes: { equals: mes } });
   }
 
-  if (queryBanco) {
-    filters.push({
-      bancos: { nome: { contains: queryBanco, mode: "insensitive" } },
+  if (banco) {
+    whereConditions.push({
+      bancos: { nome: { contains: banco, mode: "insensitive" } },
     });
   }
 
   const ativosFilter: Record<string, any> = {};
-  if (queryAtivo) {
-    ativosFilter.nome = { contains: queryAtivo, mode: "insensitive" };
+  if (ativo) {
+    ativosFilter.nome = { contains: ativo, mode: "insensitive" };
   }
-  if (queryTipo) {
-    ativosFilter.tipos = { nome: { contains: queryTipo, mode: "insensitive" } };
+  if (tipo) {
+    ativosFilter.tipos = { nome: { contains: tipo, mode: "insensitive" } };
   }
 
   if (categoriaIds && categoriaIds.length > 0) {
@@ -73,57 +80,28 @@ function buildInvestimentosFilters(
   }
 
   if (Object.keys(ativosFilter).length > 0) {
-    filters.push({ ativos: ativosFilter });
+    whereConditions.push({ ativos: ativosFilter });
   }
 
-  return filters.length > 0 ? { AND: filters } : {};
+  return whereConditions.length > 0 ? { AND: whereConditions } : {};
 }
 
 export async function fetchInvestimentosPages(
-  queryAno: string,
-  queryMes: string,
-  queryCliente: string,
-  queryBanco: string,
-  queryAtivo: string,
-  queryTipo: string,
-  categoriaId?: string
+  filters: InvestmentFiltersParams
 ): Promise<{ totalPages: number; totalItems: number }> {
   try {
-    if (process.env.NODE_ENV === "development") {
-      console.log("Entrei em fetchInvestimentosPages()");
-      console.log("queryAno", queryAno);
-      console.log("queryMes", queryMes);
-      console.log("queryCliente", queryCliente);
-      console.log("queryBanco", queryBanco);
-      console.log("queryAtivo", queryAtivo);
-      console.log("queryTipo", queryTipo);
-      console.log("categoriaId", categoriaId);
-    }
+    const { categoriaId } = filters;
 
     let categoriaIds: string[] = [];
     if (categoriaId) {
       categoriaIds = await getCategoriaIds(categoriaId);
     }
 
-    const where = buildInvestimentosFilters(
-      queryAno,
-      queryMes,
-      queryCliente,
-      queryBanco,
-      queryAtivo,
-      queryTipo,
-      categoriaIds
-    );
+    const where = buildInvestimentosFilters(filters, categoriaIds);
 
     const totalItems = await prisma.investimentos.count({ where });
 
     const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
-
-    if (process.env.NODE_ENV === "development") {
-      console.log("where:", JSON.stringify(where, null, 2));
-      console.log("totalItems: ", totalItems);
-      console.log("totalPages: ", totalPages);
-    }
 
     return { totalPages, totalItems };
   } catch (error) {
@@ -138,48 +116,20 @@ export async function fetchInvestimentosPages(
 }
 
 export async function fetchFilteredInvestimentos(
-  currentPage: number,
-  queryAno: string,
-  queryMes: string,
-  queryCliente: string,
-  queryBanco: string,
-  queryAtivo: string,
-  queryTipo: string,
-  categoriaId?: string
-) {
+  filters: InvestmentFiltersParams,
+  currentPage: number
+): Promise<InvestimentoCompleto[]> {
   try {
-    if (process.env.NODE_ENV === "development") {
-      console.log("Entrei em fetchFilteredInvestimentos()");
-      console.log("currentPage", currentPage);
-      console.log("queryAno", queryAno);
-      console.log("queryMes", queryMes);
-      console.log("queryCliente:", queryCliente);
-      console.log("queryBanco", queryBanco);
-      console.log("queryAtivo", queryAtivo);
-      console.log("queryTipo", queryTipo);
-      console.log("categoriaId", categoriaId);
-    }
-
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    const { categoriaId } = filters;
 
     let categoriaIds: string[] = [];
     if (categoriaId) {
       categoriaIds = await getCategoriaIds(categoriaId);
     }
 
-    const where = buildInvestimentosFilters(
-      queryAno,
-      queryMes,
-      queryCliente,
-      queryBanco,
-      queryAtivo,
-      queryTipo,
-      categoriaIds
-    );
-
-    if (process.env.NODE_ENV === "development") {
-      console.log("where:", JSON.stringify(where, null, 2));
-    }
+    const where = buildInvestimentosFilters(filters, categoriaIds);
 
     const investimentos = await prisma.investimentos.findMany({
       where,

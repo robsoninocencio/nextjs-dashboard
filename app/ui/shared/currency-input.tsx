@@ -28,12 +28,12 @@ export default function CustomCurrencyInput({
         className={`peer block w-full rounded-md border ${
           hasError ? "border-red-500" : "border-gray-200"
         } py-2 pl-10 text-sm outline-2 placeholder:text-gray-500`}
-        intlConfig={{ locale: "pt-BR", currency: "BRL" }}
         prefix="R$ "
         decimalSeparator=","
         groupSeparator="."
         step={1}
         allowDecimals
+        allowNegativeValue={true}
         decimalsLimit={2}
         {...props}
       />
