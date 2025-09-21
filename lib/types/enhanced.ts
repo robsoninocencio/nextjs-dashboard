@@ -1,5 +1,5 @@
-import { z } from "zod";
-import type { ReactNode } from "react";
+import { z } from 'zod';
+import type { ReactNode } from 'react';
 
 // Tipos base aprimorados
 export interface BaseEntity {
@@ -36,7 +36,7 @@ export interface TableColumn<T> {
   label: string;
   sortable?: boolean;
   width?: string;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, item: T) => ReactNode;
   format?: (value: any) => string;
 }
@@ -44,13 +44,7 @@ export interface TableColumn<T> {
 export interface TableAction<T> {
   label: string;
   icon?: ReactNode;
-  variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   onClick: (item: T) => void;
   disabled?: (item: T) => boolean;
   hidden?: (item: T) => boolean;
@@ -69,15 +63,7 @@ export interface TableConfig<T> {
 export interface FormField {
   name: string;
   label: string;
-  type:
-    | "text"
-    | "number"
-    | "email"
-    | "password"
-    | "select"
-    | "textarea"
-    | "date"
-    | "currency";
+  type: 'text' | 'number' | 'email' | 'password' | 'select' | 'textarea' | 'date' | 'currency';
   required?: boolean;
   placeholder?: string;
   description?: string;
@@ -98,7 +84,7 @@ export interface FormConfig {
   sections: FormSection[];
   submitLabel?: string;
   cancelLabel?: string;
-  layout?: "single" | "two-column" | "three-column";
+  layout?: 'single' | 'two-column' | 'three-column';
 }
 
 // Tipos para filtros genéricos
@@ -111,7 +97,7 @@ export interface FilterOption {
 export interface FilterField {
   name: string;
   label: string;
-  type: "text" | "select" | "multiselect" | "date" | "daterange" | "number";
+  type: 'text' | 'select' | 'multiselect' | 'date' | 'daterange' | 'number';
   placeholder?: string;
   options?: FilterOption[];
   multiple?: boolean;
@@ -120,7 +106,7 @@ export interface FilterField {
 
 export interface FilterConfig {
   fields: FilterField[];
-  layout?: "inline" | "stacked";
+  layout?: 'inline' | 'stacked';
   debounceMs?: number;
 }
 
@@ -173,7 +159,7 @@ export interface DashboardCard {
   title: string;
   value: string | number;
   change?: number;
-  changeType?: "increase" | "decrease" | "neutral";
+  changeType?: 'increase' | 'decrease' | 'neutral';
   icon?: ReactNode;
   href?: string;
   description?: string;
@@ -192,14 +178,14 @@ export interface ModalConfig {
   description?: string;
   content: ReactNode;
   actions?: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   closable?: boolean;
 }
 
 // Tipos para notificações
 export interface Notification {
   id: string;
-  type: "success" | "error" | "warning" | "info";
+  type: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message: string;
   timestamp: Date;
@@ -213,7 +199,7 @@ export interface Notification {
 // Tipos para permissões e autenticação
 export interface Permission {
   resource: string;
-  actions: ("create" | "read" | "update" | "delete")[];
+  actions: ('create' | 'read' | 'update' | 'delete')[];
 }
 
 export interface User {
@@ -227,7 +213,7 @@ export interface User {
 
 // Tipos para configurações da aplicação
 export interface AppConfig {
-  theme: "light" | "dark" | "system";
+  theme: 'light' | 'dark' | 'system';
   language: string;
   timezone: string;
   currency: string;
@@ -238,7 +224,7 @@ export interface AppConfig {
 export interface CacheConfig {
   ttl: number;
   maxSize?: number;
-  strategy: "memory" | "localStorage" | "sessionStorage";
+  strategy: 'memory' | 'localStorage' | 'sessionStorage';
 }
 
 export interface QueryConfig {
@@ -286,9 +272,7 @@ export interface ComponentWithClassName {
 }
 
 // Combinação de tipos comuns
-export type ComponentProps = ComponentWithChildren &
-  ComponentWithClassName &
-  ComponentWithRef;
+export type ComponentProps = ComponentWithChildren & ComponentWithClassName & ComponentWithRef;
 
 export type FormComponentProps = ComponentProps & {
   name: string;
@@ -339,8 +323,8 @@ export interface UseFiltersReturn<T> {
 
 // Tipos para testes
 export interface TestProps {
-  "data-testid"?: string;
-  "data-cy"?: string;
+  'data-testid'?: string;
+  'data-cy'?: string;
 }
 
 export interface MockData<T> {

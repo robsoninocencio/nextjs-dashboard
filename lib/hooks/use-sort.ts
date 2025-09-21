@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from 'react';
 
-export type SortDirection = "asc" | "desc" | null;
+export type SortDirection = 'asc' | 'desc' | null;
 
 export interface SortState {
   key: string;
@@ -13,23 +13,17 @@ export interface UseSortProps<T> {
   sortFunctions?: Record<string, (a: T, b: T) => number>;
 }
 
-export function useSort<T>({
-  data,
-  initialSort,
-  sortFunctions = {},
-}: UseSortProps<T>) {
-  const [sortState, setSortState] = useState<SortState | undefined>(
-    initialSort
-  );
+export function useSort<T>({ data, initialSort, sortFunctions = {} }: UseSortProps<T>) {
+  const [sortState, setSortState] = useState<SortState | undefined>(initialSort);
 
   const handleSort = useCallback((key: string) => {
-    setSortState((prevState) => {
+    setSortState(prevState => {
       if (!prevState || prevState.key !== key) {
-        return { key, direction: "asc" };
+        return { key, direction: 'asc' };
       }
 
-      if (prevState.direction === "asc") {
-        return { key, direction: "desc" };
+      if (prevState.direction === 'asc') {
+        return { key, direction: 'desc' };
       }
 
       return { key, direction: null };
@@ -50,37 +44,37 @@ export function useSort<T>({
       // Use custom sort function if provided
       if (sortFunctions[key]) {
         const result = sortFunctions[key](a, b);
-        return direction === "asc" ? result : -result;
+        return direction === 'asc' ? result : -result;
       }
 
       // Default string/number sorting
       if (aValue == null && bValue == null) return 0;
-      if (aValue == null) return direction === "asc" ? 1 : -1;
-      if (bValue == null) return direction === "asc" ? -1 : 1;
+      if (aValue == null) return direction === 'asc' ? 1 : -1;
+      if (bValue == null) return direction === 'asc' ? -1 : 1;
 
-      if (typeof aValue === "string" && typeof bValue === "string") {
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
         const comparison = aValue.localeCompare(bValue);
-        return direction === "asc" ? comparison : -comparison;
+        return direction === 'asc' ? comparison : -comparison;
       }
 
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return direction === "asc" ? aValue - bValue : bValue - aValue;
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return direction === 'asc' ? aValue - bValue : bValue - aValue;
       }
 
       // Convert to string for comparison
       const aStr = String(aValue);
       const bStr = String(bValue);
       const comparison = aStr.localeCompare(bStr);
-      return direction === "asc" ? comparison : -comparison;
+      return direction === 'asc' ? comparison : -comparison;
     });
   }, [data, sortState, sortFunctions]);
 
   const getSortIcon = useCallback(
     (key: string) => {
       if (!sortState || sortState.key !== key) {
-        return "sort";
+        return 'sort';
       }
-      return sortState.direction === "asc" ? "chevron-up" : "chevron-down";
+      return sortState.direction === 'asc' ? 'chevron-up' : 'chevron-down';
     },
     [sortState]
   );

@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { ChangeEvent, useState } from "react";
-import CustomCurrencyInput from "@/app/ui/shared/currency-input";
+import { ChangeEvent, useState } from 'react';
+import CustomCurrencyInput from '@/app/ui/shared/currency-input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 // Componente para exibir erros de validação de um campo
 export function InputError({ errors }: { errors?: string[] }) {
   if (!errors || errors.length === 0) return null;
   return (
-    <div className="mt-2 text-sm text-red-500">
-      {errors.map((error) => (
+    <div className='mt-2 text-sm text-red-500'>
+      {errors.map(error => (
         <p key={error}>{error}</p>
       ))}
     </div>
@@ -42,7 +42,7 @@ export function SelectField({
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   icon: React.ElementType;
 }) {
-  const [value, setValue] = useState(defaultValue ?? "");
+  const [value, setValue] = useState(defaultValue ?? '');
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
@@ -57,31 +57,29 @@ export function SelectField({
 
   return (
     <div>
-      <Label htmlFor={id} className="mb-2 block text-sm font-medium">
+      <Label htmlFor={id} className='mb-2 block text-sm font-medium'>
         {label}
       </Label>
-      <div className="relative">
+      <div className='relative'>
         <Select value={value} onValueChange={handleValueChange}>
-          <SelectTrigger
-            className={`w-full ${errors?.length ? "border-red-500" : ""}`}
-          >
-            <div className="flex items-center">
-              <Icon className="h-4 w-4 mr-2" />
+          <SelectTrigger className={`w-full ${errors?.length ? 'border-red-500' : ''}`}>
+            <div className='flex items-center'>
+              <Icon className='h-4 w-4 mr-2' />
               <SelectValue placeholder={`Selecione o ${label.toLowerCase()}`} />
             </div>
           </SelectTrigger>
           <SelectContent>
-            {options.map((option) => (
+            {options.map(option => (
               <SelectItem key={option.id} value={option.id}>
-                {id === "mes" ? `${option.id} - ${option.name}` : option.name}
+                {id === 'mes' ? `${option.id} - ${option.name}` : option.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         {/* Hidden input to include in form data */}
-        <input type="hidden" name={id} value={value} />
+        <input type='hidden' name={id} value={value} />
       </div>
-      <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
+      <div id={`${id}-error`} aria-live='polite' aria-atomic='true'>
         <InputError errors={errors} />
       </div>
     </div>
@@ -104,10 +102,10 @@ export function CurrencyField({
 }) {
   return (
     <div>
-      <Label htmlFor={id} className="mb-2 block text-sm font-medium">
+      <Label htmlFor={id} className='mb-2 block text-sm font-medium'>
         {label}
       </Label>
-      <div className="relative">
+      <div className='relative'>
         <CustomCurrencyInput
           id={id}
           name={id}
@@ -117,7 +115,7 @@ export function CurrencyField({
           hasError={!!errors?.length}
         />
       </div>
-      <div id={`${id}-error`} aria-live="polite" aria-atomic="true">
+      <div id={`${id}-error`} aria-live='polite' aria-atomic='true'>
         <InputError errors={errors} />
       </div>
     </div>

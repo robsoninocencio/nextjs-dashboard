@@ -1,10 +1,10 @@
-import { writeFileSync, mkdirSync } from "fs";
-import path from "path";
-import { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { writeFileSync, mkdirSync } from 'fs';
+import path from 'path';
+import { Prisma } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 async function exportDB() {
-  const outputDir = path.join(__dirname, "data");
+  const outputDir = path.join(__dirname, 'data');
 
   // Garante que o diretório de saída exista
   mkdirSync(outputDir, { recursive: true });
@@ -13,7 +13,7 @@ async function exportDB() {
   // Isso torna o script robusto a mudanças no schema.
   const modelNames = Object.values(Prisma.ModelName);
 
-  console.log(`📦 Exportando dados para os modelos: ${modelNames.join(", ")}`);
+  console.log(`📦 Exportando dados para os modelos: ${modelNames.join(', ')}`);
 
   for (const modelName of modelNames) {
     try {
@@ -28,7 +28,7 @@ async function exportDB() {
       writeFileSync(
         path.join(outputDir, `${modelName}.json`),
         JSON.stringify(data, null, 2),
-        "utf-8"
+        'utf-8'
       );
       console.log(`✅ Exportado: ${modelName} (${data.length} registros)`);
     } catch (error) {
@@ -40,7 +40,7 @@ async function exportDB() {
   await prisma.$disconnect();
 }
 
-exportDB().catch((e) => {
+exportDB().catch(e => {
   console.error(e);
   process.exit(1);
 });

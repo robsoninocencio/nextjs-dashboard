@@ -1,22 +1,20 @@
-"use server";
+'use server';
 
-import { z } from "zod";
+import { z } from 'zod';
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 // Schema
 const InvoiceFormSchema = z.object({
   clienteId: z.string({
-    invalid_type_error: "Please select a cliente.",
+    invalid_type_error: 'Please select a cliente.',
   }),
-  amount: z.coerce
-    .number()
-    .gt(0, { message: "Please enter an amount greater than $0." }),
-  status: z.enum(["pendente", "pago"], {
-    invalid_type_error: "Please select an invoice status.",
+  amount: z.coerce.number().gt(0, { message: 'Please enter an amount greater than $0.' }),
+  status: z.enum(['pendente', 'pago'], {
+    invalid_type_error: 'Please select an invoice status.',
   }),
 });
 
@@ -47,9 +45,9 @@ function getFormValue(formData: FormData, key: string): string | undefined {
 // Utils - Função para validar os campos do formulário usando Zod
 function parseInvoiceForm(formData: FormData) {
   return InvoiceFormSchema.safeParse({
-    clienteId: getFormValue(formData, "clienteId"),
-    amount: getFormValue(formData, "amount"),
-    status: getFormValue(formData, "status"),
+    clienteId: getFormValue(formData, 'clienteId'),
+    amount: getFormValue(formData, 'amount'),
+    status: getFormValue(formData, 'status'),
   });
 }
 
@@ -60,11 +58,11 @@ function handleValidationError(
 ): InvoiceFormState {
   return {
     errors: validatedFields.error?.flatten().fieldErrors,
-    message: "Missing Fields. Failed to Create or Update Invoice.",
+    message: 'Missing Fields. Failed to Create or Update Invoice.',
     submittedData: {
-      clienteId: getFormValue(formData, "clienteId"),
-      amount: getFormValue(formData, "amount"),
-      status: getFormValue(formData, "status"),
+      clienteId: getFormValue(formData, 'clienteId'),
+      amount: getFormValue(formData, 'amount'),
+      status: getFormValue(formData, 'status'),
     },
   };
 }
@@ -76,15 +74,12 @@ function getCurrentDate() {
 }
 
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
-function getDatabaseErrorMessage(action: "create" | "update") {
+function getDatabaseErrorMessage(action: 'create' | 'update') {
   return `Database Error: Failed to ${action} invoice.`;
 }
 
 // Utils - Função para salvar a fatura no banco
-async function saveInvoiceToDatabase(
-  data: InvoiceData,
-  id?: string
-): Promise<void> {
+async function saveInvoiceToDatabase(data: InvoiceData, id?: string): Promise<void> {
   const amountInCents = data.amount * 100; // Armazenar em centavos para precisão
   const date = getCurrentDate();
 
@@ -116,14 +111,14 @@ export async function createInvoice(
   prevState: InvoiceFormState,
   formData: FormData
 ): Promise<InvoiceFormState | never> {
-  if (process.env.NODE_ENV === "development") {
-    console.log("Received FormData:", [...formData.entries()]);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Received FormData:', [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
   const validatedFields = parseInvoiceForm(formData);
-  if (process.env.NODE_ENV === "development") {
-    console.log("validatedFields.error:", validatedFields.error);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('validatedFields.error:', validatedFields.error);
   }
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
@@ -135,15 +130,15 @@ export async function createInvoice(
   try {
     await saveInvoiceToDatabase(validatedFields.data);
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Create Invoice Error:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Create Invoice Error:', error);
     }
-    return { message: getDatabaseErrorMessage("create") };
+    return { message: getDatabaseErrorMessage('create') };
   }
 
   // Atualiza e redireciona para a página de faturas
-  revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
 }
 
 export async function updateInvoice(
@@ -151,14 +146,14 @@ export async function updateInvoice(
   prevState: InvoiceFormState,
   formData: FormData
 ): Promise<InvoiceFormState | never> {
-  if (process.env.NODE_ENV === "development") {
-    console.log("Received FormData:", [...formData.entries()]);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Received FormData:', [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
   const validatedFields = parseInvoiceForm(formData);
-  if (process.env.NODE_ENV === "development") {
-    console.log("validatedFields.error:", validatedFields.error);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('validatedFields.error:', validatedFields.error);
   }
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
@@ -169,43 +164,43 @@ export async function updateInvoice(
   // Verifica se a fatura existe antes de tentar atualizar
   const existing = await prisma.invoices.findUnique({ where: { id } });
   if (!existing) {
-    return { message: "Invoice not found. Cannot update." };
+    return { message: 'Invoice not found. Cannot update.' };
   }
 
   // Atualiza fatura no banco de dados
   try {
     await saveInvoiceToDatabase(validatedFields.data, id);
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Update Invoice Error:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Update Invoice Error:', error);
     }
-    return { message: getDatabaseErrorMessage("update") };
+    return { message: getDatabaseErrorMessage('update') };
   }
 
   // Atualiza e redireciona para a página de faturas
-  revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
 }
 
 export async function deleteInvoice(id: string) {
   if (!id) {
-    throw new Error("Invoice ID for deletion is invalid.");
+    throw new Error('Invoice ID for deletion is invalid.');
   }
 
   try {
     const invoice = await prisma.invoices.findUnique({ where: { id } });
     if (!invoice) {
-      throw new Error("Invoice not found.");
+      throw new Error('Invoice not found.');
     }
 
     await prisma.invoices.delete({
       where: { id: id },
     });
-    revalidatePath("/dashboard/invoices");
+    revalidatePath('/dashboard/invoices');
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Delete Invoice Error:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Delete Invoice Error:', error);
     }
-    throw new Error("Failed to delete invoice.");
+    throw new Error('Failed to delete invoice.');
   }
 }

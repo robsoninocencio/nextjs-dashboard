@@ -1,5 +1,5 @@
-import { z } from "zod";
-import type { ReactNode } from "react";
+import { z } from 'zod';
+import type { ReactNode } from 'react';
 
 // Tipos base para formulários
 export interface BaseFormData {
@@ -34,14 +34,14 @@ export interface BaseFieldConfig {
 }
 
 export interface TextFieldConfig extends BaseFieldConfig {
-  type: "text" | "email" | "password" | "url" | "tel";
+  type: 'text' | 'email' | 'password' | 'url' | 'tel';
   minLength?: number;
   maxLength?: number;
   pattern?: string;
 }
 
 export interface NumberFieldConfig extends BaseFieldConfig {
-  type: "number";
+  type: 'number';
   min?: number;
   max?: number;
   step?: number;
@@ -49,27 +49,27 @@ export interface NumberFieldConfig extends BaseFieldConfig {
 }
 
 export interface SelectFieldConfig extends BaseFieldConfig {
-  type: "select" | "multiselect";
+  type: 'select' | 'multiselect';
   options: SelectOption[];
   searchable?: boolean;
   clearable?: boolean;
 }
 
 export interface DateFieldConfig extends BaseFieldConfig {
-  type: "date" | "datetime" | "time";
+  type: 'date' | 'datetime' | 'time';
   minDate?: Date | string;
   maxDate?: Date | string;
 }
 
 export interface TextareaFieldConfig extends BaseFieldConfig {
-  type: "textarea";
+  type: 'textarea';
   rows?: number;
   minLength?: number;
   maxLength?: number;
 }
 
 export interface CurrencyFieldConfig extends BaseFieldConfig {
-  type: "currency";
+  type: 'currency';
   currency?: string;
   locale?: string;
   min?: number;
@@ -77,7 +77,7 @@ export interface CurrencyFieldConfig extends BaseFieldConfig {
 }
 
 export interface FileFieldConfig extends BaseFieldConfig {
-  type: "file";
+  type: 'file';
   accept?: string;
   multiple?: boolean;
   maxSize?: number; // em bytes
@@ -85,24 +85,24 @@ export interface FileFieldConfig extends BaseFieldConfig {
 }
 
 export interface CheckboxFieldConfig extends BaseFieldConfig {
-  type: "checkbox";
+  type: 'checkbox';
   checkedValue?: any;
   uncheckedValue?: any;
 }
 
 export interface RadioFieldConfig extends BaseFieldConfig {
-  type: "radio";
+  type: 'radio';
   options: SelectOption[];
 }
 
 export interface SwitchFieldConfig extends BaseFieldConfig {
-  type: "switch";
+  type: 'switch';
   checkedText?: string;
   uncheckedText?: string;
 }
 
 export interface HiddenFieldConfig extends BaseFieldConfig {
-  type: "hidden";
+  type: 'hidden';
 }
 
 // União de todos os tipos de campo
@@ -121,24 +121,24 @@ export type FieldConfig =
 
 // Tipos auxiliares
 export type FieldType =
-  | "text"
-  | "email"
-  | "password"
-  | "url"
-  | "tel"
-  | "number"
-  | "select"
-  | "multiselect"
-  | "date"
-  | "datetime"
-  | "time"
-  | "textarea"
-  | "currency"
-  | "file"
-  | "checkbox"
-  | "radio"
-  | "switch"
-  | "hidden";
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'url'
+  | 'tel'
+  | 'number'
+  | 'select'
+  | 'multiselect'
+  | 'date'
+  | 'datetime'
+  | 'time'
+  | 'textarea'
+  | 'currency'
+  | 'file'
+  | 'checkbox'
+  | 'radio'
+  | 'switch'
+  | 'hidden';
 
 export interface SelectOption {
   label: string;
@@ -160,47 +160,29 @@ export interface FieldGroup {
 // Configuração completa do formulário
 export interface FormConfig {
   fields: FieldConfig[] | FieldGroup[];
-  layout?: "vertical" | "horizontal" | "inline";
+  layout?: 'vertical' | 'horizontal' | 'inline';
   columns?: 1 | 2 | 3 | 4;
   submitButton?: {
     label?: string;
-    variant?:
-      | "default"
-      | "destructive"
-      | "outline"
-      | "secondary"
-      | "ghost"
-      | "link";
-    size?: "sm" | "md" | "lg";
+    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+    size?: 'sm' | 'md' | 'lg';
     icon?: ReactNode;
     disabled?: boolean;
   };
   cancelButton?: {
     label?: string;
-    variant?:
-      | "default"
-      | "destructive"
-      | "outline"
-      | "secondary"
-      | "ghost"
-      | "link";
-    size?: "sm" | "md" | "lg";
+    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+    size?: 'sm' | 'md' | 'lg';
     icon?: ReactNode;
   };
   resetButton?: {
     label?: string;
-    variant?:
-      | "default"
-      | "destructive"
-      | "outline"
-      | "secondary"
-      | "ghost"
-      | "link";
-    size?: "sm" | "md" | "lg";
+    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+    size?: 'sm' | 'md' | 'lg';
     icon?: ReactNode;
   };
-  validationMode?: "onChange" | "onBlur" | "onSubmit";
-  reValidateMode?: "onChange" | "onBlur" | "onSubmit";
+  validationMode?: 'onChange' | 'onBlur' | 'onSubmit';
+  reValidateMode?: 'onChange' | 'onBlur' | 'onSubmit';
   className?: string;
   style?: Record<string, any>;
 }
@@ -246,17 +228,10 @@ export interface ZodFormSchema {
 // Utilitários para formulários
 export interface FormUtils {
   validateField: (config: FieldConfig, value: any) => FormValidationError[];
-  validateForm: (
-    config: FormConfig,
-    values: FormValues
-  ) => FormValidationError[];
+  validateForm: (config: FormConfig, values: FormValues) => FormValidationError[];
   getDefaultValues: (config: FormConfig) => FormValues;
   getFieldValue: (values: FormValues, fieldName: string) => any;
-  setFieldValue: (
-    values: FormValues,
-    fieldName: string,
-    value: any
-  ) => FormValues;
+  setFieldValue: (values: FormValues, fieldName: string, value: any) => FormValues;
   formatFieldValue: (config: FieldConfig, value: any) => any;
   parseFieldValue: (config: FieldConfig, value: any) => any;
 }
@@ -267,8 +242,8 @@ export interface DynamicFormConfig {
   fields: FieldConfig[];
   sections?: FieldGroup[];
   validation?: {
-    mode?: "onChange" | "onBlur" | "onSubmit";
-    reValidateMode?: "onChange" | "onBlur" | "onSubmit";
+    mode?: 'onChange' | 'onBlur' | 'onSubmit';
+    reValidateMode?: 'onChange' | 'onBlur' | 'onSubmit';
   };
 }
 
@@ -287,13 +262,7 @@ export interface MultiStepFormConfig {
   showProgress?: boolean;
   submitButton?: {
     label?: string;
-    variant?:
-      | "default"
-      | "destructive"
-      | "outline"
-      | "secondary"
-      | "ghost"
-      | "link";
+    variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   };
 }
 
@@ -309,7 +278,7 @@ export interface MultiStepFormState {
 // Tipos para formulários de busca/filtros
 export interface FilterFormConfig {
   fields: FieldConfig[];
-  layout?: "inline" | "stacked";
+  layout?: 'inline' | 'stacked';
   debounceMs?: number;
   onFiltersChange: (filters: FormValues) => void;
   onReset?: () => void;
@@ -319,7 +288,7 @@ export interface FilterFormConfig {
 export interface ModalFormConfig extends FormConfig {
   title: string;
   description?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   closable?: boolean;
   onClose?: () => void;
 }
@@ -327,10 +296,7 @@ export interface ModalFormConfig extends FormConfig {
 // Tipos para validação customizada
 export interface CustomValidation {
   name: string;
-  validator: (
-    value: any,
-    formValues?: FormValues
-  ) => boolean | Promise<boolean>;
+  validator: (value: any, formValues?: FormValues) => boolean | Promise<boolean>;
   message: string;
 }
 
@@ -364,11 +330,9 @@ export interface TestableFormConfig extends FormConfig {
 }
 
 // Exportação de tipos utilitários
-export type FieldValue<T extends FieldConfig> = T["defaultValue"];
-export type FormData<T extends FormConfig> = T["fields"] extends FieldConfig[]
+export type FieldValue<T extends FieldConfig> = T['defaultValue'];
+export type FormData<T extends FormConfig> = T['fields'] extends FieldConfig[]
   ? {
-      [K in T["fields"][number] as T["fields"][number]["name"]]: FieldValue<
-        T["fields"][number]
-      >;
+      [K in T['fields'][number] as T['fields'][number]['name']]: FieldValue<T['fields'][number]>;
     }
   : FormValues;

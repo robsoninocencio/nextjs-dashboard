@@ -1,28 +1,28 @@
-import { readFileSync } from "fs";
-import path from "path";
-import { prisma } from "@/lib/prisma";
+import { readFileSync } from 'fs';
+import path from 'path';
+import { prisma } from '@/lib/prisma';
 
 // Regex para identificar strings de data no formato ISO 8601
 const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
 
 async function importDB() {
-  const inputDir = path.join(__dirname, "data");
+  const inputDir = path.join(__dirname, 'data');
 
   // A ordem de importação é crucial para respeitar as chaves estrangeiras.
   // Modelos sem dependências (ou com dependências opcionais) vêm primeiro.
   // Modelos que dependem de outros vêm depois.
   // Ex: 'invoices' depende de 'clientes', então 'clientes' deve vir antes.
   const order = [
-    "users",
-    "tipos",
-    "categorias",
-    "bancos",
-    "revenue",
-    "ativos",
-    "clientes",
-    "invoices",
-    "investimentos",
-    "ativo_categoria",
+    'users',
+    'tipos',
+    'categorias',
+    'bancos',
+    'revenue',
+    'ativos',
+    'clientes',
+    'invoices',
+    'investimentos',
+    'ativo_categoria',
   ];
 
   for (const model of order) {
@@ -30,8 +30,8 @@ async function importDB() {
 
     // Usamos um "reviver" para converter strings de data ISO de volta para objetos Date.
     // Isso garante que os tipos de dados correspondam ao schema do Prisma.
-    const data = JSON.parse(readFileSync(filePath, "utf-8"), (key, value) => {
-      if (typeof value === "string" && isoDateRegex.test(value)) {
+    const data = JSON.parse(readFileSync(filePath, 'utf-8'), (key, value) => {
+      if (typeof value === 'string' && isoDateRegex.test(value)) {
         return new Date(value);
       }
       return value;
@@ -52,7 +52,7 @@ async function importDB() {
   await prisma.$disconnect();
 }
 
-importDB().catch((e) => {
+importDB().catch(e => {
   console.error(e);
   process.exit(1);
 });

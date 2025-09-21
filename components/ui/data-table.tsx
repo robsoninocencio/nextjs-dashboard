@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,9 +8,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 export interface Column<T> {
   key: keyof T;
@@ -22,7 +22,7 @@ export interface Column<T> {
 
 export interface SortConfig {
   key: string;
-  direction: "asc" | "desc";
+  direction: 'asc' | 'desc';
 }
 
 interface DataTableProps<T> {
@@ -39,20 +39,16 @@ export function DataTable<T extends Record<string, any>>({
   columns,
   onSort,
   loading = false,
-  emptyMessage = "Nenhum dado encontrado",
-  className = "",
+  emptyMessage = 'Nenhum dado encontrado',
+  className = '',
 }: DataTableProps<T>) {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
   const handleSort = (key: string) => {
-    let direction: "asc" | "desc" = "asc";
+    let direction: 'asc' | 'desc' = 'asc';
 
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "asc"
-    ) {
-      direction = "desc";
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
     }
 
     const newSortConfig = { key, direction };
@@ -65,25 +61,25 @@ export function DataTable<T extends Record<string, any>>({
       return null;
     }
 
-    return sortConfig.direction === "asc" ? (
-      <ChevronUpIcon className="w-4 h-4 ml-1" />
+    return sortConfig.direction === 'asc' ? (
+      <ChevronUpIcon className='w-4 h-4 ml-1' />
     ) : (
-      <ChevronDownIcon className="w-4 h-4 ml-1" />
+      <ChevronDownIcon className='w-4 h-4 ml-1' />
     );
   };
 
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className='space-y-3'>
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-4 bg-gray-200 rounded animate-pulse" />
+          <div key={i} className='h-4 bg-gray-200 rounded animate-pulse' />
         ))}
       </div>
     );
   }
 
   if (data.length === 0) {
-    return <div className="text-center py-8 text-gray-500">{emptyMessage}</div>;
+    return <div className='text-center py-8 text-gray-500'>{emptyMessage}</div>;
   }
 
   return (
@@ -91,26 +87,24 @@ export function DataTable<T extends Record<string, any>>({
       <Table>
         <TableHeader>
           <TableRow>
-            {columns.map((column) => (
+            {columns.map(column => (
               <TableHead
                 key={String(column.key)}
                 style={{ width: column.width }}
-                className={
-                  column.sortable ? "cursor-pointer hover:bg-gray-50" : ""
-                }
+                className={column.sortable ? 'cursor-pointer hover:bg-gray-50' : ''}
               >
                 {column.sortable ? (
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto p-0 font-semibold hover:bg-transparent"
+                    variant='ghost'
+                    size='sm'
+                    className='h-auto p-0 font-semibold hover:bg-transparent'
                     onClick={() => handleSort(String(column.key))}
                   >
                     {column.title}
                     {getSortIcon(String(column.key))}
                   </Button>
                 ) : (
-                  <span className="font-semibold">{column.title}</span>
+                  <span className='font-semibold'>{column.title}</span>
                 )}
               </TableHead>
             ))}
@@ -118,12 +112,10 @@ export function DataTable<T extends Record<string, any>>({
         </TableHeader>
         <TableBody>
           {data.map((item, index) => (
-            <TableRow key={index} className="hover:bg-gray-50">
-              {columns.map((column) => (
+            <TableRow key={index} className='hover:bg-gray-50'>
+              {columns.map(column => (
                 <TableCell key={String(column.key)}>
-                  {column.render
-                    ? column.render(item)
-                    : String(item[column.key] || "")}
+                  {column.render ? column.render(item) : String(item[column.key] || '')}
                 </TableCell>
               ))}
             </TableRow>
@@ -145,10 +137,10 @@ export function useTableData<T>(initialData: T[]) {
         const bValue = b[sortConfig.key as keyof T];
 
         if (aValue < bValue) {
-          return sortConfig.direction === "asc" ? -1 : 1;
+          return sortConfig.direction === 'asc' ? -1 : 1;
         }
         if (aValue > bValue) {
-          return sortConfig.direction === "asc" ? 1 : -1;
+          return sortConfig.direction === 'asc' ? 1 : -1;
         }
         return 0;
       })

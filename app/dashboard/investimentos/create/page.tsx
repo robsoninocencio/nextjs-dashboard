@@ -1,15 +1,15 @@
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import Form from "@/app/ui/investimentos/create-form";
+import Form from '@/app/ui/investimentos/create-form';
 
-import { fetchClientes } from "@/lib/clientes/data";
-import { fetchBancos } from "@/lib/bancos/data";
-import { fetchAtivos } from "@/lib/ativos/data";
+import { fetchClientes } from '@/lib/clientes/data';
+import { fetchBancos } from '@/lib/bancos/data';
+import { fetchAtivos } from '@/lib/ativos/data';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Investimentos",
+  title: 'Investimentos',
 };
 
 export default async function Page() {
@@ -23,10 +23,10 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Investimentos", href: "/dashboard/investimentos" },
+          { label: 'Investimentos', href: '/dashboard/investimentos' },
           {
-            label: "Cadastro de Investimento",
-            href: "/dashboard/investimentos/create",
+            label: 'Cadastro de Investimento',
+            href: '/dashboard/investimentos/create',
             active: true,
           },
         ]}

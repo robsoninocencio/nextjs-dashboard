@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -7,43 +7,36 @@ export async function fetchInvoicesPages(query: string) {
     const count = await prisma.invoices.count({
       where: {
         OR: [
-          { cliente: { name: { contains: query, mode: "insensitive" } } },
-          { cliente: { email: { contains: query, mode: "insensitive" } } },
+          { cliente: { name: { contains: query, mode: 'insensitive' } } },
+          { cliente: { email: { contains: query, mode: 'insensitive' } } },
           {
-            amount: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
+            amount: isNaN(Number(query)) ? undefined : { equals: Number(query) },
           },
-          { status: { contains: query, mode: "insensitive" } },
+          { status: { contains: query, mode: 'insensitive' } },
         ],
       },
     });
 
     return Math.ceil(count / ITEMS_PER_PAGE);
   } catch (error) {
-    console.error("Erro ao buscar o número total de páginas:", error);
-    throw new Error("Erro ao buscar o número total de páginas.");
+    console.error('Erro ao buscar o número total de páginas:', error);
+    throw new Error('Erro ao buscar o número total de páginas.');
   }
 }
 
-export async function fetchFilteredInvoices(
-  query: string,
-  currentPage: number
-) {
+export async function fetchFilteredInvoices(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
     const invoices = await prisma.invoices.findMany({
       where: {
         OR: [
-          { cliente: { name: { contains: query, mode: "insensitive" } } },
-          { cliente: { email: { contains: query, mode: "insensitive" } } },
+          { cliente: { name: { contains: query, mode: 'insensitive' } } },
+          { cliente: { email: { contains: query, mode: 'insensitive' } } },
           {
-            amount: isNaN(Number(query))
-              ? undefined
-              : { equals: Number(query) },
+            amount: isNaN(Number(query)) ? undefined : { equals: Number(query) },
           },
-          { status: { contains: query, mode: "insensitive" } },
+          { status: { contains: query, mode: 'insensitive' } },
         ],
       },
       include: {
@@ -54,21 +47,21 @@ export async function fetchFilteredInvoices(
           },
         },
       },
-      orderBy: { date: "desc" },
+      orderBy: { date: 'desc' },
       skip: offset,
       take: ITEMS_PER_PAGE,
     });
 
     return invoices;
   } catch (error) {
-    console.error("Erro ao buscar faturas filtradas:", error);
-    throw new Error("Erro ao buscar faturas filtradas.");
+    console.error('Erro ao buscar faturas filtradas:', error);
+    throw new Error('Erro ao buscar faturas filtradas.');
   }
 }
 
 export async function fetchInvoiceById(id: string) {
   if (!id) {
-    throw new Error("O ID da fatura é obrigatório.");
+    throw new Error('O ID da fatura é obrigatório.');
   }
 
   try {
@@ -84,7 +77,7 @@ export async function fetchInvoiceById(id: string) {
     });
 
     if (!invoice) {
-      throw new Error("Fatura não encontrada.");
+      throw new Error('Fatura não encontrada.');
     }
 
     return {
@@ -93,6 +86,6 @@ export async function fetchInvoiceById(id: string) {
     };
   } catch (error) {
     console.error(`Erro ao buscar fatura com ID ${id}:`, error);
-    throw new Error("Erro ao buscar a fatura.");
+    throw new Error('Erro ao buscar a fatura.');
   }
 }

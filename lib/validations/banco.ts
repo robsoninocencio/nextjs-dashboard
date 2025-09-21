@@ -1,52 +1,52 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Schema base para banco
 export const bancoSchema = z.object({
   nome: z
     .string({
-      required_error: "Nome é obrigatório",
-      invalid_type_error: "Nome deve ser uma string",
+      required_error: 'Nome é obrigatório',
+      invalid_type_error: 'Nome deve ser uma string',
     })
-    .min(2, "Nome deve ter pelo menos 2 caracteres")
-    .max(100, "Nome deve ter no máximo 100 caracteres")
-    .regex(/^[a-zA-ZÀ-ÿ0-9\s\-_.]+$/, "Nome contém caracteres inválidos"),
+    .min(2, 'Nome deve ter pelo menos 2 caracteres')
+    .max(100, 'Nome deve ter no máximo 100 caracteres')
+    .regex(/^[a-zA-ZÀ-ÿ0-9\s\-_.]+$/, 'Nome contém caracteres inválidos'),
 
   codigo: z
     .string({
-      required_error: "Código é obrigatório",
-      invalid_type_error: "Código deve ser uma string",
+      required_error: 'Código é obrigatório',
+      invalid_type_error: 'Código deve ser uma string',
     })
-    .min(3, "Código deve ter pelo menos 3 caracteres")
-    .max(10, "Código deve ter no máximo 10 caracteres")
-    .regex(/^[0-9]+$/, "Código deve conter apenas números")
-    .transform((codigo) => codigo.padStart(3, "0")),
+    .min(3, 'Código deve ter pelo menos 3 caracteres')
+    .max(10, 'Código deve ter no máximo 10 caracteres')
+    .regex(/^[0-9]+$/, 'Código deve conter apenas números')
+    .transform(codigo => codigo.padStart(3, '0')),
 
   agencia: z
     .string({
-      required_error: "Agência é obrigatória",
-      invalid_type_error: "Agência deve ser uma string",
+      required_error: 'Agência é obrigatória',
+      invalid_type_error: 'Agência deve ser uma string',
     })
-    .min(4, "Agência deve ter pelo menos 4 caracteres")
-    .max(10, "Agência deve ter no máximo 10 caracteres")
-    .regex(/^[0-9\-]+$/, "Agência deve conter apenas números e hífen"),
+    .min(4, 'Agência deve ter pelo menos 4 caracteres')
+    .max(10, 'Agência deve ter no máximo 10 caracteres')
+    .regex(/^[0-9\-]+$/, 'Agência deve conter apenas números e hífen'),
 
   conta: z
     .string({
-      required_error: "Conta é obrigatória",
-      invalid_type_error: "Conta deve ser uma string",
+      required_error: 'Conta é obrigatória',
+      invalid_type_error: 'Conta deve ser uma string',
     })
-    .min(5, "Conta deve ter pelo menos 5 caracteres")
-    .max(20, "Conta deve ter no máximo 20 caracteres")
-    .regex(/^[0-9\-]+$/, "Conta deve conter apenas números e hífen"),
+    .min(5, 'Conta deve ter pelo menos 5 caracteres')
+    .max(20, 'Conta deve ter no máximo 20 caracteres')
+    .regex(/^[0-9\-]+$/, 'Conta deve conter apenas números e hífen'),
 
-  tipo: z.enum(["CORRENTE", "POUPANCA", "INVESTIMENTO"], {
-    required_error: "Tipo de conta é obrigatório",
-    invalid_type_error: "Tipo de conta inválido",
+  tipo: z.enum(['CORRENTE', 'POUPANCA', 'INVESTIMENTO'], {
+    required_error: 'Tipo de conta é obrigatório',
+    invalid_type_error: 'Tipo de conta inválido',
   }),
 
   ativo: z
     .boolean({
-      invalid_type_error: "Status ativo deve ser um booleano",
+      invalid_type_error: 'Status ativo deve ser um booleano',
     })
     .default(true),
 });
@@ -63,7 +63,7 @@ export const updateBancoSchema = bancoSchema.partial();
 export const bancoFiltersSchema = z.object({
   nome: z.string().optional(),
   codigo: z.string().optional(),
-  tipo: z.enum(["CORRENTE", "POUPANCA", "INVESTIMENTO"]).optional(),
+  tipo: z.enum(['CORRENTE', 'POUPANCA', 'INVESTIMENTO']).optional(),
   ativo: z.string().optional(),
   page: z.string().optional(),
   limit: z.string().optional(),
@@ -73,19 +73,19 @@ export const bancoFiltersSchema = z.object({
 export const uniqueContaSchema = z.object({
   codigo: z
     .string()
-    .min(3, "Código deve ter pelo menos 3 caracteres")
-    .max(10, "Código deve ter no máximo 10 caracteres")
-    .regex(/^[0-9]+$/, "Código deve conter apenas números"),
+    .min(3, 'Código deve ter pelo menos 3 caracteres')
+    .max(10, 'Código deve ter no máximo 10 caracteres')
+    .regex(/^[0-9]+$/, 'Código deve conter apenas números'),
   agencia: z
     .string()
-    .min(4, "Agência deve ter pelo menos 4 caracteres")
-    .max(10, "Agência deve ter no máximo 10 caracteres")
-    .regex(/^[0-9\-]+$/, "Agência deve conter apenas números e hífen"),
+    .min(4, 'Agência deve ter pelo menos 4 caracteres')
+    .max(10, 'Agência deve ter no máximo 10 caracteres')
+    .regex(/^[0-9\-]+$/, 'Agência deve conter apenas números e hífen'),
   conta: z
     .string()
-    .min(5, "Conta deve ter pelo menos 5 caracteres")
-    .max(20, "Conta deve ter no máximo 20 caracteres")
-    .regex(/^[0-9\-]+$/, "Conta deve conter apenas números e hífen"),
+    .min(5, 'Conta deve ter pelo menos 5 caracteres')
+    .max(20, 'Conta deve ter no máximo 20 caracteres')
+    .regex(/^[0-9\-]+$/, 'Conta deve conter apenas números e hífen'),
   excludeId: z.string().uuid().optional(),
 });
 
@@ -123,26 +123,26 @@ export const bancoValidations = {
   // Valida se o código do banco é válido (códigos oficiais do BACEN)
   validateCodigoBanco: (codigo: string): boolean => {
     const validCodigos = [
-      "001",
-      "033",
-      "104",
-      "237",
-      "341",
-      "356",
-      "389",
-      "399",
-      "422",
-      "070",
-      "136",
-      "173",
-      "184",
-      "477",
-      "745",
-      "041",
-      "004",
-      "021",
+      '001',
+      '033',
+      '104',
+      '237',
+      '341',
+      '356',
+      '389',
+      '399',
+      '422',
+      '070',
+      '136',
+      '173',
+      '184',
+      '477',
+      '745',
+      '041',
+      '004',
+      '021',
     ];
-    return validCodigos.includes(codigo.padStart(3, "0"));
+    return validCodigos.includes(codigo.padStart(3, '0'));
   },
 
   // Valida formato da agência
@@ -180,18 +180,16 @@ export const bancoValidations = {
   // Formata dados bancários para exibição
   formatConta: (conta: string): string => {
     // Remove hífen e formata com padrão brasileiro
-    const cleanConta = conta.replace("-", "");
+    const cleanConta = conta.replace('-', '');
     if (cleanConta.length <= 8) {
-      return cleanConta
-        .replace(/(\d{5,7})(\d{1,2})?$/, "$1-$2")
-        .replace(/-$/, "");
+      return cleanConta.replace(/(\d{5,7})(\d{1,2})?$/, '$1-$2').replace(/-$/, '');
     }
-    return cleanConta.replace(/(\d{8})(\d{1,2})?$/, "$1-$2").replace(/-$/, "");
+    return cleanConta.replace(/(\d{8})(\d{1,2})?$/, '$1-$2').replace(/-$/, '');
   },
 
   formatAgencia: (agencia: string): string => {
     // Remove hífen e formata com padrão brasileiro
-    const cleanAgencia = agencia.replace("-", "");
-    return cleanAgencia.replace(/(\d{4})(\d)?$/, "$1-$2").replace(/-$/, "");
+    const cleanAgencia = agencia.replace('-', '');
+    return cleanAgencia.replace(/(\d{4})(\d)?$/, '$1-$2').replace(/-$/, '');
   },
 };

@@ -1,31 +1,24 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchBancos } from "@/lib/bancos/data";
+import { fetchBancos } from '@/lib/bancos/data';
 
-import Form from "@/app/ui/bancos/edit-form";
+import Form from '@/app/ui/bancos/edit-form';
 
-import { fetchBancoById } from "@/lib/bancos/data";
-import type { Banco } from "@/lib/bancos/definitions";
+import { fetchBancoById } from '@/lib/bancos/data';
+import type { Banco } from '@/lib/bancos/definitions';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Bancos",
+  title: 'Bancos',
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  const [banco, bancos] = await Promise.all([
-    fetchBancoById(id),
-    fetchBancos(),
-  ]);
+  const [banco, bancos] = await Promise.all([fetchBancoById(id), fetchBancos()]);
 
   if (!banco) {
     notFound();
@@ -35,9 +28,9 @@ export default async function Page({
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Bancos", href: "/dashboard/bancos" },
+          { label: 'Bancos', href: '/dashboard/bancos' },
           {
-            label: "Atualizar banco",
+            label: 'Atualizar banco',
             href: { pathname: `/dashboard/bancos/${id}/edit` },
             active: true,
           },

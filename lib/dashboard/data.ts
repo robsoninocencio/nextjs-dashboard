@@ -1,22 +1,20 @@
-import { prisma } from "@/lib/prisma";
-import { formatCurrency } from "../utils";
+import { prisma } from '@/lib/prisma';
+import { formatCurrency } from '../utils';
 
 export async function fetchCardData() {
   try {
-    const [invoiceCount, clienteCount, paidSum, pendingSum] = await Promise.all(
-      [
-        prisma.invoices.count(),
-        prisma.clientes.count(),
-        prisma.invoices.aggregate({
-          _sum: { amount: true },
-          where: { status: "pago" },
-        }),
-        prisma.invoices.aggregate({
-          _sum: { amount: true },
-          where: { status: "pendente" },
-        }),
-      ]
-    );
+    const [invoiceCount, clienteCount, paidSum, pendingSum] = await Promise.all([
+      prisma.invoices.count(),
+      prisma.clientes.count(),
+      prisma.invoices.aggregate({
+        _sum: { amount: true },
+        where: { status: 'pago' },
+      }),
+      prisma.invoices.aggregate({
+        _sum: { amount: true },
+        where: { status: 'pendente' },
+      }),
+    ]);
 
     return {
       numberOfInvoices: invoiceCount,
@@ -25,8 +23,8 @@ export async function fetchCardData() {
       totalPendingInvoices: formatCurrency(pendingSum._sum.amount || 0),
     };
   } catch (error) {
-    console.error("Erro ao buscar dados do painel:", error);
-    throw new Error("Erro ao buscar dados do painel.");
+    console.error('Erro ao buscar dados do painel:', error);
+    throw new Error('Erro ao buscar dados do painel.');
   }
 }
 
@@ -35,17 +33,15 @@ export async function fetchRevenue() {
     const data = await prisma.revenue.findMany();
     return data;
   } catch (error) {
-    console.error("Erro ao buscar dados de receita:", error);
-    throw new Error(
-      "Erro ao buscar dados de receita. Verifique o banco de dados."
-    );
+    console.error('Erro ao buscar dados de receita:', error);
+    throw new Error('Erro ao buscar dados de receita. Verifique o banco de dados.');
   }
 }
 
 export async function fetchLatestInvoices() {
   try {
     const data = await prisma.invoices.findMany({
-      orderBy: { date: "desc" },
+      orderBy: { date: 'desc' },
       take: 5,
       include: {
         cliente: {
@@ -57,7 +53,7 @@ export async function fetchLatestInvoices() {
       },
     });
 
-    const latestInvoices = data.map((invoice) => ({
+    const latestInvoices = data.map(invoice => ({
       id: invoice.id,
       amount: formatCurrency(invoice.amount),
       status: invoice.status,
@@ -67,7 +63,7 @@ export async function fetchLatestInvoices() {
 
     return latestInvoices;
   } catch (error) {
-    console.error("Erro ao buscar as últimas faturas:", error);
-    throw new Error("Não foi possível buscar as últimas faturas.");
+    console.error('Erro ao buscar as últimas faturas:', error);
+    throw new Error('Não foi possível buscar as últimas faturas.');
   }
 }

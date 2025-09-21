@@ -1,13 +1,13 @@
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import Form from "@/app/ui/categorias/create-form";
+import Form from '@/app/ui/categorias/create-form';
 
-import { fetchCategorias } from "@/lib/categorias/data";
+import { fetchCategorias } from '@/lib/categorias/data';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Categorias",
+  title: 'Categorias',
 };
 
 export default async function Page() {
@@ -17,10 +17,10 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Categorias", href: "/dashboard/categorias" },
+          { label: 'Categorias', href: '/dashboard/categorias' },
           {
-            label: "Cadastro de Categoria",
-            href: "/dashboard/categorias/create",
+            label: 'Cadastro de Categoria',
+            href: '/dashboard/categorias/create',
             active: true,
           },
         ]}

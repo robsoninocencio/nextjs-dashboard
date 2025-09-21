@@ -1,10 +1,10 @@
-import { lusitana } from "@/app/ui/shared/fonts";
+import { lusitana } from '@/app/ui/shared/fonts';
 
-import { CalendarIcon } from "@heroicons/react/24/outline";
-import { generateYAxis } from "@/lib/utils";
+import { CalendarIcon } from '@heroicons/react/24/outline';
+import { generateYAxis } from '@/lib/utils';
 
-import { fetchRevenue } from "@/lib/dashboard/data";
-import { Revenue } from "@/lib/dashboard/definitions";
+import { fetchRevenue } from '@/lib/dashboard/data';
+import { Revenue } from '@/lib/dashboard/definitions';
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -19,54 +19,50 @@ export default async function RevenueChart() {
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   if (!revenue || revenue.length === 0) {
-    return <p className="mt-4 text-gray-400">No data available.</p>;
+    return <p className='mt-4 text-gray-400'>No data available.</p>;
   }
 
   return (
-    <div className="w-full md:col-span-4">
-      <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Faturamento Mensal
-      </h2>
+    <div className='w-full md:col-span-4'>
+      <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>Faturamento Mensal</h2>
 
-      <div className="rounded-xl bg-gray-50 p-4">
-        <div className="sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white p-4 md:gap-4">
+      <div className='rounded-xl bg-gray-50 p-4'>
+        <div className='sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white p-4 md:gap-4'>
           <div
-            className="mb-6 hidden flex-col justify-between text-sm text-gray-400 sm:flex"
+            className='mb-6 hidden flex-col justify-between text-sm text-gray-400 sm:flex'
             style={{ height: `${chartHeight}px` }}
           >
-            {yAxisLabels.map((label) => (
+            {yAxisLabels.map(label => (
               <p key={label}>{label}</p>
             ))}
           </div>
 
-          {revenue.map((month) => (
-            <div key={month.month} className="flex flex-col items-center gap-2">
+          {revenue.map(month => (
+            <div key={month.month} className='flex flex-col items-center gap-2'>
               <div
-                className="w-full rounded-md bg-blue-300"
+                className='w-full rounded-md bg-blue-300'
                 style={{
                   height: `${(chartHeight / topLabel) * month.revenue}px`,
                 }}
               >
                 <div
-                  className="flex items-end justify-center w-full rounded-md bg-blue-500 relative transition-all hover:bg-blue-600"
+                  className='flex items-end justify-center w-full rounded-md bg-blue-500 relative transition-all hover:bg-blue-600'
                   style={{
                     height: `${(chartHeight / topLabel) * month.revenue}px`,
                   }}
                 >
-                  <span className="absolute top-1 text-[10px] font-medium text-white">
+                  <span className='absolute top-1 text-[10px] font-medium text-white'>
                     {month.revenue}
                   </span>
                 </div>
               </div>
-              <p className="-rotate-90 text-sm text-gray-400 sm:rotate-0">
-                {month.month}
-              </p>
+              <p className='-rotate-90 text-sm text-gray-400 sm:rotate-0'>{month.month}</p>
             </div>
           ))}
         </div>
-        <div className="flex items-center pb-2 pt-6">
-          <CalendarIcon className="h-5 w-5 text-gray-500" />
-          <h3 className="ml-2 text-sm text-gray-500 ">Last 12 months</h3>
+        <div className='flex items-center pb-2 pt-6'>
+          <CalendarIcon className='h-5 w-5 text-gray-500' />
+          <h3 className='ml-2 text-sm text-gray-500 '>Last 12 months</h3>
         </div>
       </div>
     </div>

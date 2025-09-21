@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useCallback, useMemo } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 export interface FilterState {
   [key: string]: string | number | boolean;
@@ -33,9 +33,7 @@ export function useFilters<T extends FilterState>({
   }, [initialFilters, onFiltersChange]);
 
   const hasActiveFilters = useMemo(() => {
-    return Object.values(filters).some(
-      (value) => value !== "" && value !== 0 && value !== false
-    );
+    return Object.values(filters).some(value => value !== '' && value !== 0 && value !== false);
   }, [filters]);
 
   const debouncedUpdateFilter = useDebouncedCallback(updateFilter, debounceMs);

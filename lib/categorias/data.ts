@@ -1,26 +1,26 @@
-import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import { unstable_cache } from "next/cache";
-import type { CategoriaComPai, CategoriaField } from "./definitions"; // Supondo que CategoriaComPai foi movido para definitions
+import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
+import { unstable_cache } from 'next/cache';
+import type { CategoriaComPai, CategoriaField } from './definitions'; // Supondo que CategoriaComPai foi movido para definitions
 
 const ITEMS_PER_PAGE = 50;
 
 export async function fetchCategoriasPages(queryCategoria: string) {
   try {
-    console.log("Entrei em fetchCategoriasPages()");
+    console.log('Entrei em fetchCategoriasPages()');
     const where: any = {};
 
     // Filtra por categoria, se fornecido
     if (queryCategoria) {
-      where.nome = { contains: queryCategoria, mode: "insensitive" };
+      where.nome = { contains: queryCategoria, mode: 'insensitive' };
     }
 
     const count = await prisma.categorias.count({ where });
-    console.log("count:", count);
+    console.log('count:', count);
     return Math.ceil(count / ITEMS_PER_PAGE);
   } catch (error) {
-    console.error("Erro ao buscar o número total de páginas:", error);
-    throw new Error("Erro ao buscar o número total de páginas.");
+    console.error('Erro ao buscar o número total de páginas:', error);
+    throw new Error('Erro ao buscar o número total de páginas.');
   }
 }
 
@@ -28,10 +28,10 @@ export async function fetchFilteredCategorias(
   currentPage: number,
   queryCategoria: string
 ): Promise<CategoriaComPai[]> {
-  console.log("Entrei em fetchFilteredCategorias()");
+  console.log('Entrei em fetchFilteredCategorias()');
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  console.log("queryCategoria = ", queryCategoria);
+  console.log('queryCategoria = ', queryCategoria);
 
   try {
     let categorias: CategoriaComPai[];
@@ -74,14 +74,14 @@ export async function fetchFilteredCategorias(
 
     return categorias;
   } catch (error) {
-    console.error("Erro ao buscar categorias filtradas:", error);
-    throw new Error("Erro ao buscar categorias filtradas.");
+    console.error('Erro ao buscar categorias filtradas:', error);
+    throw new Error('Erro ao buscar categorias filtradas.');
   }
 }
 
 export async function fetchCategoriaById(id: string) {
   if (!id) {
-    throw new Error("O ID da categoria é obrigatório.");
+    throw new Error('O ID da categoria é obrigatório.');
   }
 
   try {
@@ -95,13 +95,13 @@ export async function fetchCategoriaById(id: string) {
     });
 
     if (!categoria) {
-      throw new Error("Categoria não encontrada.");
+      throw new Error('Categoria não encontrada.');
     }
 
     return categoria;
   } catch (error) {
     console.error(`Erro ao buscar categoria com ID ${id}:`, error);
-    throw new Error("Erro ao buscar a categoria.");
+    throw new Error('Erro ao buscar a categoria.');
   }
 }
 
@@ -113,11 +113,11 @@ export async function fetchCategorias(): Promise<CategoriaField[]> {
         nome: true,
         parentId: true,
       },
-      orderBy: { nome: "asc" },
+      orderBy: { nome: 'asc' },
     });
     return categorias;
   } catch (error) {
-    console.error("Erro ao buscar categorias:", error);
-    throw new Error("Não foi possível buscar as categorias.");
+    console.error('Erro ao buscar categorias:', error);
+    throw new Error('Não foi possível buscar as categorias.');
   }
 }

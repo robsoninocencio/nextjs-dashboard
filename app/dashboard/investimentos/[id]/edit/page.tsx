@@ -1,20 +1,20 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchClientes } from "@/lib/clientes/data";
-import { fetchBancos } from "@/lib/bancos/data";
-import { fetchAtivos } from "@/lib/ativos/data";
+import { fetchClientes } from '@/lib/clientes/data';
+import { fetchBancos } from '@/lib/bancos/data';
+import { fetchAtivos } from '@/lib/ativos/data';
 
-import Form from "@/app/ui/investimentos/edit-form";
+import Form from '@/app/ui/investimentos/edit-form';
 
-import { fetchInvestimentoById } from "@/lib/investimentos/data";
-import type { InvestimentoForm } from "@/lib/investimentos/definitions";
+import { fetchInvestimentoById } from '@/lib/investimentos/data';
+import type { InvestimentoForm } from '@/lib/investimentos/definitions';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Investimentos",
+  title: 'Investimentos',
 };
 
 export default async function Page({
@@ -22,9 +22,7 @@ export default async function Page({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams:
-    | Promise<{ [key: string]: string | string[] | undefined }>
-    | undefined;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }> | undefined;
 }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
@@ -45,7 +43,7 @@ export default async function Page({
   const typedInvestimento: InvestimentoForm = investimento;
 
   const breadcrumbHref = {
-    pathname: "/dashboard/investimentos",
+    pathname: '/dashboard/investimentos',
     query: resolvedSearchParams,
   };
 
@@ -53,9 +51,9 @@ export default async function Page({
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Investimentos", href: breadcrumbHref },
+          { label: 'Investimentos', href: breadcrumbHref },
           {
-            label: "Atualizar Investimento",
+            label: 'Atualizar Investimento',
             href: {
               pathname: `/dashboard/investimentos/${id}/edit`,
             },

@@ -1,31 +1,24 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchCategorias } from "@/lib/categorias/data";
+import { fetchCategorias } from '@/lib/categorias/data';
 
-import Form from "@/app/ui/categorias/edit-form";
+import Form from '@/app/ui/categorias/edit-form';
 
-import { fetchCategoriaById } from "@/lib/categorias/data";
-import type { Categoria } from "@/lib/categorias/definitions";
+import { fetchCategoriaById } from '@/lib/categorias/data';
+import type { Categoria } from '@/lib/categorias/definitions';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Categorias",
+  title: 'Categorias',
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  const [categoria, categorias] = await Promise.all([
-    fetchCategoriaById(id),
-    fetchCategorias(),
-  ]);
+  const [categoria, categorias] = await Promise.all([fetchCategoriaById(id), fetchCategorias()]);
 
   if (!categoria) {
     notFound();
@@ -35,9 +28,9 @@ export default async function Page({
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Categorias", href: "/dashboard/categorias" },
+          { label: 'Categorias', href: '/dashboard/categorias' },
           {
-            label: "Atualizar Categoria",
+            label: 'Atualizar Categoria',
             href: {
               pathname: `/dashboard/categorias/${id}/edit`,
             },

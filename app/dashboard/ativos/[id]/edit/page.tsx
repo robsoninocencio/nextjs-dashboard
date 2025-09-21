@@ -1,26 +1,22 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import Form from "@/app/ui/ativos/edit-form";
+import Form from '@/app/ui/ativos/edit-form';
 
-import { fetchTipos } from "@/lib/tipos/data";
-import { fetchAtivoById } from "@/lib/ativos/data";
-import { fetchCategorias } from "@/lib/categorias/data";
+import { fetchTipos } from '@/lib/tipos/data';
+import { fetchAtivoById } from '@/lib/ativos/data';
+import { fetchCategorias } from '@/lib/categorias/data';
 
-import type { Ativo } from "@/lib/ativos/definitions";
+import type { Ativo } from '@/lib/ativos/definitions';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Ativos",
+  title: 'Ativos',
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
   if (!id) {
@@ -40,9 +36,9 @@ export default async function Page({
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Ativos", href: "/dashboard/ativos" },
+          { label: 'Ativos', href: '/dashboard/ativos' },
           {
-            label: "Atualizar Ativos",
+            label: 'Atualizar Ativos',
             href: {
               pathname: `/dashboard/ativos/${id}/edit`,
             },

@@ -1,20 +1,14 @@
-import React from "react";
+import React from 'react';
 
-import { Totais } from "@/lib/investimentos/definitions";
-import {
-  fetchFilteredInvestimentos,
-  InvestmentFiltersParams,
-} from "@/lib/investimentos/data";
+import { Totais } from '@/lib/investimentos/definitions';
+import { fetchFilteredInvestimentos, InvestmentFiltersParams } from '@/lib/investimentos/data';
 
-import { InvestimentoCompleto } from "@/lib/types";
+import { InvestimentoCompleto } from '@/lib/types';
 
-import DesktopInvestimentosTable from "@/app/ui/investimentos/desktop-table";
-import {
-  MobileInvestimentoRow,
-  MobileTotals,
-} from "@/app/ui/investimentos/mobile-table";
+import DesktopInvestimentosTable from '@/app/ui/investimentos/desktop-table';
+import { MobileInvestimentoRow, MobileTotals } from '@/app/ui/investimentos/mobile-table';
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from '@/components/ui/card';
 
 // Interface para os props do componente
 interface InvestimentosTableProps {
@@ -23,13 +17,12 @@ interface InvestimentosTableProps {
 }
 
 // Componente principal
-export default async function Table({
-  currentPage,
-  filters,
-}: InvestimentosTableProps) {
+export default async function Table({ currentPage, filters }: InvestimentosTableProps) {
   // Buscar dados de investimentos
-  const investimentos: InvestimentoCompleto[] =
-    await fetchFilteredInvestimentos(filters, currentPage);
+  const investimentos: InvestimentoCompleto[] = await fetchFilteredInvestimentos(
+    filters,
+    currentPage
+  );
 
   // Recria o objeto searchParams para passar aos componentes filhos.
   // Isso é necessário para que os links de edição e cancelamento preservem os filtros.
@@ -72,21 +65,17 @@ export default async function Table({
   // console.log("totais**************************:", totais);
 
   if (!investimentos || investimentos.length === 0) {
-    return (
-      <p className="mt-6 text-center text-gray-500">
-        Nenhum investimento encontrado.
-      </p>
-    );
+    return <p className='mt-6 text-center text-gray-500'>Nenhum investimento encontrado.</p>;
   }
 
   return (
-    <div className="mt-4 flow-root">
-      <div className="inline-block min-w-full align-middle">
+    <div className='mt-4 flow-root'>
+      <div className='inline-block min-w-full align-middle'>
         <Card>
-          <CardContent className="p-2 md:pt-0">
+          <CardContent className='p-2 md:pt-0'>
             {/* Layout para dispositivos móveis */}
-            <div className="md:hidden">
-              {investimentos.map((investimento) => (
+            <div className='md:hidden'>
+              {investimentos.map(investimento => (
                 <MobileInvestimentoRow
                   key={investimento.id}
                   investimento={investimento}

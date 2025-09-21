@@ -1,19 +1,16 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { InvestimentoForm } from "@/lib/investimentos/definitions";
-import { ClienteField } from "@/lib/clientes/definitions";
-import { BancoField } from "@/lib/bancos/definitions";
-import { AtivoField } from "@/lib/ativos/definitions";
+import { Card, CardContent } from '@/components/ui/card';
+import { InvestimentoForm } from '@/lib/investimentos/definitions';
+import { ClienteField } from '@/lib/clientes/definitions';
+import { BancoField } from '@/lib/bancos/definitions';
+import { AtivoField } from '@/lib/ativos/definitions';
 
-import {
-  updateInvestimento,
-  InvestimentoFormState,
-} from "@/lib/investimentos/actions";
-import { formatDateToMonth, formatDateToYear } from "@/lib/utils";
-import { SelectField, CurrencyField } from "@/app/ui/shared/form-fields";
+import { updateInvestimento, InvestimentoFormState } from '@/lib/investimentos/actions';
+import { formatDateToMonth, formatDateToYear } from '@/lib/utils';
+import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
 
-import InvestmentForm from "./form";
+import InvestmentForm from './form';
 
 export default function EditInvestimentoForm({
   investimento,
@@ -28,11 +25,8 @@ export default function EditInvestimentoForm({
   ativos: AtivoField[];
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const initialState: InvestimentoFormState = { message: "", errors: {} };
-  const updateInvestimentoWithId = updateInvestimento.bind(
-    null,
-    investimento.id
-  );
+  const initialState: InvestimentoFormState = { message: '', errors: {} };
+  const updateInvestimentoWithId = updateInvestimento.bind(null, investimento.id);
 
   return (
     <Card>
@@ -43,7 +37,7 @@ export default function EditInvestimentoForm({
           ativos={ativos}
           action={updateInvestimentoWithId}
           initialState={initialState}
-          buttonText="Atualizar Investimento"
+          buttonText='Atualizar Investimento'
           investimento={investimento}
           searchParams={searchParams}
         />

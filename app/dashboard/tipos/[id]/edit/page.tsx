@@ -1,25 +1,21 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchTipos } from "@/lib/tipos/data";
+import { fetchTipos } from '@/lib/tipos/data';
 
-import Form from "@/app/ui/tipos/edit-form";
+import Form from '@/app/ui/tipos/edit-form';
 
-import { fetchTipoById } from "@/lib/tipos/data";
-import type { Tipo } from "@/lib/tipos/definitions";
+import { fetchTipoById } from '@/lib/tipos/data';
+import type { Tipo } from '@/lib/tipos/definitions';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Tipos",
+  title: 'Tipos',
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
   const [tipo, tipos] = await Promise.all([fetchTipoById(id), fetchTipos()]);
@@ -32,9 +28,9 @@ export default async function Page({
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Tipos", href: "/dashboard/tipos" },
+          { label: 'Tipos', href: '/dashboard/tipos' },
           {
-            label: "Atualizar Tipo",
+            label: 'Atualizar Tipo',
             href: {
               pathname: `/dashboard/tipos/${id}/edit`,
             },

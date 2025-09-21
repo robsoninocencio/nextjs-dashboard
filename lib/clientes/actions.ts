@@ -1,23 +1,23 @@
-"use server";
+'use server';
 
-import { z } from "zod";
+import { z } from 'zod';
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 // Schemas
 const ClienteFormSchema = z.object({
   name: z
-    .string({ invalid_type_error: "Por favor, insira um nome." })
-    .min(3, "O nome deve ter pelo menos 3 caracteres.")
-    .max(255, "O nome deve ter no máximo 255 caracteres."),
+    .string({ invalid_type_error: 'Por favor, insira um nome.' })
+    .min(3, 'O nome deve ter pelo menos 3 caracteres.')
+    .max(255, 'O nome deve ter no máximo 255 caracteres.'),
   email: z
-    .string({ invalid_type_error: "Por favor, insira um email." })
-    .email("Por favor, insira um email válido.")
-    .min(5, "O email deve ter pelo menos 5 caracteres.")
-    .max(255, "O email deve ter no máximo 255 caracteres."),
+    .string({ invalid_type_error: 'Por favor, insira um email.' })
+    .email('Por favor, insira um email válido.')
+    .min(5, 'O email deve ter pelo menos 5 caracteres.')
+    .max(255, 'O email deve ter no máximo 255 caracteres.'),
 });
 
 // tipar explicitamente validatedFields.data
@@ -45,8 +45,8 @@ function getFormValue(formData: FormData, key: string): string | undefined {
 // Utils - Função para validar os campos do formulário usando Zod
 function parseClienteForm(formData: FormData) {
   return ClienteFormSchema.safeParse({
-    name: getFormValue(formData, "name"),
-    email: getFormValue(formData, "email"),
+    name: getFormValue(formData, 'name'),
+    email: getFormValue(formData, 'email'),
   });
 }
 
@@ -57,23 +57,20 @@ function handleValidationError(
 ): CreateClienteFormState | UpdateClienteFormState {
   return {
     errors: validatedFields.error?.flatten().fieldErrors,
-    message: "Missing Fields. Failed to Create or Update Invoice.",
+    message: 'Missing Fields. Failed to Create or Update Invoice.',
     submittedData: {
-      name: getFormValue(formData, "name"),
-      email: getFormValue(formData, "email"),
+      name: getFormValue(formData, 'name'),
+      email: getFormValue(formData, 'email'),
     },
   };
 }
 
 // Utils - Função que retorna mensagem de erro padrão do Banco de Dados
-function getDatabaseErrorMessage(action: "create" | "update") {
+function getDatabaseErrorMessage(action: 'create' | 'update') {
   return `Database Error: Failed to ${action} cliente.`;
 }
 
-async function saveClienteToDatabase(
-  data: ClienteData,
-  id?: string
-): Promise<void> {
+async function saveClienteToDatabase(data: ClienteData, id?: string): Promise<void> {
   if (id) {
     // Atualiza a cliente
     await prisma.clientes.update({
@@ -99,14 +96,14 @@ export async function createCliente(
   prevState: CreateClienteFormState,
   formData: FormData
 ): Promise<CreateClienteFormState | never> {
-  if (process.env.NODE_ENV === "development") {
-    console.log("Received FormData:", [...formData.entries()]);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Received FormData:', [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
   const validatedFields = parseClienteForm(formData);
-  if (process.env.NODE_ENV === "development") {
-    console.log("validatedFields.error:", validatedFields.error);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('validatedFields.error:', validatedFields.error);
   }
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
@@ -118,14 +115,14 @@ export async function createCliente(
   try {
     await saveClienteToDatabase(validatedFields.data);
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Create Cliente Error:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Create Cliente Error:', error);
     }
-    return { message: getDatabaseErrorMessage("create") };
+    return { message: getDatabaseErrorMessage('create') };
   }
 
-  revalidatePath("/dashboard/clientes");
-  redirect("/dashboard/clientes");
+  revalidatePath('/dashboard/clientes');
+  redirect('/dashboard/clientes');
 }
 
 export async function updateCliente(
@@ -133,20 +130,20 @@ export async function updateCliente(
   prevState: UpdateClienteFormState,
   formData: FormData
 ): Promise<UpdateClienteFormState | never> {
-  if (process.env.NODE_ENV === "development") {
-    console.log("Received FormData:", [...formData.entries()]);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Received FormData:', [...formData.entries()]);
   }
 
   // Valida os campos do formulário usando Zod
   const validatedFields = parseClienteForm(formData);
-  if (process.env.NODE_ENV === "development") {
-    console.log("validatedFields.error:", validatedFields.error);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('validatedFields.error:', validatedFields.error);
   }
 
   // Trata erros de validação - Se tiver erros retorna Senão continua.
   if (!validatedFields.success) {
-    if (process.env.NODE_ENV === "development") {
-      console.log("validatedFields.error:", validatedFields.error);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('validatedFields.error:', validatedFields.error);
     }
     return handleValidationError(formData, validatedFields);
   }
@@ -154,37 +151,37 @@ export async function updateCliente(
   // Verifica se o cliente existe antes de tentar atualizar
   const existing = await prisma.clientes.findUnique({ where: { id } });
   if (!existing) {
-    return { message: "Cliente not found. Cannot update." };
+    return { message: 'Cliente not found. Cannot update.' };
   }
 
   // Atualiza cliente no banco de dados
   try {
     await saveClienteToDatabase(validatedFields.data, id);
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Update Cliente Error:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Update Cliente Error:', error);
     }
-    return { message: getDatabaseErrorMessage("update") };
+    return { message: getDatabaseErrorMessage('update') };
   }
 
-  revalidatePath("/dashboard/clientes");
-  redirect("/dashboard/clientes");
+  revalidatePath('/dashboard/clientes');
+  redirect('/dashboard/clientes');
 }
 
 export async function deleteCliente(id: string) {
   if (!id) {
-    throw new Error("Cliente ID for deletion is invalid.");
+    throw new Error('Cliente ID for deletion is invalid.');
   }
 
   try {
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async tx => {
       // Primeiro, pegar o cliente para obter a URL da imagem
       const cliente = await tx.clientes.findUnique({
         where: { id },
       });
 
       if (!cliente) {
-        throw new Error("Cliente not found.");
+        throw new Error('Cliente not found.');
       }
 
       // Apagar as faturas associadas ao cliente
@@ -198,12 +195,9 @@ export async function deleteCliente(id: string) {
       });
     });
   } catch (error) {
-    console.error(
-      `Database Error: Failed to Delete Cliente ID ${id} and their Invoices.`,
-      error
-    );
-    throw new Error("Failed to delete cliente and their invoices.");
+    console.error(`Database Error: Failed to Delete Cliente ID ${id} and their Invoices.`, error);
+    throw new Error('Failed to delete cliente and their invoices.');
   }
 
-  revalidatePath("/dashboard/clientes");
+  revalidatePath('/dashboard/clientes');
 }

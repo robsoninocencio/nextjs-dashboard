@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import { InvestimentoCompleto } from "@/lib/types"; // Importando o tipo gerado pelo Prisma
+import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
+import { InvestimentoCompleto } from '@/lib/types'; // Importando o tipo gerado pelo Prisma
 
 export type InvestmentFiltersParams = {
   ano: string;
@@ -35,7 +35,7 @@ async function getCategoriaIds(categoriaId: string): Promise<string[]> {
     `
   );
 
-  return result.map((r) => r.id);
+  return result.map(r => r.id);
 }
 
 function buildInvestimentosFilters(
@@ -47,7 +47,7 @@ function buildInvestimentosFilters(
 
   if (cliente) {
     whereConditions.push({
-      clientes: { name: { contains: cliente, mode: "insensitive" } },
+      clientes: { name: { contains: cliente, mode: 'insensitive' } },
     });
   }
 
@@ -61,16 +61,16 @@ function buildInvestimentosFilters(
 
   if (banco) {
     whereConditions.push({
-      bancos: { nome: { contains: banco, mode: "insensitive" } },
+      bancos: { nome: { contains: banco, mode: 'insensitive' } },
     });
   }
 
   const ativosFilter: Record<string, any> = {};
   if (ativo) {
-    ativosFilter.nome = { contains: ativo, mode: "insensitive" };
+    ativosFilter.nome = { contains: ativo, mode: 'insensitive' };
   }
   if (tipo) {
-    ativosFilter.tipos = { nome: { contains: tipo, mode: "insensitive" } };
+    ativosFilter.tipos = { nome: { contains: tipo, mode: 'insensitive' } };
   }
 
   if (categoriaIds && categoriaIds.length > 0) {
@@ -105,12 +105,10 @@ export async function fetchInvestimentosPages(
 
     return { totalPages, totalItems };
   } catch (error) {
-    console.error("Erro ao buscar o número total de páginas:", error);
+    console.error('Erro ao buscar o número total de páginas:', error);
 
     throw new Error(
-      error instanceof Error
-        ? error.message
-        : "Erro ao buscar o número total de páginas."
+      error instanceof Error ? error.message : 'Erro ao buscar o número total de páginas.'
     );
   }
 }
@@ -166,11 +164,11 @@ export async function fetchFilteredInvestimentos(
         },
       },
       orderBy: [
-        { clientes: { name: "asc" } },
-        { ano: "desc" },
-        { mes: "desc" },
-        { bancos: { nome: "asc" } },
-        { ativos: { nome: "asc" } },
+        { clientes: { name: 'asc' } },
+        { ano: 'desc' },
+        { mes: 'desc' },
+        { bancos: { nome: 'asc' } },
+        { ativos: { nome: 'asc' } },
       ],
       skip: offset,
       take: ITEMS_PER_PAGE,
@@ -178,14 +176,14 @@ export async function fetchFilteredInvestimentos(
 
     return investimentos;
   } catch (error) {
-    console.error("Erro ao buscar investimentos filtradas:", error);
-    throw new Error("Erro ao buscar investimentos filtradas.");
+    console.error('Erro ao buscar investimentos filtradas:', error);
+    throw new Error('Erro ao buscar investimentos filtradas.');
   }
 }
 
 export async function fetchInvestimentoById(id: string) {
   if (!id) {
-    throw new Error("O ID da investimento é obrigatório.");
+    throw new Error('O ID da investimento é obrigatório.');
   }
 
   try {
@@ -212,7 +210,7 @@ export async function fetchInvestimentoById(id: string) {
     });
 
     if (!investimento) {
-      throw new Error("Investimento não encontrada.");
+      throw new Error('Investimento não encontrada.');
     }
 
     return {
@@ -230,7 +228,7 @@ export async function fetchInvestimentoById(id: string) {
     };
   } catch (error) {
     console.error(`Erro ao buscar investimento com ID ${id}:`, error);
-    throw new Error("Erro ao buscar a investimento.");
+    throw new Error('Erro ao buscar a investimento.');
   }
 }
 
@@ -244,9 +242,7 @@ export async function fetchInvestimentoAnterior(
   try {
     // Validar parâmetros
     if (!ano || !mes || !clienteId || !bancoId || !ativoId) {
-      throw new Error(
-        "Os parâmetros ano, mes, clienteId, bancoId e ativoId são obrigatórios."
-      );
+      throw new Error('Os parâmetros ano, mes, clienteId, bancoId e ativoId são obrigatórios.');
     }
 
     // Converter ano e mês para números para calcular o mês anterior
@@ -264,7 +260,7 @@ export async function fetchInvestimentoAnterior(
     const registroAnterior = await prisma.investimentos.findFirst({
       where: {
         ano: anoAnterior.toString(),
-        mes: mesAnterior.toString().padStart(2, "0"),
+        mes: mesAnterior.toString().padStart(2, '0'),
         clienteId,
         bancoId,
         ativoId,
@@ -276,7 +272,7 @@ export async function fetchInvestimentoAnterior(
     });
 
     if (!registroAnterior) {
-      console.log("Nenhum investimento anterior encontrado.");
+      console.log('Nenhum investimento anterior encontrado.');
       return null;
     }
 
@@ -289,7 +285,7 @@ export async function fetchInvestimentoAnterior(
       saldoLiquido: registroAnterior.saldoLiquido / 100,
     };
   } catch (error) {
-    console.error("Erro ao buscar o investimento anterior:", error);
-    throw new Error("Erro ao buscar o investimento anterior.");
+    console.error('Erro ao buscar o investimento anterior:', error);
+    throw new Error('Erro ao buscar o investimento anterior.');
   }
 }

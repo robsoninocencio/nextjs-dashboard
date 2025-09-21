@@ -1,8 +1,8 @@
-import "server-only";
+import 'server-only';
 
-import { cache } from "react";
+import { cache } from 'react';
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 /**
  * Fetches a user by email, including the password hash.
@@ -16,7 +16,7 @@ export const getUser = cache(async (email: string) => {
     const user = await prisma.users.findUnique({ where: { email } });
     return user;
   } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
   }
 });

@@ -7,31 +7,31 @@ import {
   BanknotesIcon,
   TagIcon,
   FolderIcon,
-} from "@heroicons/react/24/outline";
-import { ComponentType, SVGProps } from "react";
+} from '@heroicons/react/24/outline';
+import { ComponentType, SVGProps } from 'react';
 
 // 🔗 Enum para rotas
 export enum Paths {
-  Dashboard = "/dashboard",
-  Invoices = "/dashboard/invoices",
-  Clientes = "/dashboard/clientes",
-  Bancos = "/dashboard/bancos",
-  Tipos = "/dashboard/tipos",
-  Ativos = "/dashboard/ativos",
-  Investimentos = "/dashboard/investimentos",
-  Categorias = "/dashboard/categorias",
+  Dashboard = '/dashboard',
+  Invoices = '/dashboard/invoices',
+  Clientes = '/dashboard/clientes',
+  Bancos = '/dashboard/bancos',
+  Tipos = '/dashboard/tipos',
+  Ativos = '/dashboard/ativos',
+  Investimentos = '/dashboard/investimentos',
+  Categorias = '/dashboard/categorias',
 }
 
 // 🔤 Labels para suporte a internacionalização futura
 export const labels = {
-  [Paths.Dashboard]: "Dashboard",
-  [Paths.Invoices]: "Faturas",
-  [Paths.Clientes]: "Clientes",
-  [Paths.Bancos]: "Bancos",
-  [Paths.Tipos]: "Tipos",
-  [Paths.Ativos]: "Ativos",
-  [Paths.Investimentos]: "Investimentos",
-  [Paths.Categorias]: "Categorias",
+  [Paths.Dashboard]: 'Dashboard',
+  [Paths.Invoices]: 'Faturas',
+  [Paths.Clientes]: 'Clientes',
+  [Paths.Bancos]: 'Bancos',
+  [Paths.Tipos]: 'Tipos',
+  [Paths.Ativos]: 'Ativos',
+  [Paths.Investimentos]: 'Investimentos',
+  [Paths.Categorias]: 'Categorias',
 } as const;
 
 // 🔧 Tipagem dos ícones

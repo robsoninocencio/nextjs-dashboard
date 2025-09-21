@@ -1,5 +1,5 @@
-import { fetchFilteredInvestimentos } from "@/lib/investimentos/data";
-import { InvestimentoCompleto } from "@/lib/types";
+import { fetchFilteredInvestimentos } from '@/lib/investimentos/data';
+import { InvestimentoCompleto } from '@/lib/types';
 
 // Tipagem inferida da função de busca para garantir consistência
 // Este tipo é agora obsoleto e foi substituído por InvestimentoCompleto de @/lib/types
@@ -43,14 +43,14 @@ export type LatestInvestimento = {
 // The database returns a number for fieds, but we later format it to a string with the formatCurrency function
 export type LatestInvestimentoRaw = Omit<
   LatestInvestimento,
-  | "rendimentoDoMes"
-  | "dividendosDoMes"
-  | "valorAplicado"
-  | "saldoBruto"
-  | "valorResgatado"
-  | "impostoIncorrido"
-  | "impostoPrevisto"
-  | "saldoLiquido"
+  | 'rendimentoDoMes'
+  | 'dividendosDoMes'
+  | 'valorAplicado'
+  | 'saldoBruto'
+  | 'valorResgatado'
+  | 'impostoIncorrido'
+  | 'impostoPrevisto'
+  | 'saldoLiquido'
 > & {
   rendimentoDoMes: number;
   dividendosDoMes: number;

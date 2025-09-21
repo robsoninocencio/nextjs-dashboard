@@ -1,6 +1,6 @@
-import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
-import { z } from "zod";
+import bcrypt from 'bcryptjs';
+import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
 import {
   usersData,
   clientesData,
@@ -10,7 +10,7 @@ import {
   tiposData,
   ativosData,
   investimentosData,
-} from "@/lib/placeholder-data";
+} from '@/lib/placeholder-data';
 
 /**
  * Função para semear a tabela 'users'.
@@ -350,7 +350,7 @@ async function seedInvestimentos() {
  * Função principal para executar todos os processos de seeding.
  */
 export async function main() {
-  console.log("Iniciando o processo de seeding...");
+  console.log('Iniciando o processo de seeding...');
   try {
     await seedUsers();
     await seedClientes();
@@ -360,9 +360,9 @@ export async function main() {
     await seedTipos();
     await seedAtivos();
     await seedInvestimentos();
-    console.log("Todos os processos de seeding concluídos com sucesso!");
+    console.log('Todos os processos de seeding concluídos com sucesso!');
   } catch (error) {
-    console.error("Erro durante o processo de seeding:", error);
+    console.error('Erro durante o processo de seeding:', error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();
@@ -371,5 +371,5 @@ export async function main() {
 
 // Executa a função principal quando o script é chamado
 main()
-  .then(() => console.log("Seed completo."))
-  .catch((e) => console.error(e));
+  .then(() => console.log('Seed completo.'))
+  .catch(e => console.error(e));

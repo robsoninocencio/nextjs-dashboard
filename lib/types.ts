@@ -1,4 +1,4 @@
-import { Prisma, investimentos } from "@prisma/client";
+import { Prisma, investimentos } from '@prisma/client';
 
 // 1. Tipo base para Investimento, diretamente do modelo Prisma
 //    O nome do tipo corresponde ao nome do modelo no schema.prisma: 'investimentos'.

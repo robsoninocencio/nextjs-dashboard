@@ -1,17 +1,14 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  createInvestimento,
-  InvestimentoFormState,
-} from "@/lib/investimentos/actions";
+import { Card, CardContent } from '@/components/ui/card';
+import { createInvestimento, InvestimentoFormState } from '@/lib/investimentos/actions';
 
-import InvestmentForm from "./form";
+import InvestmentForm from './form';
 
-import { ClienteField } from "@/lib/clientes/definitions";
-import { BancoField } from "@/lib/bancos/definitions";
-import { AtivoField } from "@/lib/ativos/definitions";
-import { SelectField, CurrencyField } from "@/app/ui/shared/form-fields";
+import { ClienteField } from '@/lib/clientes/definitions';
+import { BancoField } from '@/lib/bancos/definitions';
+import { AtivoField } from '@/lib/ativos/definitions';
+import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
 
 // Interface para props do componente
 interface FormProps {
@@ -33,7 +30,7 @@ export default function Form({ clientes, bancos, ativos }: FormProps) {
           ativos={ativos}
           action={createInvestimento}
           initialState={initialState}
-          buttonText="Cadastrar Investimento"
+          buttonText='Cadastrar Investimento'
         />
       </CardContent>
     </Card>

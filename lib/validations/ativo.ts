@@ -1,46 +1,43 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Schema base para ativo
 export const ativoSchema = z.object({
   nome: z
     .string({
-      required_error: "Nome é obrigatório",
-      invalid_type_error: "Nome deve ser uma string",
+      required_error: 'Nome é obrigatório',
+      invalid_type_error: 'Nome deve ser uma string',
     })
-    .min(2, "Nome deve ter pelo menos 2 caracteres")
-    .max(100, "Nome deve ter no máximo 100 caracteres")
-    .regex(/^[a-zA-ZÀ-ÿ0-9\s\-_.]+$/, "Nome contém caracteres inválidos"),
+    .min(2, 'Nome deve ter pelo menos 2 caracteres')
+    .max(100, 'Nome deve ter no máximo 100 caracteres')
+    .regex(/^[a-zA-ZÀ-ÿ0-9\s\-_.]+$/, 'Nome contém caracteres inválidos'),
 
   codigo: z
     .string({
-      required_error: "Código é obrigatório",
-      invalid_type_error: "Código deve ser uma string",
+      required_error: 'Código é obrigatório',
+      invalid_type_error: 'Código deve ser uma string',
     })
-    .min(3, "Código deve ter pelo menos 3 caracteres")
-    .max(20, "Código deve ter no máximo 20 caracteres")
-    .regex(
-      /^[A-Z0-9]+$/,
-      "Código deve conter apenas letras maiúsculas e números"
-    )
-    .transform((codigo) => codigo.toUpperCase()),
+    .min(3, 'Código deve ter pelo menos 3 caracteres')
+    .max(20, 'Código deve ter no máximo 20 caracteres')
+    .regex(/^[A-Z0-9]+$/, 'Código deve conter apenas letras maiúsculas e números')
+    .transform(codigo => codigo.toUpperCase()),
 
   tipoId: z
     .string({
-      required_error: "Tipo é obrigatório",
-      invalid_type_error: "ID do tipo deve ser uma string",
+      required_error: 'Tipo é obrigatório',
+      invalid_type_error: 'ID do tipo deve ser uma string',
     })
-    .uuid("ID do tipo deve ser um UUID válido"),
+    .uuid('ID do tipo deve ser um UUID válido'),
 
   descricao: z
     .string({
-      invalid_type_error: "Descrição deve ser uma string",
+      invalid_type_error: 'Descrição deve ser uma string',
     })
-    .max(500, "Descrição deve ter no máximo 500 caracteres")
+    .max(500, 'Descrição deve ter no máximo 500 caracteres')
     .optional(),
 
   ativo: z
     .boolean({
-      invalid_type_error: "Status ativo deve ser um booleano",
+      invalid_type_error: 'Status ativo deve ser um booleano',
     })
     .default(true),
 });
@@ -67,12 +64,9 @@ export const ativoFiltersSchema = z.object({
 export const uniqueCodigoSchema = z.object({
   codigo: z
     .string()
-    .min(3, "Código deve ter pelo menos 3 caracteres")
-    .max(20, "Código deve ter no máximo 20 caracteres")
-    .regex(
-      /^[A-Z0-9]+$/,
-      "Código deve conter apenas letras maiúsculas e números"
-    ),
+    .min(3, 'Código deve ter pelo menos 3 caracteres')
+    .max(20, 'Código deve ter no máximo 20 caracteres')
+    .regex(/^[A-Z0-9]+$/, 'Código deve conter apenas letras maiúsculas e números'),
   excludeId: z.string().uuid().optional(),
 });
 
@@ -128,10 +122,7 @@ export const ativoValidations = {
   },
 
   // Valida se o código já existe (excluindo o próprio registro)
-  isCodigoUnique: async (
-    codigo: string,
-    excludeId?: string
-  ): Promise<boolean> => {
+  isCodigoUnique: async (codigo: string, excludeId?: string): Promise<boolean> => {
     // Esta validação seria implementada no server action
     return true; // Placeholder
   },

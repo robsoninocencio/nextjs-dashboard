@@ -1,13 +1,13 @@
-"use server";
+'use server';
 
-import { z } from "zod";
+import { z } from 'zod';
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-import { prisma } from "@/lib/prisma";
-import { fetchInvestimentoAnterior } from "@/lib/investimentos/data";
-import { fetchAtivos } from "@/lib/ativos/data";
+import { prisma } from '@/lib/prisma';
+import { fetchInvestimentoAnterior } from '@/lib/investimentos/data';
+import { fetchAtivos } from '@/lib/ativos/data';
 
 // ===================================================================
 // 1. ESQUEMA DE VALIDAÇÃO E TIPOS
@@ -18,37 +18,37 @@ const currentYear = new Date().getFullYear();
 /**
  * Pré-processador Zod para converter strings de moeda (ex: "R$ 1.234,56") para números.
  */
-const currencyStringToNumber = z.preprocess((val) => {
-  if (typeof val !== "string" || !val) return 0;
+const currencyStringToNumber = z.preprocess(val => {
+  if (typeof val !== 'string' || !val) return 0;
   // Remove todos os caracteres que não são dígitos, vírgula ou sinal de menos.
   // Em seguida, substitui a vírgula por ponto para a conversão.
-  const cleanedVal = val.replace(/[^\d,-]/g, "").replace(",", ".");
+  const cleanedVal = val.replace(/[^\d,-]/g, '').replace(',', '.');
   return parseFloat(cleanedVal) || 0;
 }, z.number().default(0));
 
 const InvestimentoFormSchema = z.object({
   clienteId: z.string({
-    invalid_type_error: "Por favor selecione um Cliente.",
+    invalid_type_error: 'Por favor selecione um Cliente.',
   }),
   bancoId: z.string({
-    invalid_type_error: "Por favor selecione um Banco.",
+    invalid_type_error: 'Por favor selecione um Banco.',
   }),
   ativoId: z.string({
-    invalid_type_error: "Por favor selecione um Ativo.",
+    invalid_type_error: 'Por favor selecione um Ativo.',
   }),
   ano: z.coerce
     .number()
     .int()
-    .min(2000, "Ano inválido")
+    .min(2000, 'Ano inválido')
     .max(currentYear, {
       message: `Ano não pode ser maior que ${currentYear}.`,
     }),
   mes: z.coerce
     .number()
     .int()
-    .min(1, "Mês deve estar entre 1 e 12")
-    .max(12, "Mês inválido")
-    .transform((val) => val.toString().padStart(2, "0")), // Garantindo o mês com 2 dígitos
+    .min(1, 'Mês deve estar entre 1 e 12')
+    .max(12, 'Mês inválido')
+    .transform(val => val.toString().padStart(2, '0')), // Garantindo o mês com 2 dígitos
   rendimentoDoMes: currencyStringToNumber,
   dividendosDoMes: currencyStringToNumber,
   valorAplicado: currencyStringToNumber,
@@ -128,7 +128,7 @@ async function calculateRendimentoCDB(
 ): Promise<number> {
   const ativos = await fetchAtivos();
   const isCDBAutomatico = ativos.some(
-    (ativo) => ativo.id === data.ativoId && ativo.nome === "CDB Automático"
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB Automático'
   );
 
   if (!isCDBAutomatico) {
@@ -167,10 +167,7 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     saldoLiquido: investimentoAnterior?.saldoLiquido ?? 0,
   };
 
-  const rendimentoDoMes = await calculateRendimentoCDB(
-    data,
-    dadosAnterioresParaCalculo
-  );
+  const rendimentoDoMes = await calculateRendimentoCDB(data, dadosAnterioresParaCalculo);
 
   const payload = {
     rendimentoDoMes: toCents(rendimentoDoMes),
@@ -212,16 +209,16 @@ async function saveInvestimento(
 ): Promise<InvestimentoFormState> {
   const rawFormData = Object.fromEntries(formData.entries());
 
-  console.log("rawFormData:", rawFormData);
+  console.log('rawFormData:', rawFormData);
 
   const validatedFields = InvestimentoFormSchema.safeParse(rawFormData);
 
-  console.log("validatedFields.data:", validatedFields.data);
+  console.log('validatedFields.data:', validatedFields.data);
 
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Erro de validação. Verifique os campos e tente novamente.",
+      message: 'Erro de validação. Verifique os campos e tente novamente.',
       submittedData: rawFormData as SubmittedInvestimentoData,
     };
   }
@@ -231,38 +228,34 @@ async function saveInvestimento(
       const existing = await prisma.investimentos.findUnique({ where: { id } });
       if (!existing) {
         return {
-          message: "Investimento não encontrado. Não foi possível atualizar.",
+          message: 'Investimento não encontrado. Não foi possível atualizar.',
         };
       }
     }
     await saveInvestimentoToDatabase(validatedFields.data, id);
   } catch (error) {
-    console.error("Database Error:", error);
+    console.error('Database Error:', error);
     return {
-      message: "Erro no banco de dados: Falha ao salvar o investimento.",
+      message: 'Erro no banco de dados: Falha ao salvar o investimento.',
     };
   }
 
   // Build the redirect URL with filters
-  const searchParamsString = formData.get("searchParams");
-  let queryString = "";
-  if (typeof searchParamsString === "string" && searchParamsString) {
+  const searchParamsString = formData.get('searchParams');
+  let queryString = '';
+  if (typeof searchParamsString === 'string' && searchParamsString) {
     try {
       // Filtra chaves com valores nulos ou indefinidos antes de criar a query string
       const params = JSON.parse(searchParamsString);
-      const cleanedParams = Object.fromEntries(
-        Object.entries(params).filter(([, v]) => v != null)
-      );
-      queryString = new URLSearchParams(
-        cleanedParams as Record<string, string>
-      ).toString();
+      const cleanedParams = Object.fromEntries(Object.entries(params).filter(([, v]) => v != null));
+      queryString = new URLSearchParams(cleanedParams as Record<string, string>).toString();
     } catch (e) {
-      console.error("Failed to parse searchParams for redirect", e);
+      console.error('Failed to parse searchParams for redirect', e);
     }
   }
   const redirectUrl = `/dashboard/investimentos?${queryString}`;
 
-  revalidatePath("/dashboard/investimentos");
+  revalidatePath('/dashboard/investimentos');
   redirect(redirectUrl);
 }
 
@@ -292,18 +285,18 @@ export async function updateInvestimento(
  */
 export async function deleteInvestimento(id: string) {
   if (!id) {
-    throw new Error("Investimento ID for deletion is invalid.");
+    throw new Error('Investimento ID for deletion is invalid.');
   }
 
   try {
     await prisma.investimentos.delete({
       where: { id: id },
     });
-    revalidatePath("/dashboard/investimentos");
+    revalidatePath('/dashboard/investimentos');
   } catch (error) {
-    console.error("Database Error:", error);
+    console.error('Database Error:', error);
     // É uma boa prática lançar o erro para que possa ser tratado
     // por um Error Boundary, se necessário.
-    throw new Error("Erro no banco de dados: Falha ao deletar o investimento.");
+    throw new Error('Erro no banco de dados: Falha ao deletar o investimento.');
   }
 }

@@ -1,46 +1,41 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Schema base para cliente
 export const clienteSchema = z.object({
   name: z
     .string({
-      required_error: "Nome é obrigatório",
-      invalid_type_error: "Nome deve ser uma string",
+      required_error: 'Nome é obrigatório',
+      invalid_type_error: 'Nome deve ser uma string',
     })
-    .min(2, "Nome deve ter pelo menos 2 caracteres")
-    .max(255, "Nome deve ter no máximo 255 caracteres")
-    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Nome deve conter apenas letras e espaços"),
+    .min(2, 'Nome deve ter pelo menos 2 caracteres')
+    .max(255, 'Nome deve ter no máximo 255 caracteres')
+    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras e espaços'),
 
   email: z
     .string({
-      required_error: "Email é obrigatório",
-      invalid_type_error: "Email deve ser uma string",
+      required_error: 'Email é obrigatório',
+      invalid_type_error: 'Email deve ser uma string',
     })
-    .email("Email inválido")
-    .max(255, "Email deve ter no máximo 255 caracteres")
+    .email('Email inválido')
+    .max(255, 'Email deve ter no máximo 255 caracteres')
     .refine(
-      (email) => {
+      email => {
         // Validação adicional para emails corporativos
-        const commonDomains = [
-          "gmail.com",
-          "yahoo.com",
-          "hotmail.com",
-          "outlook.com",
-        ];
-        const domain = email.split("@")[1];
+        const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+        const domain = email.split('@')[1];
         return !commonDomains.includes(domain);
       },
       {
-        message: "Por favor, use um email corporativo ou profissional",
+        message: 'Por favor, use um email corporativo ou profissional',
       }
     ),
 
   userId: z
     .string({
-      required_error: "Usuário é obrigatório",
-      invalid_type_error: "ID do usuário deve ser uma string",
+      required_error: 'Usuário é obrigatório',
+      invalid_type_error: 'ID do usuário deve ser uma string',
     })
-    .uuid("ID do usuário deve ser um UUID válido")
+    .uuid('ID do usuário deve ser um UUID válido')
     .optional(),
 });
 
@@ -63,10 +58,7 @@ export const clienteFiltersSchema = z.object({
 
 // Schema para validação de email único
 export const uniqueEmailSchema = z.object({
-  email: z
-    .string()
-    .email("Email inválido")
-    .max(255, "Email deve ter no máximo 255 caracteres"),
+  email: z.string().email('Email inválido').max(255, 'Email deve ter no máximo 255 caracteres'),
   excludeId: z.string().uuid().optional(),
 });
 
@@ -108,13 +100,8 @@ export const clienteValidations = {
 
   // Valida se o email é de um domínio corporativo
   isCorporateEmail: (email: string): boolean => {
-    const commonDomains = [
-      "gmail.com",
-      "yahoo.com",
-      "hotmail.com",
-      "outlook.com",
-    ];
-    const domain = email.split("@")[1];
+    const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+    const domain = email.split('@')[1];
     return !commonDomains.includes(domain);
   },
 

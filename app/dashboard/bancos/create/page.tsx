@@ -1,9 +1,9 @@
-import Form from "@/app/ui/bancos/create-form";
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
-import { Metadata } from "next";
+import Form from '@/app/ui/bancos/create-form';
+import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Bancos",
+  title: 'Bancos',
 };
 
 export default async function Page() {
@@ -11,10 +11,10 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Bancos", href: "/dashboard/bancos" },
+          { label: 'Bancos', href: '/dashboard/bancos' },
           {
-            label: "Cadastro de Banco",
-            href: "/dashboard/bancos/create",
+            label: 'Cadastro de Banco',
+            href: '/dashboard/bancos/create',
             active: true,
           },
         ]}

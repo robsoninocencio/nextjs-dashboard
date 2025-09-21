@@ -1,22 +1,22 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-import type { Revenue } from "./dashboard/definitions";
+import type { Revenue } from './dashboard/definitions';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
+  return (amount / 100).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
   });
 };
 
 export const formatNumberWithDot = (amount: string): string | undefined => {
   // Remove caracteres não numéricos, exceto vírgula e ponto
-  const cleanedAmount = amount.replace(/[^\d,.]/g, "").replace(",", ".");
+  const cleanedAmount = amount.replace(/[^\d,.]/g, '').replace(',', '.');
 
   // Converte para número e verifica se é válido
   const parsedAmount = parseFloat(cleanedAmount);
@@ -28,36 +28,30 @@ export const formatNumberWithDot = (amount: string): string | undefined => {
   return Math.round(parsedAmount * 100).toString();
 };
 
-export const formatDateToLocal = (
-  dateStr: string,
-  locale: string = "pt-BR"
-) => {
+export const formatDateToLocal = (dateStr: string, locale: string = 'pt-BR') => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
 };
 
-export const formatDateToYear = (dateStr: string, locale: string = "pt-BR") => {
+export const formatDateToYear = (dateStr: string, locale: string = 'pt-BR') => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
+    year: 'numeric',
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
 };
 
-export const formatDateToMonth = (
-  dateStr: string,
-  locale: string = "pt-BR"
-) => {
+export const formatDateToMonth = (dateStr: string, locale: string = 'pt-BR') => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
-    month: "2-digit",
+    month: '2-digit',
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
@@ -65,16 +59,16 @@ export const formatDateToMonth = (
 
 // Converte número para um número específico de casas decimais com vírgula e ponto como separador de milhar
 export const formatToDecimals = (value: number, decimals: number): string => {
-  if (typeof value !== "number" || isNaN(value)) {
-    return "0," + "0".repeat(decimals);
+  if (typeof value !== 'number' || isNaN(value)) {
+    return '0,' + '0'.repeat(decimals);
   }
   if (!Number.isInteger(decimals) || decimals < 0) {
-    return value.toLocaleString("pt-BR", {
+    return value.toLocaleString('pt-BR', {
       minimumFractionDigits: 4,
       maximumFractionDigits: 4,
     });
   }
-  return value.toLocaleString("pt-BR", {
+  return value.toLocaleString('pt-BR', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
@@ -84,7 +78,7 @@ export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis
   // based on highest record and in 1000s
   const yAxisLabels = [];
-  const highestRecord = Math.max(...revenue.map((month) => month.revenue));
+  const highestRecord = Math.max(...revenue.map(month => month.revenue));
   const topLabel = Math.ceil(highestRecord / 1000) * 1000;
 
   for (let i = topLabel; i >= 0; i -= 1000) {
@@ -104,27 +98,19 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   // If the current page is among the first 3 pages,
   // show the first 3, an ellipsis, and the last 2 pages.
   if (currentPage <= 3) {
-    return [1, 2, 3, "...", totalPages - 1, totalPages];
+    return [1, 2, 3, '...', totalPages - 1, totalPages];
   }
 
   // If the current page is among the last 3 pages,
   // show the first 2, an ellipsis, and the last 3 pages.
   if (currentPage >= totalPages - 2) {
-    return [1, 2, "...", totalPages - 2, totalPages - 1, totalPages];
+    return [1, 2, '...', totalPages - 2, totalPages - 1, totalPages];
   }
 
   // If the current page is somewhere in the middle,
   // show the first page, an ellipsis, the current page and its neighbors,
   // another ellipsis, and the last page.
-  return [
-    1,
-    "...",
-    currentPage - 1,
-    currentPage,
-    currentPage + 1,
-    "...",
-    totalPages,
-  ];
+  return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
 };
 
 // Novas funções utilitárias aprimoradas
@@ -132,14 +118,11 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 /**
  * Formata um valor percentual para exibição
  */
-export const formatPercentage = (
-  value: number,
-  decimals: number = 2
-): string => {
-  if (typeof value !== "number" || isNaN(value)) {
-    return "0,00%";
+export const formatPercentage = (value: number, decimals: number = 2): string => {
+  if (typeof value !== 'number' || isNaN(value)) {
+    return '0,00%';
   }
-  return `${value.toFixed(decimals).replace(".", ",")}%`;
+  return `${value.toFixed(decimals).replace('.', ',')}%`;
 };
 
 /**
@@ -157,9 +140,9 @@ export const slugify = (str: string): string => {
   return str
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 };
 
 /**
@@ -167,7 +150,7 @@ export const slugify = (str: string): string => {
  */
 export const truncate = (str: string, length: number): string => {
   if (str.length <= length) return str;
-  return str.slice(0, length).trim() + "...";
+  return str.slice(0, length).trim() + '...';
 };
 
 /**
@@ -182,12 +165,12 @@ export const isValidEmail = (email: string): boolean => {
  * Formata um telefone brasileiro
  */
 export const formatPhone = (phone: string): string => {
-  const cleaned = phone.replace(/\D/g, "");
+  const cleaned = phone.replace(/\D/g, '');
   if (cleaned.length === 11) {
-    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
   }
   if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
   }
   return phone;
 };
@@ -196,9 +179,9 @@ export const formatPhone = (phone: string): string => {
  * Gera um ID único (UUID v4 simplificado)
  */
 export const generateId = (): string => {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 };
@@ -238,10 +221,10 @@ export const throttle = <T extends (...args: any[]) => any>(
  * Deep clone de um objeto
  */
 export const deepClone = <T>(obj: T): T => {
-  if (obj === null || typeof obj !== "object") return obj;
+  if (obj === null || typeof obj !== 'object') return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as T;
   if (obj instanceof Array) return obj.map(deepClone) as T;
-  if (typeof obj === "object") {
+  if (typeof obj === 'object') {
     const clonedObj = {} as T;
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -258,18 +241,16 @@ export const deepClone = <T>(obj: T): T => {
  */
 export const isEmpty = (value: any): boolean => {
   if (value == null) return true;
-  if (typeof value === "string") return value.trim().length === 0;
+  if (typeof value === 'string') return value.trim().length === 0;
   if (Array.isArray(value)) return value.length === 0;
-  if (typeof value === "object") return Object.keys(value).length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
   return false;
 };
 
 /**
  * Remove propriedades vazias de um objeto
  */
-export const removeEmpty = <T extends Record<string, any>>(
-  obj: T
-): Partial<T> => {
+export const removeEmpty = <T extends Record<string, any>>(obj: T): Partial<T> => {
   const result = {} as Partial<T>;
   for (const key in obj) {
     if (obj.hasOwnProperty(key) && !isEmpty(obj[key])) {
@@ -305,17 +286,17 @@ export const groupBy = <T, K extends string | number>(
 export const sortBy = <T>(
   array: T[],
   keys: (keyof T | ((item: T) => any))[],
-  directions: ("asc" | "desc")[] = []
+  directions: ('asc' | 'desc')[] = []
 ): T[] => {
   return [...array].sort((a, b) => {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      const direction = directions[i] || "asc";
+      const direction = directions[i] || 'asc';
 
       let aValue: any;
       let bValue: any;
 
-      if (typeof key === "function") {
+      if (typeof key === 'function') {
         aValue = key(a);
         bValue = key(b);
       } else {
@@ -328,7 +309,7 @@ export const sortBy = <T>(
       if (aValue < bValue) comparison = -1;
 
       if (comparison !== 0) {
-        return direction === "desc" ? -comparison : comparison;
+        return direction === 'desc' ? -comparison : comparison;
       }
     }
     return 0;
@@ -338,11 +319,7 @@ export const sortBy = <T>(
 /**
  * Cria um range de números
  */
-export const range = (
-  start: number,
-  end: number,
-  step: number = 1
-): number[] => {
+export const range = (start: number, end: number, step: number = 1): number[] => {
   const result: number[] = [];
   for (let i = start; i < end; i += step) {
     result.push(i);
@@ -385,7 +362,7 @@ export const calculateStats = (numbers: number[]) => {
  * Valida CPF brasileiro
  */
 export const isValidCPF = (cpf: string): boolean => {
-  const cleaned = cpf.replace(/\D/g, "");
+  const cleaned = cpf.replace(/\D/g, '');
   if (cleaned.length !== 11) return false;
 
   // Verifica se todos os dígitos são iguais
@@ -415,17 +392,17 @@ export const isValidCPF = (cpf: string): boolean => {
  * Formata CPF para exibição
  */
 export const formatCPF = (cpf: string): string => {
-  const cleaned = cpf.replace(/\D/g, "");
+  const cleaned = cpf.replace(/\D/g, '');
   if (cleaned.length !== 11) return cpf;
 
-  return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 };
 
 /**
  * Valida CNPJ brasileiro
  */
 export const isValidCNPJ = (cnpj: string): boolean => {
-  const cleaned = cnpj.replace(/\D/g, "");
+  const cleaned = cnpj.replace(/\D/g, '');
   if (cleaned.length !== 14) return false;
 
   // Verifica se todos os dígitos são iguais
@@ -459,13 +436,10 @@ export const isValidCNPJ = (cnpj: string): boolean => {
  * Formata CNPJ para exibição
  */
 export const formatCNPJ = (cnpj: string): string => {
-  const cleaned = cnpj.replace(/\D/g, "");
+  const cleaned = cnpj.replace(/\D/g, '');
   if (cleaned.length !== 14) return cnpj;
 
-  return cleaned.replace(
-    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-    "$1.$2.$3/$4-$5"
-  );
+  return cleaned.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
 };
 
 /**
@@ -500,14 +474,12 @@ export const formatRelativeDate = (date: Date): string => {
   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
-  if (diffInMinutes < 1) return "Agora mesmo";
-  if (diffInMinutes < 60)
-    return `Há ${diffInMinutes} minuto${diffInMinutes > 1 ? "s" : ""}`;
-  if (diffInHours < 24)
-    return `Há ${diffInHours} hora${diffInHours > 1 ? "s" : ""}`;
-  if (diffInDays < 7) return `Há ${diffInDays} dia${diffInDays > 1 ? "s" : ""}`;
+  if (diffInMinutes < 1) return 'Agora mesmo';
+  if (diffInMinutes < 60) return `Há ${diffInMinutes} minuto${diffInMinutes > 1 ? 's' : ''}`;
+  if (diffInHours < 24) return `Há ${diffInHours} hora${diffInHours > 1 ? 's' : ''}`;
+  if (diffInDays < 7) return `Há ${diffInDays} dia${diffInDays > 1 ? 's' : ''}`;
   if (diffInDays < 30)
-    return `Há ${Math.floor(diffInDays / 7)} semana${Math.floor(diffInDays / 7) > 1 ? "s" : ""}`;
+    return `Há ${Math.floor(diffInDays / 7)} semana${Math.floor(diffInDays / 7) > 1 ? 's' : ''}`;
 
   return formatDateToLocal(date.toISOString());
 };

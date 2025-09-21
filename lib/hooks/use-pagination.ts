@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 export interface UsePaginationProps {
   currentPage: number;
@@ -40,7 +40,7 @@ export function usePagination({
       rangeWithDots.push(range[i]);
 
       if (i < range.length - 1 && range[i + 1] - range[i] > 1) {
-        rangeWithDots.push("...");
+        rangeWithDots.push('...');
       }
     }
 

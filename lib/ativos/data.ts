@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
-import type { Ativo, AtivoField, AtivosTable } from "./definitions";
+import type { Ativo, AtivoField, AtivosTable } from './definitions';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -16,24 +16,19 @@ async function getCategoriaIds(categoriaId: string): Promise<string[]> {
 
   if (!categoria) return [];
 
-  const subIds = await Promise.all(
-    categoria.subCategories.map((sub) => getCategoriaIds(sub.id))
-  );
+  const subIds = await Promise.all(categoria.subCategories.map(sub => getCategoriaIds(sub.id)));
 
   return [categoria.id, ...subIds.flat()];
 }
 
-function buildAtivosWhereClause(
-  query: string,
-  categoriaIds?: string[]
-): Record<string, any> {
+function buildAtivosWhereClause(query: string, categoriaIds?: string[]): Record<string, any> {
   const andConditions: any[] = [];
 
   if (query) {
     andConditions.push({
       OR: [
-        { nome: { contains: query, mode: "insensitive" } },
-        { tipos: { nome: { contains: query, mode: "insensitive" } } },
+        { nome: { contains: query, mode: 'insensitive' } },
+        { tipos: { nome: { contains: query, mode: 'insensitive' } } },
       ],
     });
   }
@@ -54,10 +49,10 @@ export async function fetchAtivosPages(
   categoriaId?: string
 ): Promise<{ totalPages: number; totalItems: number }> {
   try {
-    if (process.env.NODE_ENV === "development") {
-      console.log("Entrei em fetchAtivosPages()");
-      console.log("query", query);
-      console.log("categoriaId", categoriaId);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Entrei em fetchAtivosPages()');
+      console.log('query', query);
+      console.log('categoriaId', categoriaId);
     }
 
     let categoriaIds: string[] = [];
@@ -71,20 +66,18 @@ export async function fetchAtivosPages(
 
     const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
 
-    if (process.env.NODE_ENV === "development") {
-      console.log("where:", JSON.stringify(where, null, 2));
-      console.log("totalItems:", totalItems);
-      console.log("totalPages:", totalPages);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('where:', JSON.stringify(where, null, 2));
+      console.log('totalItems:', totalItems);
+      console.log('totalPages:', totalPages);
     }
 
     return { totalPages, totalItems };
   } catch (error) {
-    console.error("Erro ao buscar o número total de páginas:", error);
+    console.error('Erro ao buscar o número total de páginas:', error);
 
     throw new Error(
-      error instanceof Error
-        ? error.message
-        : "Erro ao buscar o número total de páginas."
+      error instanceof Error ? error.message : 'Erro ao buscar o número total de páginas.'
     );
   }
 }
@@ -95,11 +88,11 @@ export async function fetchFilteredAtivos(
   categoriaId: string
 ): Promise<AtivosTable[]> {
   try {
-    if (process.env.NODE_ENV === "development") {
-      console.log("Entrei em fetchFilteredAtivos()");
-      console.log("currentPage", currentPage);
-      console.log("query", query);
-      console.log("categoriaId", categoriaId);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Entrei em fetchFilteredAtivos()');
+      console.log('currentPage', currentPage);
+      console.log('query', query);
+      console.log('categoriaId', categoriaId);
     }
 
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -127,15 +120,15 @@ export async function fetchFilteredAtivos(
           },
         },
       },
-      orderBy: { nome: "asc" },
+      orderBy: { nome: 'asc' },
       skip: offset,
       take: ITEMS_PER_PAGE,
     });
 
     return ativos;
   } catch (error) {
-    console.error("Erro ao buscar ativos filtradas:", error);
-    throw new Error("Erro ao buscar ativos filtradas.");
+    console.error('Erro ao buscar ativos filtradas:', error);
+    throw new Error('Erro ao buscar ativos filtradas.');
   }
 }
 
@@ -151,21 +144,21 @@ export async function fetchAtivos(): Promise<AtivoField[]> {
           },
         },
       },
-      orderBy: { nome: "asc" },
+      orderBy: { nome: 'asc' },
     });
 
     // console.log("ativos:", ativos);
 
     return ativos;
   } catch (error) {
-    console.error("Erro ao buscar ativos:", error);
-    throw new Error("Não foi possível buscar os ativos.");
+    console.error('Erro ao buscar ativos:', error);
+    throw new Error('Não foi possível buscar os ativos.');
   }
 }
 
 export async function fetchAtivoById(id: string) {
   if (!id) {
-    throw new Error("O ID da ativo é obrigatório.");
+    throw new Error('O ID da ativo é obrigatório.');
   }
 
   try {
@@ -184,12 +177,12 @@ export async function fetchAtivoById(id: string) {
     });
 
     if (!ativo) {
-      throw new Error("Ativo não encontrada.");
+      throw new Error('Ativo não encontrada.');
     }
 
     return ativo;
   } catch (error) {
     console.error(`Erro ao buscar ativo com ID ${id}:`, error);
-    throw new Error("Erro ao buscar a ativo.");
+    throw new Error('Erro ao buscar a ativo.');
   }
 }
