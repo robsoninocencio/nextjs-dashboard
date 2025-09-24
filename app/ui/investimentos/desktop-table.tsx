@@ -59,6 +59,89 @@ const calculatePercentage = (value: number, total: number) => {
   return (value / total) * 100;
 };
 
+// Helper function para estilização condicional de valores
+const StyledValue = ({
+  value,
+  type = 'default',
+  isBold = false,
+  showAsPercentage = false,
+}: {
+  value: number;
+  type?:
+    | 'profit'
+    | 'loss'
+    | 'neutral'
+    | 'default'
+    | 'tax'
+    | 'balance'
+    | 'good'
+    | 'very-good'
+    | 'excellent';
+  isBold?: boolean;
+  showAsPercentage?: boolean;
+}) => {
+  const isNegative = value < 0;
+  const isZero = value === 0;
+
+  const getStyles = () => {
+    if (isZero) {
+      return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+
+    switch (type) {
+      case 'profit':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-emerald-600 bg-emerald-50 border-emerald-200';
+      case 'loss':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'tax':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'balance':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'neutral':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-gray-700 bg-yellow-100 border-gray-200';
+      case 'good':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-emerald-500 bg-emerald-50 border-emerald-200';
+      case 'very-good':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-emerald-700 bg-emerald-100 border-emerald-300';
+      case 'excellent':
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-emerald-900 bg-emerald-200 border-emerald-400';
+
+      default:
+        return isNegative
+          ? 'text-red-600 bg-red-50 border-red-200'
+          : 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  };
+
+  const styles = getStyles();
+  const displayValue = showAsPercentage
+    ? `${formatToDecimals(Math.abs(value), 6)}%`
+    : formatCurrency(Math.abs(value));
+
+  return (
+    <span className={`font-medium py-1 rounded border ${styles} ${isBold ? 'font-bold' : ''}`}>
+      {isNegative && !isZero && '-'}
+      {displayValue}
+    </span>
+  );
+};
+
 const monthNames: { [key: string]: string } = {
   '01': 'Janeiro',
   '02': 'Fevereiro',
@@ -327,7 +410,7 @@ const GrandTotalRow = ({
           data={totais}
           visibleHeaders={visibleHeaders}
           type='grand'
-          cellClassName='whitespace-nowrap px-4 py-4 text-right align-top font-bold text-primary text-lg'
+          cellClassName='whitespace-nowrap py-4 text-right align-top font-bold text-primary text-lg'
         />
         <TableCell className='whitespace-nowrap px-4 py-4 text-right align-top rounded-br-lg'></TableCell>
       </TableRow>
@@ -417,69 +500,99 @@ export default function DesktopInvestimentosTable({
         key: 'saldoAnterior',
         render: (data, type) => {
           if (type === 'grand') return '';
-          return formatCurrency(data.saldoAnterior);
+          return <StyledValue value={data.saldoAnterior} type='balance' />;
         },
       },
       {
         label: 'Rendimento',
         key: 'rendimentoDoMes',
-        render: data => formatCurrency(data.rendimentoDoMes),
+        render: data => <StyledValue value={data.rendimentoDoMes} type='profit' />,
       },
       {
         label: 'Rendimento (%)',
         key: 'percentualRendimentoDoMes',
-        render: data =>
-          formatToDecimals(
-            calculatePercentage(
-              data.rendimentoDoMes,
-              data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
-            ),
-            6
-          ),
+        render: data => {
+          const percentage = calculatePercentage(
+            data.rendimentoDoMes,
+            data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
+          );
+          let type: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
+
+          if (percentage >= 1) {
+            type = 'excellent';
+          } else if (percentage >= 0.8) {
+            type = 'very-good';
+          } else if (percentage >= 0.6) {
+            type = 'good';
+          } else if (percentage > 0) {
+            type = 'neutral';
+          }
+          return <StyledValue value={percentage} type={type} showAsPercentage={true} />;
+        },
       },
       {
         label: 'Dividendo',
         key: 'dividendosDoMes',
         condition: totais.dividendosDoMes > 0,
-        render: data => formatCurrency(data.dividendosDoMes),
+        render: data => <StyledValue value={data.dividendosDoMes} type='profit' />,
       },
       {
         label: 'Dividendo (%)',
         key: 'percentualDividendosDoMes',
         condition: totais.dividendosDoMes > 0,
-        render: data =>
-          formatToDecimals(
-            calculatePercentage(
-              data.dividendosDoMes,
-              data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
-            ),
-            6
-          ),
+        render: data => {
+          const percentage = calculatePercentage(
+            data.dividendosDoMes,
+            data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
+          );
+          let type: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
+
+          if (percentage >= 1) {
+            type = 'excellent';
+          } else if (percentage >= 0.8) {
+            type = 'very-good';
+          } else if (percentage >= 0.6) {
+            type = 'good';
+          } else if (percentage > 0) {
+            type = 'neutral';
+          }
+          return <StyledValue value={percentage} type={type} showAsPercentage={true} />;
+        },
       },
       {
         label: 'Rend + Div (%)',
         key: 'percentualRendMaisDivDoMes',
         condition: totais.dividendosDoMes > 0,
-        render: data =>
-          formatToDecimals(
-            calculatePercentage(
-              data.rendimentoDoMes + data.dividendosDoMes,
-              data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
-            ),
-            6
-          ),
+        render: data => {
+          const percentage = calculatePercentage(
+            data.rendimentoDoMes + data.dividendosDoMes,
+            data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
+          );
+          let type: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
+
+          if (percentage >= 1) {
+            type = 'excellent';
+          } else if (percentage >= 0.8) {
+            type = 'very-good';
+          } else if (percentage >= 0.6) {
+            type = 'good';
+          } else if (percentage > 0) {
+            type = 'neutral';
+          }
+          return <StyledValue value={percentage} type={type} showAsPercentage={true} />;
+        },
       },
       {
         label: 'Aplicações',
         key: 'valorAplicado',
         condition: totais.valorAplicado > 0,
-        render: data => formatCurrency(data.valorAplicado),
+        render: data => <StyledValue value={data.valorAplicado} type='loss' />,
       },
       {
         label: 'Resgates',
         key: 'valorResgatado',
         condition: totais.valorResgatado > 0,
-        render: data => formatCurrency(data.valorResgatado),
+        render: data => <StyledValue value={data.valorResgatado} type='loss' />,
       },
       {
         label: 'Saldo Bruto',
@@ -487,7 +600,7 @@ export default function DesktopInvestimentosTable({
         condition: totais.saldoBruto > 0,
         render: (data, type) => {
           if (type === 'grand') return '';
-          return formatCurrency(data.saldoBruto);
+          return <StyledValue value={data.saldoBruto} type='balance' />;
         },
       },
       {
@@ -500,30 +613,39 @@ export default function DesktopInvestimentosTable({
               : data.saldoAnterior !== 0
                 ? data.saldoAnterior
                 : data.valorAplicado;
-          return formatToDecimals(
-            calculatePercentage(data.saldoBruto - data.saldoAnterior, base),
-            6
-          );
+          const percentage = calculatePercentage(data.saldoBruto - data.saldoAnterior, base);
+          let gradiente: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
+
+          if (percentage >= 1) {
+            gradiente = 'excellent';
+          } else if (percentage >= 0.8) {
+            gradiente = 'very-good';
+          } else if (percentage >= 0.6) {
+            gradiente = 'good';
+          } else if (percentage > 0) {
+            gradiente = 'neutral';
+          }
+          return <StyledValue value={percentage} type={gradiente} showAsPercentage={true} />;
         },
       },
       {
         label: 'Imposto Incorrido',
         key: 'impostoIncorrido',
         condition: totais.impostoIncorrido > 0,
-        render: data => formatCurrency(data.impostoIncorrido),
+        render: data => <StyledValue value={data.impostoIncorrido} type='tax' />,
       },
       {
         label: 'Imposto Previsto',
         key: 'impostoPrevisto',
         condition: totais.impostoPrevisto > 0,
-        render: data => formatCurrency(data.impostoPrevisto),
+        render: data => <StyledValue value={data.impostoPrevisto} type='tax' />,
       },
       {
         label: 'Saldo Líquido',
         key: 'saldoLiquido',
         render: (data, type) => {
           if (type === 'grand') return '';
-          return formatCurrency(data.saldoLiquido);
+          return <StyledValue value={data.saldoLiquido} type='profit' isBold={true} />;
         },
       },
     ];
