@@ -192,6 +192,7 @@ const GroupHeaderRow = ({
 }) => {
   const evolucao = group.totals.saldoBruto - group.totals.saldoAnterior;
   const movimentacao = group.totals.valorAplicado - group.totals.valorResgatado;
+  const rendimento = evolucao - movimentacao;
 
   return (
     <TableRow className='border-y-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/15 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.001] transform'>
@@ -212,6 +213,7 @@ const GroupHeaderRow = ({
             </span>
           </div>
           <div className='flex gap-8 animate-in slide-in-from-right duration-500 delay-200'>
+            <HeaderIndicator label='Rendimento' value={rendimento} />
             <HeaderIndicator label='Evolução' value={evolucao} />
             <HeaderIndicator label='Movimentação' value={movimentacao} />
           </div>
@@ -379,6 +381,7 @@ const GrandTotalRow = ({
 }) => {
   const evolucao = totais.saldoBruto - totais.saldoAnterior;
   const movimentacao = totais.valorAplicado - totais.valorResgatado;
+  const rendimento = evolucao - movimentacao;
 
   return (
     <TableFooter>
@@ -390,6 +393,7 @@ const GrandTotalRow = ({
               <span className='text-foreground font-bold text-xl'>Sumário Geral</span>
             </div>
             <div className='flex gap-8'>
+              <HeaderIndicator label='Rendimento' value={rendimento} />
               <HeaderIndicator label='Evolução' value={evolucao} />
               <HeaderIndicator label='Movimentação' value={movimentacao} />
             </div>

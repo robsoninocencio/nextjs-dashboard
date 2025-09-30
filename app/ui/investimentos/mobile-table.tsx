@@ -197,6 +197,7 @@ export function MobileInvestimentoRow({
 export function MobileTotals({ totais }: { totais: Totais }) {
   const evolucao = totais.saldoBruto - totais.saldoAnterior;
   const movimentacao = totais.valorAplicado - totais.valorResgatado;
+  const rendimento = evolucao - movimentacao;
 
   return (
     <div className='mb-1 w-full rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 p-5 mt-4 border border-primary/20 shadow-sm'>
@@ -206,6 +207,11 @@ export function MobileTotals({ totais }: { totais: Totais }) {
           <p className='text-xl font-bold text-gray-900'>Total Geral do Mês</p>
         </div>
         <div className='flex gap-3'>
+          <MobileCardIndicator
+            label='Rendimento'
+            value={rendimento}
+            type={rendimento >= 0 ? 'profit' : 'loss'}
+          />
           <MobileCardIndicator
             label='Evolução'
             value={evolucao}
