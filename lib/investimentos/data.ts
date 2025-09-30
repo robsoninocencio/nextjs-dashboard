@@ -12,7 +12,7 @@ export type InvestmentFiltersParams = {
   categoriaId?: string;
 };
 
-const ITEMS_PER_PAGE = 200;
+const ITEMS_PER_PAGE = 300;
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
