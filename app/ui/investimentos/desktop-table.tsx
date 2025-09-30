@@ -195,7 +195,7 @@ const GroupHeaderRow = ({
 
   return (
     <TableRow className='border-y-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/15 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.001] transform'>
-      <TableCell colSpan={colSpan} className='p-5'>
+      <TableCell colSpan={colSpan} className='p-3'>
         <div className='flex items-center justify-between animate-in slide-in-from-left duration-500'>
           <div className='flex items-center gap-4'>
             <div className='flex items-center gap-3'>
@@ -226,7 +226,7 @@ const TableHeaderRow = ({ visibleHeaders }: { visibleHeaders: HeaderConfig[] }) 
     {['Banco', 'Ativo', 'Tipo', 'Categorias'].map(header => (
       <TableHead
         key={header}
-        className='py-3 px-2 text-xs font-bold text-slate-700 uppercase tracking-wider text-left bg-white/90 backdrop-blur-sm border-r border-gray-100 last:border-r-0'
+        className='py-2 px-2 text-xs font-bold text-slate-700 uppercase tracking-wider text-left bg-white/90 backdrop-blur-sm border-r border-gray-100 last:border-r-0'
       >
         {header}
       </TableHead>
@@ -234,12 +234,12 @@ const TableHeaderRow = ({ visibleHeaders }: { visibleHeaders: HeaderConfig[] }) 
     {visibleHeaders.map(({ label }) => (
       <TableHead
         key={label}
-        className='py-3 px-2 text-xs font-bold text-slate-700 uppercase tracking-wider text-right bg-white/90 backdrop-blur-sm border-r border-gray-100 last:border-r-0'
+        className='py-2 px-2 text-xs font-bold text-slate-700 uppercase tracking-wider text-right bg-white/90 backdrop-blur-sm border-r border-gray-100 last:border-r-0'
       >
         {label}
       </TableHead>
     ))}
-    <TableHead className='px-4 py-4 text-right bg-white/90 backdrop-blur-sm'>
+    <TableHead className='px-4 py-3 text-right bg-white/90 backdrop-blur-sm'>
       <span className='sr-only'>Ações</span>
     </TableHead>
   </TableRow>
@@ -278,22 +278,22 @@ const InvestmentRow = ({
     key={investimento.id}
     className='border-b border-gray-100 text-sm hover:bg-gray-50/80 hover:shadow-sm transition-all group animate-in fade-in slide-in-from-bottom duration-300'
   >
-    <TableCell className='whitespace-nowrap px-2 py-2 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
+    <TableCell className='whitespace-nowrap px-2 py-1 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
       <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
         {investimento.bancos.nome}
       </span>
     </TableCell>
-    <TableCell className='whitespace-nowrap px-2 py-2 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
+    <TableCell className='whitespace-nowrap px-2 py-1 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
       <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
         {investimento.ativos.nome}
       </span>
     </TableCell>
-    <TableCell className='whitespace-nowrap px-2 py-2 align-top text-gray-700 group-hover:text-gray-900 transition-colors duration-150'>
+    <TableCell className='whitespace-nowrap px-2 py-1 align-top text-gray-700 group-hover:text-gray-900 transition-colors duration-150'>
       <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
         {investimento.ativos.tipos?.nome}
       </span>
     </TableCell>
-    <TableCell className='whitespace-nowrap px-2 py-2 align-top'>
+    <TableCell className='whitespace-nowrap px-2 py-1 align-top'>
       <div className='flex flex-wrap gap-2'>
         {investimento.ativos.ativo_categorias.map(({ categoria }, index) => (
           <Badge
@@ -311,9 +311,9 @@ const InvestmentRow = ({
       data={investimento}
       visibleHeaders={visibleHeaders}
       type='investment'
-      cellClassName='whitespace-nowrap px-2 py-2 text-right align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'
+      cellClassName='whitespace-nowrap px-2 py-1 text-right align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'
     />
-    <TableCell className='whitespace-nowrap py-2 pl-2 pr-3 align-top'>
+    <TableCell className='whitespace-nowrap py-1 pl-2 pr-3 align-top'>
       <div className='flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-all duration-200'>
         <ButtonLinkUpdate
           href={{
@@ -339,13 +339,13 @@ const GroupTotalRow = ({
   return (
     <>
       {/* Linha de espaçamento para separar visualmente dos investimentos */}
-      <TableRow className='h-4 border-0 bg-transparent hover:bg-transparent'>
+      <TableRow className='h-2 border-0 bg-transparent hover:bg-transparent'>
         <TableCell colSpan={colSpan} className='p-0 border-0' />
       </TableRow>
       <TableRow className='border-t-2 border-b-2 border-primary/20 bg-gradient-to-r from-primary/8 to-primary/12 font-semibold hover:from-primary/12 hover:to-primary/16 transition-all duration-200 shadow-sm'>
         <TableCell
           colSpan={4}
-          className='px-3 py-3 text-left font-bold align-top text-primary text-base'
+          className='px-3 py-2 text-left font-bold align-top text-primary text-base'
         >
           <div className='flex items-center gap-2'>
             <div className='w-1 h-6 bg-primary/60 rounded-full'></div>
@@ -356,12 +356,12 @@ const GroupTotalRow = ({
           data={groupTotals}
           visibleHeaders={visibleHeaders}
           type='group'
-          cellClassName='whitespace-nowrap px-3 py-3 text-right align-top font-bold text-primary'
+          cellClassName='whitespace-nowrap px-3 py-2 text-right align-top font-bold text-primary'
         />
-        <TableCell className='whitespace-nowrap px-3 py-3 text-right align-top'></TableCell>
+        <TableCell className='whitespace-nowrap px-3 py-2 text-right align-top'></TableCell>
       </TableRow>
       {/* Linha de espaçamento para separar visualmente dos investimentos */}
-      <TableRow className='h-6 border-0 bg-transparent hover:bg-transparent'>
+      <TableRow className='h-3 border-0 bg-transparent hover:bg-transparent'>
         <TableCell colSpan={colSpan} className='p-0 border-0' />
       </TableRow>
     </>
@@ -383,7 +383,7 @@ const GrandTotalRow = ({
   return (
     <TableFooter>
       <TableRow className='border-t-2 border-b-2 border-primary/20 bg-gradient-to-r from-primary/10 to-primary/15 hover:from-primary/15 hover:to-primary/20 transition-all duration-200 shadow-sm'>
-        <TableCell colSpan={colSpan} className='p-4'>
+        <TableCell colSpan={colSpan} className='p-3'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-4'>
               <div className='w-1 h-10 bg-primary rounded-full'></div>
@@ -399,7 +399,7 @@ const GrandTotalRow = ({
       <TableRow className='bg-gradient-to-r from-primary/20 to-primary/25 text-base font-bold hover:from-primary/25 hover:to-primary/30 transition-all duration-200 shadow-lg'>
         <TableCell
           colSpan={4}
-          className='px-4 py-4 text-left font-bold text-xl align-top text-primary rounded-bl-lg'
+          className='px-4 py-3 text-left font-bold text-xl align-top text-primary rounded-bl-lg'
         >
           <div className='flex items-center gap-3'>
             <div className='w-2 h-8 bg-primary rounded-full'></div>
@@ -410,9 +410,9 @@ const GrandTotalRow = ({
           data={totais}
           visibleHeaders={visibleHeaders}
           type='grand'
-          cellClassName='whitespace-nowrap py-4 text-right align-top font-bold text-primary text-lg'
+          cellClassName='whitespace-nowrap py-3 text-right align-top font-bold text-primary text-lg'
         />
-        <TableCell className='whitespace-nowrap px-4 py-4 text-right align-top rounded-br-lg'></TableCell>
+        <TableCell className='whitespace-nowrap px-4 py-3 text-right align-top rounded-br-lg'></TableCell>
       </TableRow>
     </TableFooter>
   );
