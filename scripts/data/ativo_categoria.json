@@ -218,5 +218,10 @@
     "ativoId": "e81f4942-d946-464b-8d6b-820629473657",
     "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
     "createdAt": "2025-09-19T16:52:41.946Z"
+  },
+  {
+    "ativoId": "27e70aa2-5659-4c6e-b34f-07d1d7cae142",
+    "categoriaId": "04854073-f6dd-463a-8110-7bf990456712",
+    "createdAt": "2025-09-24T16:07:30.925Z"
   }
 ]
