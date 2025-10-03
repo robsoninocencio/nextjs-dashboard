@@ -11,10 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 
-import { createAtivo, AtivoFormState } from '@/lib/ativos/actions';
+import { createAtivo, AtivoFormState } from '@/lib/actions/ativo-actions';
 
-import { TipoField } from '@/lib/tipos/definitions';
-import type { CategoriaField } from '@/lib/categorias/definitions';
+import { TipoField } from '@/lib/types/tipo';
+import type { CategoriaField } from '@/lib/types/categoria';
 import { cn } from '@/lib/utils';
 
 // Botão com estado pendente (loading)

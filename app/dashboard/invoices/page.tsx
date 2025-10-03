@@ -8,7 +8,7 @@ import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
 import Table from '@/app/ui/invoices/table';
 import { InvoicesTableSkeleton } from '@/app/ui/invoices/skeletons';
 
-import { fetchInvoicesPages } from '@/lib/invoices/data';
+import { fetchInvoicesPages } from '@/lib/data/invoices';
 
 import { Metadata } from 'next';
 

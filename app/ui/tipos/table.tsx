@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 
 import { DeleteTipo, UpdateTipo } from '@/app/ui/tipos/buttons';
-import { fetchFilteredTipos } from '@/lib/tipos/data';
+import { fetchFilteredTipos } from '@/lib/data/tipos';
 
 export default async function TiposTable({
   query,

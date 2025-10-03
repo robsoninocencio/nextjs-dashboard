@@ -2,12 +2,12 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchClientes } from '@/lib/clientes/data';
+import { fetchClientes } from '@/lib/data/clientes';
 
 import Form from '@/app/ui/invoices/edit-form';
 
-import { fetchInvoiceById } from '@/lib/invoices/data';
-import type { Invoice } from '@/lib/invoices/definitions';
+import { fetchInvoiceById } from '@/lib/data/invoices';
+import type { Invoice } from '@/lib/types/invoice';
 
 import { Metadata } from 'next';
 

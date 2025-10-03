@@ -8,9 +8,9 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 import { Button } from '@/app/ui/shared/button';
 
-import { createCategoria, CategoriaFormState } from '@/lib/categorias/actions';
+import { createCategoria, CategoriaFormState } from '@/lib/actions/categoria-actions';
 
-import { CategoriaField } from '@/lib/categorias/definitions';
+import { CategoriaField } from '@/lib/types/categoria';
 
 // Interface para props do componente
 interface FormProps {

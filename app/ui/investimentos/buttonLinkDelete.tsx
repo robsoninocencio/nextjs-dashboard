@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { deleteInvestimento } from '@/lib/investimentos/actions';
+import { deleteInvestimento } from '@/lib/actions/investimento-actions';
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const deleteInvestimentoWithId = deleteInvestimento.bind(null, id);

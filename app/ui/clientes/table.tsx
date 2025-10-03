@@ -12,7 +12,7 @@ import {
 import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 
 import { DeleteCliente, UpdateCliente } from '@/app/ui/clientes/buttons';
-import { fetchFilteredClientes } from '@/lib/clientes/data';
+import { fetchFilteredClientes } from '@/lib/data/clientes';
 
 export default async function ClientesTable({
   query,

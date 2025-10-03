@@ -1,13 +1,13 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { createInvestimento, InvestimentoFormState } from '@/lib/investimentos/actions';
+import { createInvestimento, InvestimentoFormState } from '@/lib/actions/investimento-actions';
 
 import InvestmentForm from './form';
 
-import { ClienteField } from '@/lib/clientes/definitions';
-import { BancoField } from '@/lib/bancos/definitions';
-import { AtivoField } from '@/lib/ativos/definitions';
+import { ClienteField } from '@/lib/types/cliente';
+import { BancoField } from '@/lib/types/banco';
+import { AtivoField } from '@/lib/types/ativo';
 import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
 
 // Interface para props do componente

@@ -10,8 +10,8 @@ import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
 import Table from '@/app/ui/ativos/table';
 import { AtivosTableSkeleton } from '@/app/ui/ativos/skeletons';
 
-import { fetchAtivosPages } from '@/lib/ativos/data';
-import { fetchCategorias } from '@/lib/categorias/data';
+import { fetchAtivosPages } from '@/lib/data/ativos';
+import { fetchCategorias } from '@/lib/data/categorias';
 
 import { Metadata } from 'next';
 

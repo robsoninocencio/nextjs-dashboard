@@ -4,11 +4,11 @@ import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
 import Form from '@/app/ui/ativos/edit-form';
 
-import { fetchTipos } from '@/lib/tipos/data';
-import { fetchAtivoById } from '@/lib/ativos/data';
-import { fetchCategorias } from '@/lib/categorias/data';
+import { fetchTipos } from '@/lib/data/tipos';
+import { fetchAtivoById } from '@/lib/data/ativos';
+import { fetchCategorias } from '@/lib/data/categorias';
 
-import type { Ativo } from '@/lib/ativos/definitions';
+import type { Ativo } from '@/lib/types/ativo';
 
 import { Metadata } from 'next';
 

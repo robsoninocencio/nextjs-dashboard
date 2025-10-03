@@ -4,11 +4,11 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { CheckIcon, ClockIcon, EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { ClienteForm } from '@/lib/clientes/definitions';
-import { ClienteField } from '@/lib/clientes/definitions';
+import { ClienteForm } from '@/lib/types/cliente';
+import { ClienteField } from '@/lib/types/cliente';
 
 import { Button } from '@/app/ui/shared/button';
-import { updateCliente, UpdateClienteFormState } from '@/lib/clientes/actions';
+import { updateCliente, UpdateClienteFormState } from '@/lib/actions/cliente-actions';
 
 export default function EditClienteForm({
   cliente,

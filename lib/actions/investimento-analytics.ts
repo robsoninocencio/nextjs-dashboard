@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import { InvestmentFiltersParams } from './data';
+import { InvestmentFiltersParams } from '@/lib/data/investimentos';
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.

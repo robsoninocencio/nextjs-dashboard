@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { prisma } from '@/lib/prisma';
-import { fetchCategorias } from '@/lib/categorias/data';
+import { fetchCategorias } from '@/lib/data/categorias';
 
 // Schema
 const CategoriaFormSchema = z.object({

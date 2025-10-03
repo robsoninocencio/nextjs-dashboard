@@ -2,9 +2,9 @@ import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
 import Form from '@/app/ui/investimentos/create-form';
 
-import { fetchClientes } from '@/lib/clientes/data';
-import { fetchBancos } from '@/lib/bancos/data';
-import { fetchAtivos } from '@/lib/ativos/data';
+import { fetchClientes } from '@/lib/data/clientes';
+import { fetchBancos } from '@/lib/data/bancos';
+import { fetchAtivos } from '@/lib/data/ativos';
 
 import { Metadata } from 'next';
 

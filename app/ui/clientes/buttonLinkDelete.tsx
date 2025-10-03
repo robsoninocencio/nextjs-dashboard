@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { deleteCliente } from '@/lib/clientes/actions';
+import { deleteCliente } from '@/lib/actions/cliente-actions';
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const deleteClienteWithId = deleteCliente.bind(null, id);

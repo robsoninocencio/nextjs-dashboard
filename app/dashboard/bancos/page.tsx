@@ -9,7 +9,7 @@ import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
 import Table from '@/app/ui/bancos/table';
 import { BancosTableSkeleton } from '@/app/ui/bancos/skeletons';
 
-import { fetchBancosPages } from '@/lib/bancos/data';
+import { fetchBancosPages } from '@/lib/data/bancos';
 
 import { Metadata } from 'next';
 

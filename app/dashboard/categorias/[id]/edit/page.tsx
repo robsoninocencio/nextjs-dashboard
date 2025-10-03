@@ -2,12 +2,12 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchCategorias } from '@/lib/categorias/data';
+import { fetchCategorias } from '@/lib/data/categorias';
 
 import Form from '@/app/ui/categorias/edit-form';
 
-import { fetchCategoriaById } from '@/lib/categorias/data';
-import type { Categoria } from '@/lib/categorias/definitions';
+import { fetchCategoriaById } from '@/lib/data/categorias';
+import type { Categoria } from '@/lib/types/categoria';
 
 import { Metadata } from 'next';
 

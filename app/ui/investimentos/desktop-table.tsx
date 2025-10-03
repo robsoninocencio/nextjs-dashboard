@@ -16,7 +16,7 @@ import {
   Totais,
   GrupoInvestimento,
   GrupoInvestimentoComTotais,
-} from '@/lib/investimentos/definitions';
+} from '@/lib/types/investimento';
 import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 import { ButtonLinkDelete } from '@/app/ui/investimentos/buttonLinkDelete';
 

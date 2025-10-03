@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { unstable_cache } from 'next/cache';
-import type { CategoriaComPai, CategoriaField } from './definitions'; // Supondo que CategoriaComPai foi movido para definitions
+import type { CategoriaComPai, CategoriaField } from '../types/categoria';
 
 const ITEMS_PER_PAGE = 50;
 

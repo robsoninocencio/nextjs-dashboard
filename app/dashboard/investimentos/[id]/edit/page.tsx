@@ -2,14 +2,14 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchClientes } from '@/lib/clientes/data';
-import { fetchBancos } from '@/lib/bancos/data';
-import { fetchAtivos } from '@/lib/ativos/data';
+import { fetchClientes } from '@/lib/data/clientes';
+import { fetchBancos } from '@/lib/data/bancos';
+import { fetchAtivos } from '@/lib/data/ativos';
 
 import Form from '@/app/ui/investimentos/edit-form';
 
-import { fetchInvestimentoById } from '@/lib/investimentos/data';
-import type { InvestimentoForm } from '@/lib/investimentos/definitions';
+import { fetchInvestimentoById } from '@/lib/data/investimentos';
+import type { InvestimentoForm } from '@/lib/types/investimento';
 
 import { Metadata } from 'next';
 

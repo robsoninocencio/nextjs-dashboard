@@ -4,7 +4,7 @@ import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 
 import { formatDateToLocal, formatCurrency } from '@/lib/utils';
 
-import { fetchFilteredInvoices } from '@/lib/invoices/data';
+import { fetchFilteredInvoices } from '@/lib/data/invoices';
 
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { ButtonLinkDelete } from '@/app/ui/invoices/buttonLinkDelete';

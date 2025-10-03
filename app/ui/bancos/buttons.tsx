@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteBanco } from '@/lib/bancos/actions';
+import { deleteBanco } from '@/lib/actions/banco-actions';
 
 export function UpdateBanco({ id }: { id: string }) {
   return (

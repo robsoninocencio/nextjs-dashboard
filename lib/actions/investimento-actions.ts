@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { prisma } from '@/lib/prisma';
-import { fetchInvestimentoAnterior } from '@/lib/investimentos/data';
-import { fetchAtivos } from '@/lib/ativos/data';
+import { fetchInvestimentoAnterior } from '@/lib/data/investimentos';
+import { fetchAtivos } from '@/lib/data/ativos';
 
 // ===================================================================
 // 1. ESQUEMA DE VALIDAÇÃO E TIPOS

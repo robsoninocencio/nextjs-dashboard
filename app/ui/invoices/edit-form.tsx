@@ -9,13 +9,13 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 
-import { InvoiceForm } from '@/lib/invoices/definitions';
-import { ClienteField } from '@/lib/clientes/definitions';
+import { InvoiceForm } from '@/lib/types/invoice';
+import { ClienteField } from '@/lib/types/cliente';
 
 import { Button } from '@/app/ui/shared/button';
 
 // import { updateInvoice, State } from "@/app/lib/invoices/actions";
-import { updateInvoice, InvoiceFormState } from '@/lib/invoices/actions';
+import { updateInvoice, InvoiceFormState } from '@/lib/actions/invoice-actions';
 
 export default function EditInvoiceForm({
   invoice,

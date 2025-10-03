@@ -2,12 +2,12 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchBancos } from '@/lib/bancos/data';
+import { fetchBancos } from '@/lib/data/bancos';
 
 import Form from '@/app/ui/bancos/edit-form';
 
-import { fetchBancoById } from '@/lib/bancos/data';
-import type { Banco } from '@/lib/bancos/definitions';
+import { fetchBancoById } from '@/lib/data/bancos';
+import type { Banco } from '@/lib/types/banco';
 
 import { Metadata } from 'next';
 

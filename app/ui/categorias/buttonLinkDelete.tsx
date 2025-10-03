@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { deleteCategoria } from '@/lib/categorias/actions';
+import { deleteCategoria } from '@/lib/actions/categoria-actions';
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const Categoria = deleteCategoria.bind(null, id);

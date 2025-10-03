@@ -2,7 +2,7 @@ import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
 import Form from '@/app/ui/categorias/create-form';
 
-import { fetchCategorias } from '@/lib/categorias/data';
+import { fetchCategorias } from '@/lib/data/categorias';
 
 import { Metadata } from 'next';
 

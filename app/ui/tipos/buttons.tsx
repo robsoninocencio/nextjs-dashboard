@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteTipo } from '@/lib/tipos/actions';
+import { deleteTipo } from '@/lib/actions/tipo-actions';
 
 export function UpdateTipo({ id }: { id: string }) {
   return (

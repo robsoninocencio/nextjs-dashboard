@@ -9,7 +9,7 @@ import Table from '@/app/ui/tipos/table';
 
 import { TiposTableSkeleton } from '@/app/ui/tipos/skeletons';
 
-import { fetchTiposPages } from '@/lib/tipos/data';
+import { fetchTiposPages } from '@/lib/data/tipos';
 
 import { Metadata } from 'next';
 

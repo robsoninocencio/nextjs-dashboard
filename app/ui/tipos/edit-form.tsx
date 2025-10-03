@@ -4,11 +4,11 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { TipoForm } from '@/lib/tipos/definitions';
-import { TipoField } from '@/lib/tipos/definitions';
+import { TipoForm } from '@/lib/types/tipo';
+import { TipoField } from '@/lib/types/tipo';
 
 import { Button } from '@/app/ui/shared/button';
-import { updateTipo, UpdateTipoFormState } from '@/lib/tipos/actions';
+import { updateTipo, UpdateTipoFormState } from '@/lib/actions/tipo-actions';
 
 export default function EditTipoForm({ tipo, tipos }: { tipo: TipoForm; tipos: TipoField[] }) {
   const initialState: UpdateTipoFormState = { message: '', errors: {} };

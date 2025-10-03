@@ -6,7 +6,7 @@ import SearchAtivo from '@/app/ui/shared/searchAtivo';
 import SearchTipo from '@/app/ui/shared/searchTipo';
 import CategoriaFilter from '@/app/ui/shared/categoria-filter';
 import { Card, CardContent } from '@/components/ui/card';
-import { Categoria } from '@/lib/categorias/definitions';
+import { Categoria } from '@/lib/types/categoria';
 
 type InvestmentFiltersProps = {
   categorias: Categoria[];

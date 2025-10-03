@@ -2,10 +2,10 @@ import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
 import Form from '@/app/ui/ativos/create-form';
 
-import { fetchTipos } from '@/lib/tipos/data';
+import { fetchTipos } from '@/lib/data/tipos';
 
 import { Metadata } from 'next';
-import { fetchCategorias } from '@/lib/categorias/data';
+import { fetchCategorias } from '@/lib/data/categorias';
 
 export const metadata: Metadata = {
   title: 'Ativos',

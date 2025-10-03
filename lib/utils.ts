@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import type { Revenue } from './dashboard/definitions';
+import type { Revenue } from './types/dashboard';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -5,7 +5,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
 
-import { getUser } from '@/lib/users/data';
+import { getUser } from '@/lib/data/users';
 
 const PASSWORD_MIN_LENGTH = 6;
 

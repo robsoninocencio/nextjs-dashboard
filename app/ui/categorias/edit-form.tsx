@@ -6,12 +6,12 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 import { Button } from '@/app/ui/shared/button';
 
-import { CategoriaForm } from '@/lib/categorias/definitions';
+import { CategoriaForm } from '@/lib/types/categoria';
 
-import { CategoriaField } from '@/lib/categorias/definitions';
+import { CategoriaField } from '@/lib/types/categoria';
 
 // import { updateCategoria, State } from "@/app/lib/categorias/actions";
-import { updateCategoria, CategoriaFormState } from '@/lib/categorias/actions';
+import { updateCategoria, CategoriaFormState } from '@/lib/actions/categoria-actions';
 
 export default function EditCategoriaForm({
   categoria,

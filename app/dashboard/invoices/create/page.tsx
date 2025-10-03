@@ -2,7 +2,7 @@ import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
 import Form from '@/app/ui/invoices/create-form';
 
-import { fetchClientes } from '@/lib/clientes/data';
+import { fetchClientes } from '@/lib/data/clientes';
 
 import { Metadata } from 'next';
 

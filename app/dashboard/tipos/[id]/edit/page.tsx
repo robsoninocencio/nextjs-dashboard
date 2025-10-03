@@ -2,12 +2,12 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
 
-import { fetchTipos } from '@/lib/tipos/data';
+import { fetchTipos } from '@/lib/data/tipos';
 
 import Form from '@/app/ui/tipos/edit-form';
 
-import { fetchTipoById } from '@/lib/tipos/data';
-import type { Tipo } from '@/lib/tipos/definitions';
+import { fetchTipoById } from '@/lib/data/tipos';
+import type { Tipo } from '@/lib/types/tipo';
 
 import { Metadata } from 'next';
 

@@ -3,8 +3,8 @@ import { lusitana } from '@/app/ui/shared/fonts';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { generateYAxis } from '@/lib/utils';
 
-import { fetchRevenue } from '@/lib/dashboard/data';
-import { Revenue } from '@/lib/dashboard/definitions';
+import { fetchRevenue } from '@/lib/data/dashboard';
+import { Revenue } from '@/lib/types/dashboard';
 
 // This component is representational only.
 // For data visualization UI, check out:

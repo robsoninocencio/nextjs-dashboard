@@ -8,7 +8,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 import { Button } from '@/app/ui/shared/button';
 
-import { createBanco, CreateBancoFormState } from '@/lib/bancos/actions';
+import { createBanco, CreateBancoFormState } from '@/lib/actions/banco-actions';
 
 function SubmitBancoButton() {
   const { pending } = useFormStatus();

@@ -2,7 +2,8 @@ import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 import { ButtonLinkDelete } from '@/app/ui/ativos/buttonLinkDelete';
 import { Badge } from '@/components/ui/badge';
 
-import { fetchFilteredAtivos } from '@/lib/ativos/data';
+import { fetchFilteredAtivos } from '@/lib/data/ativos';
+import type { AtivosTable } from '@/lib/types/ativo';
 
 export default async function AtivosTable({
   currentPage,
@@ -13,7 +14,7 @@ export default async function AtivosTable({
   query: string;
   categoriaId: string;
 }) {
-  const ativos = await fetchFilteredAtivos(currentPage, query, categoriaId);
+  const ativos: AtivosTable[] = await fetchFilteredAtivos(currentPage, query, categoriaId);
 
   if (!ativos || ativos.length === 0) {
     return <p className='mt-6 text-center text-gray-500'>Nenhum ativo encontrado.</p>;

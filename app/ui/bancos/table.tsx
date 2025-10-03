@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 
 import { DeleteBanco, UpdateBanco } from '@/app/ui/bancos/buttons';
-import { fetchFilteredBancos } from '@/lib/bancos/data';
+import { fetchFilteredBancos } from '@/lib/data/bancos';
 
 export default async function BancosTable({
   query,

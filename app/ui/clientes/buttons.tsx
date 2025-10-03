@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteCliente } from '@/lib/clientes/actions';
+import { deleteCliente } from '@/lib/actions/cliente-actions';
 
 export function UpdateCliente({ id }: { id: string }) {
   return (

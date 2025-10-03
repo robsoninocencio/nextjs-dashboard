@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 
-import type { Ativo, AtivoField, AtivosTable } from './definitions';
+import type { Ativo, AtivoField, AtivosTable } from '../types/ativo';
 
 const ITEMS_PER_PAGE = 30;
 

@@ -9,7 +9,7 @@ import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
 import Table from '@/app/ui/categorias/table';
 import { CategoriasTableSkeleton } from '@/app/ui/categorias/skeletons';
 
-import { fetchCategoriasPages } from '@/lib/categorias/data';
+import { fetchCategoriasPages } from '@/lib/data/categorias';
 
 import { Metadata } from 'next';
 

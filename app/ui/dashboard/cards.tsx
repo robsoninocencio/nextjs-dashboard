@@ -1,7 +1,7 @@
 import { BanknotesIcon, ClockIcon, UserGroupIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/shared/fonts';
 
-import { fetchCardData } from '@/lib/dashboard/data';
+import { fetchCardData } from '@/lib/data/dashboard';
 
 const iconMap = {
   collected: BanknotesIcon,

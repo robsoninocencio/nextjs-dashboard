@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/shared/fonts';
 
-import { fetchLatestInvoices } from '@/lib/dashboard/data';
+import { fetchLatestInvoices } from '@/lib/data/dashboard';
 import InvoiceStatus from '../invoices/status';
 
 export default async function LatestInvoices() {

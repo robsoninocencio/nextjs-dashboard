@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Totais } from '@/lib/investimentos/definitions';
-import { fetchFilteredInvestimentos, InvestmentFiltersParams } from '@/lib/investimentos/data';
+import { Totais } from '@/lib/types/investimento';
+import { fetchFilteredInvestimentos, InvestmentFiltersParams } from '@/lib/data/investimentos';
 
 import { InvestimentoCompleto } from '@/lib/types';
 

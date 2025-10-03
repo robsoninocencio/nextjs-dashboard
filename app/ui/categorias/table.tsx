@@ -1,8 +1,8 @@
 import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 import { ButtonLinkDelete } from '@/app/ui/categorias/buttonLinkDelete';
 
-import { fetchFilteredCategorias } from '@/lib/categorias/data';
-import type { CategoriaComPai } from '@/lib/categorias/definitions';
+import { fetchFilteredCategorias } from '@/lib/data/categorias';
+import type { CategoriaComPai } from '@/lib/types/categoria';
 
 // Interface para os props do componente
 interface CategoriasTableProps {

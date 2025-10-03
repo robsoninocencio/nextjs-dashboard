@@ -8,7 +8,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 import { Button } from '@/app/ui/shared/button';
 
-import { createTipo, CreateTipoFormState } from '@/lib/tipos/actions';
+import { createTipo, CreateTipoFormState } from '@/lib/actions/tipo-actions';
 
 function SubmitTipoButton() {
   const { pending } = useFormStatus();
