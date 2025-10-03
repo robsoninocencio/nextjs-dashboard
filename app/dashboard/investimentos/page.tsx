@@ -8,9 +8,19 @@ import { SidebarToggle } from '@/app/ui/dashboard/sidebar-toggle';
 import { InvestimentosTableSkeleton } from '@/app/ui/investimentos/skeletons';
 import { InvestmentFilters } from '@/app/ui/investimentos/InvestmentFilters';
 import Table from '@/app/ui/investimentos/table';
+import { MetricsCards } from '@/app/ui/investimentos/metrics-cards';
+import { PerformanceChart } from '@/app/ui/investimentos/performance-chart';
+import { ProfitabilityChart } from '@/app/ui/investimentos/profitability-chart';
+import { DiversificationCharts } from '@/app/ui/investimentos/diversification-charts';
 
 import { fetchInvestimentosPages } from '@/lib/investimentos/data';
 import { fetchCategorias } from '@/lib/categorias/data';
+import {
+  fetchAggregatedMetrics,
+  fetchPerformanceData,
+  fetchDiversificationByCategory,
+  fetchDiversificationByBank,
+} from '@/lib/investimentos/analytics';
 
 import { Metadata } from 'next';
 
@@ -48,9 +58,20 @@ export default async function Page({
     categoriaId: resolvedSearchParams?.categoriaId || '',
   };
 
-  const [{ totalPages, totalItems }, categorias] = await Promise.all([
+  const [
+    { totalPages, totalItems },
+    categorias,
+    aggregatedMetrics,
+    performanceData,
+    categoryData,
+    bankData,
+  ] = await Promise.all([
     fetchInvestimentosPages(filters),
     fetchCategorias(),
+    fetchAggregatedMetrics(filters),
+    fetchPerformanceData(filters),
+    fetchDiversificationByCategory(filters),
+    fetchDiversificationByBank(filters),
   ]);
 
   // Gera uma chave estável para o Suspense, forçando-o a re-renderizar quando os filtros mudam.
@@ -67,6 +88,18 @@ export default async function Page({
           </ButtonLinkCreate>
         </div>
       </div>
+
+      {/* Cards de métricas */}
+      <MetricsCards data={aggregatedMetrics} />
+
+      {/* Gráficos de performance e rentabilidade */}
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6'>
+        <PerformanceChart data={performanceData} />
+        <ProfitabilityChart data={performanceData} />
+      </div>
+
+      {/* Gráficos de diversificação */}
+      <DiversificationCharts categoryData={categoryData} bankData={bankData} />
 
       <InvestmentFilters categorias={categorias} />
 
