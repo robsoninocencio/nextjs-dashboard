@@ -13,11 +13,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
 
-import { InvestimentoForm } from '@/lib/types/investimento';
+import { InvestimentoForm } from '@/modules/investimentos/types/investimento';
 import { ClienteField } from '@/lib/types/cliente';
 import { BancoField } from '@/lib/types/banco';
 import { AtivoField } from '@/lib/types/ativo';
-import { InvestimentoFormState } from '@/lib/actions/investimento-actions';
+import { InvestimentoFormState } from '@/modules/investimentos/actions/investimento-actions';
 import { formatDateToMonth, formatDateToYear } from '@/lib/utils';
 
 type InvestmentFormProps = {

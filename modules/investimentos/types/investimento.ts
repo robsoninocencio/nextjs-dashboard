@@ -1,4 +1,4 @@
-import { fetchFilteredInvestimentos } from '@/lib/data/investimentos';
+import { fetchFilteredInvestimentos } from '@/modules/investimentos/data/investimentos';
 import { InvestimentoCompleto } from '@/lib/types';
 
 // Tipagem inferida da função de busca para garantir consistência

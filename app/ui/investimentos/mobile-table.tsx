@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { Totais } from '@/lib/types/investimento';
+import { Totais } from '@/modules/investimentos/types/investimento';
 import { InvestimentoCompleto } from '@/lib/types';
 import { formatCurrency, formatDateToMonth, formatDateToYear } from '@/lib/utils';
 import { ButtonLinkDelete } from '@/app/ui/investimentos/buttonLinkDelete';

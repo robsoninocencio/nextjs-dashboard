@@ -1,12 +1,15 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { InvestimentoForm } from '@/lib/types/investimento';
+import { InvestimentoForm } from '@/modules/investimentos/types/investimento';
 import { ClienteField } from '@/lib/types/cliente';
 import { BancoField } from '@/lib/types/banco';
 import { AtivoField } from '@/lib/types/ativo';
 
-import { updateInvestimento, InvestimentoFormState } from '@/lib/actions/investimento-actions';
+import {
+  updateInvestimento,
+  InvestimentoFormState,
+} from '@/modules/investimentos/actions/investimento-actions';
 import { formatDateToMonth, formatDateToYear } from '@/lib/utils';
 import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
 

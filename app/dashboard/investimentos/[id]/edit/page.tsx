@@ -8,8 +8,8 @@ import { fetchAtivos } from '@/lib/data/ativos';
 
 import Form from '@/app/ui/investimentos/edit-form';
 
-import { fetchInvestimentoById } from '@/lib/data/investimentos';
-import type { InvestimentoForm } from '@/lib/types/investimento';
+import { fetchInvestimentoById } from '@/modules/investimentos/data/investimentos';
+import type { InvestimentoForm } from '@/modules/investimentos/types/investimento';
 
 import { Metadata } from 'next';
 

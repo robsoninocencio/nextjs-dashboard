@@ -13,14 +13,14 @@ import { PerformanceChart } from '@/app/ui/investimentos/performance-chart';
 import { ProfitabilityChart } from '@/app/ui/investimentos/profitability-chart';
 import { DiversificationCharts } from '@/app/ui/investimentos/diversification-charts';
 
-import { fetchInvestimentosPages } from '@/lib/data/investimentos';
+import { fetchInvestimentosPages } from '@/modules/investimentos/data/investimentos';
 import { fetchCategorias } from '@/lib/data/categorias';
 import {
   fetchAggregatedMetrics,
   fetchPerformanceData,
   fetchDiversificationByCategory,
   fetchDiversificationByBank,
-} from '@/lib/actions/investimento-analytics';
+} from '@/modules/investimentos/analytics/investimento-analytics';
 
 import { Metadata } from 'next';
 

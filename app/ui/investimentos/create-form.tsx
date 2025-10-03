@@ -1,7 +1,10 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { createInvestimento, InvestimentoFormState } from '@/lib/actions/investimento-actions';
+import {
+  createInvestimento,
+  InvestimentoFormState,
+} from '@/modules/investimentos/actions/investimento-actions';
 
 import InvestmentForm from './form';
 

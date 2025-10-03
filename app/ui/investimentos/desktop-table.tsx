@@ -16,7 +16,7 @@ import {
   Totais,
   GrupoInvestimento,
   GrupoInvestimentoComTotais,
-} from '@/lib/types/investimento';
+} from '@/modules/investimentos/types/investimento';
 import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
 import { ButtonLinkDelete } from '@/app/ui/investimentos/buttonLinkDelete';
 
@@ -463,7 +463,7 @@ export default function DesktopInvestimentosTable({
     return Object.values(groupInvestimentos(investimentos)).map(group => {
       // Calcula os totais para cada grupo
       const groupTotals = group.investimentos.reduce(
-        (acc, inv) => {
+        (acc: Totais, inv: InvestimentoCompleto) => {
           acc.rendimentoDoMes += inv.rendimentoDoMes;
           acc.dividendosDoMes += inv.dividendosDoMes;
           acc.valorAplicado += inv.valorAplicado;
@@ -711,7 +711,7 @@ export default function DesktopInvestimentosTable({
                 <React.Fragment key={`${group.cliente}-${group.ano}-${group.mes}`}>
                   <GroupHeaderRow group={group} colSpan={colSpan} />
                   <TableHeaderRow visibleHeaders={visibleHeaders} />
-                  {group.investimentos.map((investimento, index) => (
+                  {group.investimentos.map((investimento: InvestimentoCompleto, index: number) => (
                     <InvestmentRow
                       key={investimento.id}
                       investimento={investimento}

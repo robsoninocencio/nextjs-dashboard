@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { prisma } from '@/lib/prisma';
-import { fetchInvestimentoAnterior } from '@/lib/data/investimentos';
+import { fetchInvestimentoAnterior } from '@/modules/investimentos/data/investimentos';
 import { fetchAtivos } from '@/lib/data/ativos';
 
 // ===================================================================
