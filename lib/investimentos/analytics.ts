@@ -195,19 +195,30 @@ export async function fetchDiversificationByCategory(filters: InvestmentFiltersP
 
     const where = buildInvestimentosFilters(filters, categoriaIds);
 
+    // Buscar IDs dos ativos que correspondem aos filtros
+    const ativos = await prisma.ativos.findMany({
+      where: where.ativos || {},
+      select: { id: true },
+    });
+    const ativoIds = ativos.map(a => a.id);
+
+    if (ativoIds.length === 0) {
+      return [];
+    }
+
     const categoryData = await prisma.$queryRaw<Array<{ categoria: string; valor: number }>>(
       Prisma.sql`
         SELECT
           COALESCE(c.nome, 'Sem Categoria') as categoria,
-      SUM(i."saldoBruto") as valor
-    FROM investimentos i
-    LEFT JOIN ativos a ON i."ativoId" = a.id
-    LEFT JOIN ativo_categoria ac ON a.id = ac."ativoId"
-    LEFT JOIN categorias c ON ac."categoriaId" = c.id
-    WHERE TRUE
-    GROUP BY c.nome
-    HAVING SUM(i."saldoBruto") > 0
-    ORDER BY valor DESC
+          SUM(i."saldoBruto") as valor
+        FROM investimentos i
+        LEFT JOIN ativos a ON i."ativoId" = a.id
+        LEFT JOIN ativo_categoria ac ON a.id = ac."ativoId"
+        LEFT JOIN categorias c ON ac."categoriaId" = c.id
+        WHERE i."ativoId" = ANY(${ativoIds}::uuid[])
+        GROUP BY c.nome
+        HAVING SUM(i."saldoBruto") > 0
+        ORDER BY valor DESC
       `
     );
 
@@ -229,17 +240,28 @@ export async function fetchDiversificationByBank(filters: InvestmentFiltersParam
 
     const where = buildInvestimentosFilters(filters, categoriaIds);
 
+    // Buscar IDs dos ativos que correspondem aos filtros
+    const ativos = await prisma.ativos.findMany({
+      where: where.ativos || {},
+      select: { id: true },
+    });
+    const ativoIds = ativos.map(a => a.id);
+
+    if (ativoIds.length === 0) {
+      return [];
+    }
+
     const bankData = await prisma.$queryRaw<Array<{ banco: string; valor: number }>>(
       Prisma.sql`
         SELECT
           b.nome as banco,
-      SUM(i."saldoBruto") as valor
-    FROM investimentos i
-    LEFT JOIN bancos b ON i."bancoId" = b.id
-    WHERE TRUE
-    GROUP BY b.nome
-    HAVING SUM(i."saldoBruto") > 0
-    ORDER BY valor DESC
+          SUM(i."saldoBruto") as valor
+        FROM investimentos i
+        LEFT JOIN bancos b ON i."bancoId" = b.id
+        WHERE i."ativoId" = ANY(${ativoIds}::uuid[])
+        GROUP BY b.nome
+        HAVING SUM(i."saldoBruto") > 0
+        ORDER BY valor DESC
       `
     );
 
