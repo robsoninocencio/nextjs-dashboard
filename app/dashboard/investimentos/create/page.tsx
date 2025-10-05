@@ -1,10 +1,10 @@
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
 import Form from '@/app/ui/investimentos/create-form';
 
-import { fetchClientes } from '@/lib/data/clientes';
-import { fetchBancos } from '@/lib/data/bancos';
-import { fetchAtivos } from '@/lib/data/ativos';
+import { fetchClientes } from '@/modules/clientes/data/clientes';
+import { fetchBancos } from '@/modules/bancos/data/bancos';
+import { fetchAtivos } from '@/modules/ativos/data/ativos';
 
 import { Metadata } from 'next';
 
@@ -12,7 +12,12 @@ export const metadata: Metadata = {
   title: 'Investimentos',
 };
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedSearchParams = await searchParams;
   const [clientes, bancos, ativos] = await Promise.all([
     fetchClientes(),
     fetchBancos(),
@@ -31,7 +36,12 @@ export default async function Page() {
           },
         ]}
       />
-      <Form clientes={clientes} bancos={bancos} ativos={ativos} />
+      <Form
+        clientes={clientes}
+        bancos={bancos}
+        ativos={ativos}
+        searchParams={resolvedSearchParams}
+      />
     </main>
   );
 }

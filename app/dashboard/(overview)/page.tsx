@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { lusitana } from '@/app/ui/shared/fonts';
+import { lusitana } from '@/components/shared/fonts';
 
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import LatestInvoices from '@/app/ui/dashboard/latest-invoices';

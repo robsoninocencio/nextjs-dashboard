@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
-import { fetchCategorias } from '@/lib/data/categorias';
+import { fetchCategorias } from '@/modules/categorias/data/categorias';
 
 import Form from '@/app/ui/categorias/edit-form';
 
-import { fetchCategoriaById } from '@/lib/data/categorias';
-import type { Categoria } from '@/lib/types/categoria';
+import { fetchCategoriaById } from '@/modules/categorias/data/categorias';
+import type { Categoria } from '@/modules/categorias/types/categoria';
 
 import { Metadata } from 'next';
 

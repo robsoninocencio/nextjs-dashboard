@@ -7,7 +7,7 @@ import { EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { TipoForm } from '@/lib/types/tipo';
 import { TipoField } from '@/lib/types/tipo';
 
-import { Button } from '@/app/ui/shared/button';
+import { Button } from '@/components/shared/button';
 import { updateTipo, UpdateTipoFormState } from '@/lib/actions/tipo-actions';
 
 export default function EditTipoForm({ tipo, tipos }: { tipo: TipoForm; tipos: TipoField[] }) {

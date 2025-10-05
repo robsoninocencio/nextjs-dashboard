@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
-import { fetchBancos } from '@/lib/data/bancos';
+import { fetchBancos } from '@/modules/bancos/data/bancos';
 
 import Form from '@/app/ui/bancos/edit-form';
 
-import { fetchBancoById } from '@/lib/data/bancos';
-import type { Banco } from '@/lib/types/banco';
+import { fetchBancoById } from '@/modules/bancos/data/bancos';
+import type { Banco } from '@/modules/bancos/types/banco';
 
 import { Metadata } from 'next';
 

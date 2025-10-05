@@ -4,14 +4,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { InvestimentoForm } from '@/modules/investimentos/types/investimento';
 import { ClienteField } from '@/lib/types/cliente';
 import { BancoField } from '@/lib/types/banco';
-import { AtivoField } from '@/lib/types/ativo';
+import { AtivoField } from '@/modules/ativos/types/ativo';
 
 import {
   updateInvestimento,
   InvestimentoFormState,
 } from '@/modules/investimentos/actions/investimento-actions';
 import { formatDateToMonth, formatDateToYear } from '@/lib/utils';
-import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
+import { SelectField, CurrencyField } from '@/components/shared/form-fields';
 
 import InvestmentForm from './form';
 

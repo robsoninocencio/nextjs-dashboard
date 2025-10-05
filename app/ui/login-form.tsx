@@ -6,8 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
-import { Button } from '@/app/ui/shared/button';
-import { lusitana } from '@/app/ui/shared/fonts';
+import { Button } from '@/components/shared/button';
+import { lusitana } from '@/components/shared/fonts';
 import { authenticate } from '@/lib/actions';
 
 export default function LoginForm() {

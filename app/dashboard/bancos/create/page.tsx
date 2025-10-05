@@ -1,5 +1,5 @@
 import Form from '@/app/ui/bancos/create-form';
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

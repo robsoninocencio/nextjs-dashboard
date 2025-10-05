@@ -1,15 +1,15 @@
 import { Suspense } from 'react';
 
-import SearchCategoria from '@/app/ui/shared/searchCategoria';
+import SearchCategoria from '@/components/shared/searchCategoria';
 
-import { lusitana } from '@/app/ui/shared/fonts';
-import Pagination from '@/app/ui/shared/pagination';
-import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
+import { lusitana } from '@/components/shared/fonts';
+import Pagination from '@/components/shared/pagination';
+import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
 
 import Table from '@/app/ui/categorias/table';
 import { CategoriasTableSkeleton } from '@/app/ui/categorias/skeletons';
 
-import { fetchCategoriasPages } from '@/lib/data/categorias';
+import { fetchCategoriasPages } from '@/modules/categorias/data/categorias';
 
 import { Metadata } from 'next';
 

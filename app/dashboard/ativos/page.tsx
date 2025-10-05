@@ -1,17 +1,17 @@
 import { Suspense } from 'react';
 
-import Search from '@/app/ui/shared/search';
-import CategoriaFilter from '@/app/ui/shared/categoria-filter';
+import Search from '@/components/shared/search';
+import CategoriaFilter from '@/components/shared/categoria-filter';
 
-import { lusitana } from '@/app/ui/shared/fonts';
-import Pagination from '@/app/ui/shared/pagination';
-import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
+import { lusitana } from '@/components/shared/fonts';
+import Pagination from '@/components/shared/pagination';
+import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
 
 import Table from '@/app/ui/ativos/table';
 import { AtivosTableSkeleton } from '@/app/ui/ativos/skeletons';
 
-import { fetchAtivosPages } from '@/lib/data/ativos';
-import { fetchCategorias } from '@/lib/data/categorias';
+import { fetchAtivosPages } from '@/modules/ativos/data/ativos';
+import { fetchCategorias } from '@/modules/categorias/data/categorias';
 
 import { Metadata } from 'next';
 

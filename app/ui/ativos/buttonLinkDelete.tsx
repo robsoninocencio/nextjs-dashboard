@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { deleteAtivo } from '@/lib/actions/ativo-actions';
+import { deleteAtivo } from '@/modules/ativos/actions/ativo-actions';
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const deleteAtivoWithId = deleteAtivo.bind(null, id);

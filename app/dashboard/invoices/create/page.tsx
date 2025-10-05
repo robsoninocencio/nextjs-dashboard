@@ -1,8 +1,8 @@
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
 import Form from '@/app/ui/invoices/create-form';
 
-import { fetchClientes } from '@/lib/data/clientes';
+import { fetchClientes } from '@/modules/clientes/data/clientes';
 
 import { Metadata } from 'next';
 

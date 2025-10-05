@@ -7,8 +7,8 @@ import { CheckIcon, ClockIcon, EnvelopeIcon, UserCircleIcon } from '@heroicons/r
 import { ClienteForm } from '@/lib/types/cliente';
 import { ClienteField } from '@/lib/types/cliente';
 
-import { Button } from '@/app/ui/shared/button';
-import { updateCliente, UpdateClienteFormState } from '@/lib/actions/cliente-actions';
+import { Button } from '@/components/shared/button';
+import { updateCliente, UpdateClienteFormState } from '@/modules/clientes/actions/cliente-actions';
 
 export default function EditClienteForm({
   cliente,

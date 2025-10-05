@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
 
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
-import { fetchClientes } from '@/lib/data/clientes';
+import { fetchClientes } from '@/modules/clientes/data/clientes';
 
 import Form from '@/app/ui/clientes/edit-form';
 
-import { fetchClienteById } from '@/lib/data/clientes';
+import { fetchClienteById } from '@/modules/clientes/data/clientes';
 import type { Cliente } from '@/lib/types/cliente';
 
 import { Metadata } from 'next';

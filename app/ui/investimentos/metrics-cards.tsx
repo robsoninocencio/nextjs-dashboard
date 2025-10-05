@@ -3,15 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/utils';
 import { TrendingUp, TrendingDown, DollarSign, PieChart, Banknote, Receipt } from 'lucide-react';
+import { Decimal } from '@prisma/client/runtime/library';
 
 interface MetricsData {
-  totalInvestido: number;
-  totalResgatado: number;
-  totalRendimento: number;
-  totalDividendos: number;
-  saldoBrutoAtual: number;
-  saldoLiquidoAtual: number;
-  totalImpostos: number;
+  totalInvestido: number | Decimal;
+  totalResgatado: number | Decimal;
+  totalRendimento: number | Decimal;
+  totalDividendos: number | Decimal;
+  saldoBrutoAtual: number | Decimal;
+  saldoLiquidoAtual: number | Decimal;
+  totalImpostos: number | Decimal;
   totalAtivos: number;
 }
 
@@ -23,49 +24,68 @@ export function MetricsCards({ data }: MetricsCardsProps) {
   const cards = [
     {
       title: 'Total Investido',
-      value: data.totalInvestido,
+      value:
+        typeof data.totalInvestido === 'number'
+          ? data.totalInvestido
+          : data.totalInvestido.toNumber(),
       icon: DollarSign,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
     },
     {
       title: 'Saldo Bruto Atual',
-      value: data.saldoBrutoAtual,
+      value:
+        typeof data.saldoBrutoAtual === 'number'
+          ? data.saldoBrutoAtual
+          : data.saldoBrutoAtual.toNumber(),
       icon: Banknote,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
     },
     {
       title: 'Saldo Líquido Atual',
-      value: data.saldoLiquidoAtual,
+      value:
+        typeof data.saldoLiquidoAtual === 'number'
+          ? data.saldoLiquidoAtual
+          : data.saldoLiquidoAtual.toNumber(),
       icon: TrendingUp,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
     },
     {
       title: 'Total Rendimentos',
-      value: data.totalRendimento,
+      value:
+        typeof data.totalRendimento === 'number'
+          ? data.totalRendimento
+          : data.totalRendimento.toNumber(),
       icon: TrendingUp,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
     },
     {
       title: 'Total Dividendos',
-      value: data.totalDividendos,
+      value:
+        typeof data.totalDividendos === 'number'
+          ? data.totalDividendos
+          : data.totalDividendos.toNumber(),
       icon: Receipt,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
     },
     {
       title: 'Total Resgatado',
-      value: data.totalResgatado,
+      value:
+        typeof data.totalResgatado === 'number'
+          ? data.totalResgatado
+          : data.totalResgatado.toNumber(),
       icon: TrendingDown,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
     },
     {
       title: 'Total Impostos',
-      value: data.totalImpostos,
+      value:
+        typeof data.totalImpostos === 'number' ? data.totalImpostos : data.totalImpostos.toNumber(),
       icon: Receipt,
       color: 'text-gray-600',
       bgColor: 'bg-gray-50',

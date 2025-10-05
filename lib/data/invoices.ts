@@ -1,4 +1,10 @@
 import { prisma } from '@/lib/prisma';
+import { Decimal } from '@prisma/client/runtime/library';
+
+// Helper function to convert Decimal to number
+const toNumber = (value: Decimal | number): number => {
+  return typeof value === 'number' ? value : value.toNumber();
+};
 
 const ITEMS_PER_PAGE = 6;
 
@@ -82,7 +88,7 @@ export async function fetchInvoiceById(id: string) {
 
     return {
       ...invoice,
-      amount: invoice.amount / 100, // Converte de centavos para dólares
+      amount: toNumber(invoice.amount) / 100, // Converte de centavos para dólares
     };
   } catch (error) {
     console.error(`Erro ao buscar fatura com ID ${id}:`, error);

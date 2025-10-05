@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { Button } from '@/app/ui/shared/button';
+import { Button } from '@/components/shared/button';
 
 import { CategoriaForm } from '@/lib/types/categoria';
 

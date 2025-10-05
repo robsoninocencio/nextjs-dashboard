@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { Decimal } from '@prisma/client/runtime/library';
 
 import type { Revenue } from './types/dashboard';
 
@@ -7,8 +8,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('pt-BR', {
+export const formatCurrency = (amount: number | Decimal) => {
+  const numericAmount = typeof amount === 'number' ? amount : amount.toNumber();
+  return (numericAmount / 100).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });

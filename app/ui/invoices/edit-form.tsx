@@ -12,7 +12,7 @@ import {
 import { InvoiceForm } from '@/lib/types/invoice';
 import { ClienteField } from '@/lib/types/cliente';
 
-import { Button } from '@/app/ui/shared/button';
+import { Button } from '@/components/shared/button';
 
 // import { updateInvoice, State } from "@/app/lib/invoices/actions";
 import { updateInvoice, InvoiceFormState } from '@/lib/actions/invoice-actions';

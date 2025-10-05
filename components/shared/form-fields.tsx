@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, useState } from 'react';
-import CustomCurrencyInput from '@/app/ui/shared/currency-input';
+import CustomCurrencyInput from '@/components/shared/currency-input';
 import {
   Select,
   SelectContent,

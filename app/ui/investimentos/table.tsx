@@ -43,15 +43,51 @@ export default async function Table({ currentPage, filters }: InvestimentosTable
   // Calcular totais
   const totais: Totais = (investimentos || []).reduce(
     (acc, investimento) => ({
-      rendimentoDoMes: acc.rendimentoDoMes + investimento.rendimentoDoMes,
-      dividendosDoMes: acc.dividendosDoMes + investimento.dividendosDoMes,
-      valorAplicado: acc.valorAplicado + investimento.valorAplicado,
-      saldoAnterior: acc.saldoAnterior + investimento.saldoAnterior,
-      saldoBruto: acc.saldoBruto + investimento.saldoBruto, // Removido Math.round para consistência
-      valorResgatado: acc.valorResgatado + investimento.valorResgatado,
-      impostoIncorrido: acc.impostoIncorrido + investimento.impostoIncorrido,
-      impostoPrevisto: acc.impostoPrevisto + investimento.impostoPrevisto,
-      saldoLiquido: acc.saldoLiquido + investimento.saldoLiquido,
+      rendimentoDoMes:
+        acc.rendimentoDoMes +
+        (typeof investimento.rendimentoDoMes === 'number'
+          ? investimento.rendimentoDoMes
+          : investimento.rendimentoDoMes.toNumber()),
+      dividendosDoMes:
+        acc.dividendosDoMes +
+        (typeof investimento.dividendosDoMes === 'number'
+          ? investimento.dividendosDoMes
+          : investimento.dividendosDoMes.toNumber()),
+      valorAplicado:
+        acc.valorAplicado +
+        (typeof investimento.valorAplicado === 'number'
+          ? investimento.valorAplicado
+          : investimento.valorAplicado.toNumber()),
+      saldoAnterior:
+        acc.saldoAnterior +
+        (typeof investimento.saldoAnterior === 'number'
+          ? investimento.saldoAnterior
+          : investimento.saldoAnterior.toNumber()),
+      saldoBruto:
+        acc.saldoBruto +
+        (typeof investimento.saldoBruto === 'number'
+          ? investimento.saldoBruto
+          : investimento.saldoBruto.toNumber()), // Removido Math.round para consistência
+      valorResgatado:
+        acc.valorResgatado +
+        (typeof investimento.valorResgatado === 'number'
+          ? investimento.valorResgatado
+          : investimento.valorResgatado.toNumber()),
+      impostoIncorrido:
+        acc.impostoIncorrido +
+        (typeof investimento.impostoIncorrido === 'number'
+          ? investimento.impostoIncorrido
+          : investimento.impostoIncorrido.toNumber()),
+      impostoPrevisto:
+        acc.impostoPrevisto +
+        (typeof investimento.impostoPrevisto === 'number'
+          ? investimento.impostoPrevisto
+          : investimento.impostoPrevisto.toNumber()),
+      saldoLiquido:
+        acc.saldoLiquido +
+        (typeof investimento.saldoLiquido === 'number'
+          ? investimento.saldoLiquido
+          : investimento.saldoLiquido.toNumber()),
     }),
     {
       rendimentoDoMes: 0,
@@ -83,6 +119,7 @@ export default async function Table({ currentPage, filters }: InvestimentosTable
                   key={investimento.id}
                   investimento={investimento}
                   searchParams={searchParams}
+                  filters={searchParams}
                 />
               ))}
               {investimentos?.length > 0 && <MobileTotals totais={totais} />}

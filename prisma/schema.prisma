@@ -45,7 +45,7 @@ model clientes {
 
 model invoices {
   id        String   @id @default(uuid()) @db.Uuid
-  amount    Int
+  amount    Decimal  @db.Decimal(15, 2)
   status    String   @db.VarChar(255)
   // date        DateTime @db.Date
   date      DateTime
@@ -68,15 +68,15 @@ model investimentos {
   data             DateTime @db.Date
   ano              String   @db.VarChar(4)
   mes              String   @db.VarChar(2)
-  rendimentoDoMes  Int
-  dividendosDoMes  Int
-  valorAplicado    Int
-  saldoBruto       Int
-  saldoAnterior    Int      @default(0)
-  valorResgatado   Int
-  impostoIncorrido Int
-  impostoPrevisto  Int
-  saldoLiquido     Int
+  rendimentoDoMes  Decimal  @db.Decimal(15, 2)
+  dividendosDoMes  Decimal  @db.Decimal(15, 2)
+  valorAplicado    Decimal  @db.Decimal(15, 2)
+  saldoBruto       Decimal  @db.Decimal(15, 2)
+  saldoAnterior    Decimal  @default(0) @db.Decimal(15, 2)
+  valorResgatado   Decimal  @db.Decimal(15, 2)
+  impostoIncorrido Decimal  @db.Decimal(15, 2)
+  impostoPrevisto  Decimal  @db.Decimal(15, 2)
+  saldoLiquido     Decimal  @db.Decimal(15, 2)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -184,7 +184,7 @@ model bancos {
 
 model revenue {
   month     String   @id @db.VarChar(4)
-  revenue   Int
+  revenue   Decimal  @db.Decimal(15, 2)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -1,6 +1,13 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { InvestmentFiltersParams } from '@/modules/investimentos/data/investimentos';
+import { Decimal } from '@prisma/client/runtime/library';
+
+// Helper function to convert Decimal to number
+const toNumber = (value: Decimal | number | null | undefined): number => {
+  if (value === null || value === undefined) return 0;
+  return typeof value === 'number' ? value : value.toNumber();
+};
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
@@ -103,11 +110,11 @@ export async function fetchPerformanceData(filters: InvestmentFiltersParams) {
       periodo: `${item.ano}-${item.mes.padStart(2, '0')}`,
       ano: item.ano,
       mes: item.mes,
-      saldoBruto: item._sum.saldoBruto || 0,
-      rendimentoDoMes: item._sum.rendimentoDoMes || 0,
-      dividendosDoMes: item._sum.dividendosDoMes || 0,
-      valorAplicado: item._sum.valorAplicado || 0,
-      valorResgatado: item._sum.valorResgatado || 0,
+      saldoBruto: toNumber(item._sum.saldoBruto),
+      rendimentoDoMes: toNumber(item._sum.rendimentoDoMes),
+      dividendosDoMes: toNumber(item._sum.dividendosDoMes),
+      valorAplicado: toNumber(item._sum.valorAplicado),
+      valorResgatado: toNumber(item._sum.valorResgatado),
     }));
   } catch (error) {
     console.error('Erro ao buscar dados de performance:', error);
@@ -164,18 +171,25 @@ export async function fetchAggregatedMetrics(filters: InvestmentFiltersParams) {
           saldoLiquido: true,
         },
       });
-      saldoBrutoAtual = saldoAgg._sum.saldoBruto || 0;
-      saldoLiquidoAtual = saldoAgg._sum.saldoLiquido || 0;
+      saldoBrutoAtual =
+        typeof saldoAgg._sum.saldoBruto === 'number'
+          ? saldoAgg._sum.saldoBruto
+          : saldoAgg._sum.saldoBruto?.toNumber() || 0;
+      saldoLiquidoAtual =
+        typeof saldoAgg._sum.saldoLiquido === 'number'
+          ? saldoAgg._sum.saldoLiquido
+          : saldoAgg._sum.saldoLiquido?.toNumber() || 0;
     }
 
     return {
-      totalInvestido: metrics._sum.valorAplicado || 0,
-      totalResgatado: metrics._sum.valorResgatado || 0,
-      totalRendimento: metrics._sum.rendimentoDoMes || 0,
-      totalDividendos: metrics._sum.dividendosDoMes || 0,
+      totalInvestido: toNumber(metrics._sum.valorAplicado),
+      totalResgatado: toNumber(metrics._sum.valorResgatado),
+      totalRendimento: toNumber(metrics._sum.rendimentoDoMes),
+      totalDividendos: toNumber(metrics._sum.dividendosDoMes),
       saldoBrutoAtual,
       saldoLiquidoAtual,
-      totalImpostos: (metrics._sum.impostoIncorrido || 0) + (metrics._sum.impostoPrevisto || 0),
+      totalImpostos:
+        toNumber(metrics._sum.impostoIncorrido) + toNumber(metrics._sum.impostoPrevisto),
       totalAtivos: metrics._count.id,
     };
   } catch (error) {
@@ -195,34 +209,65 @@ export async function fetchDiversificationByCategory(filters: InvestmentFiltersP
 
     const where = buildInvestimentosFilters(filters, categoriaIds);
 
-    // Buscar IDs dos ativos que correspondem aos filtros
-    const ativos = await prisma.ativos.findMany({
-      where: where.ativos || {},
-      select: { id: true },
-    });
-    const ativoIds = ativos.map(a => a.id);
+    let finalWhere: Prisma.investimentosWhereInput = where;
 
-    if (ativoIds.length === 0) {
+    // Se o mês não for especificado, devemos encontrar o mês mais recente para os filtros dados (especialmente o ano).
+    if (!filters.mes) {
+      const latestEntry = await prisma.investimentos.findFirst({
+        where, // Usa os filtros já aplicados (ex: ano=2024, cliente=X)
+        orderBy: [{ ano: 'desc' }, { mes: 'desc' }],
+        select: { ano: true, mes: true },
+      });
+
+      // Se encontrarmos uma data, usamos ela para a consulta final.
+      if (latestEntry) {
+        // Constrói o filtro final para usar o ano e mês mais recentes encontrados.
+        finalWhere.ano = latestEntry.ano;
+        finalWhere.mes = latestEntry.mes;
+      }
+    }
+
+    // 1. Agrupa os investimentos por ativo para obter o saldo de cada um
+    const assetBalances = await prisma.investimentos.groupBy({
+      by: ['ativoId'],
+      where: finalWhere,
+      _sum: {
+        saldoBruto: true,
+      },
+    });
+
+    if (assetBalances.length === 0) {
       return [];
     }
 
-    const categoryData = await prisma.$queryRaw<Array<{ categoria: string; valor: number }>>(
-      Prisma.sql`
-        SELECT
-          COALESCE(c.nome, 'Sem Categoria') as categoria,
-          SUM(i."saldoBruto") as valor
-        FROM investimentos i
-        LEFT JOIN ativos a ON i."ativoId" = a.id
-        LEFT JOIN ativo_categoria ac ON a.id = ac."ativoId"
-        LEFT JOIN categorias c ON ac."categoriaId" = c.id
-        WHERE i."ativoId" = ANY(${ativoIds}::uuid[])
-        GROUP BY c.nome
-        HAVING SUM(i."saldoBruto") > 0
-        ORDER BY valor DESC
-      `
+    const assetIds = assetBalances.map(b => b.ativoId);
+
+    // 2. Busca as categorias para os ativos encontrados
+    const assetsWithCategories = await prisma.ativos.findMany({
+      where: { id: { in: assetIds } },
+      select: {
+        id: true,
+        ativo_categorias: {
+          select: { categoria: { select: { nome: true } } },
+        },
+      },
+    });
+
+    // 3. Agrega os saldos por categoria
+    const categoryTotals: { [key: string]: number } = {};
+    const assetIdToBalanceMap = new Map(
+      assetBalances.map(ab => [ab.ativoId, toNumber(ab._sum.saldoBruto)])
     );
 
-    return categoryData;
+    for (const asset of assetsWithCategories) {
+      const categoryName = asset.ativo_categorias[0]?.categoria.nome || 'Sem Categoria';
+      const balance = assetIdToBalanceMap.get(asset.id) || 0;
+      categoryTotals[categoryName] = (categoryTotals[categoryName] || 0) + balance;
+    }
+
+    return Object.entries(categoryTotals)
+      .map(([categoria, valor]) => ({ categoria, valor }))
+      .sort((a, b) => b.valor - a.valor);
   } catch (error) {
     console.error('Erro ao buscar diversificação por categoria:', error);
     throw new Error('Erro ao buscar diversificação por categoria.');
@@ -240,32 +285,63 @@ export async function fetchDiversificationByBank(filters: InvestmentFiltersParam
 
     const where = buildInvestimentosFilters(filters, categoriaIds);
 
-    // Buscar IDs dos ativos que correspondem aos filtros
-    const ativos = await prisma.ativos.findMany({
-      where: where.ativos || {},
-      select: { id: true },
-    });
-    const ativoIds = ativos.map(a => a.id);
+    let finalWhere = where;
 
-    if (ativoIds.length === 0) {
+    // Se o mês não for especificado, devemos encontrar o mês mais recente para os filtros dados (especialmente o ano).
+    if (!filters.mes) {
+      const latestEntry = await prisma.investimentos.findFirst({
+        where, // Usa os filtros já aplicados (ex: ano=2024, cliente=X)
+        orderBy: [{ ano: 'desc' }, { mes: 'desc' }],
+        select: { ano: true, mes: true },
+      });
+
+      // Se encontrarmos uma data, usamos ela para a consulta final.
+      if (latestEntry) {
+        // Constrói o filtro final para usar o ano e mês mais recentes encontrados.
+        finalWhere = {
+          ...where,
+          ano: latestEntry.ano,
+          mes: latestEntry.mes,
+        };
+      }
+    }
+
+    const bankData = await prisma.investimentos.groupBy({
+      by: ['bancoId'], // Agrupa pelo ID do banco
+      where: finalWhere,
+      _sum: {
+        saldoBruto: true,
+      },
+      orderBy: {
+        _sum: {
+          saldoBruto: 'desc',
+        },
+      },
+    });
+
+    if (bankData.length === 0) {
       return [];
     }
 
-    const bankData = await prisma.$queryRaw<Array<{ banco: string; valor: number }>>(
-      Prisma.sql`
-        SELECT
-          b.nome as banco,
-          SUM(i."saldoBruto") as valor
-        FROM investimentos i
-        LEFT JOIN bancos b ON i."bancoId" = b.id
-        WHERE i."ativoId" = ANY(${ativoIds}::uuid[])
-        GROUP BY b.nome
-        HAVING SUM(i."saldoBruto") > 0
-        ORDER BY valor DESC
-      `
-    );
+    // 1. Extrair os IDs dos bancos do resultado do groupBy
+    const bankIds = bankData.map(item => item.bancoId);
 
-    return bankData;
+    // 2. Buscar os nomes dos bancos correspondentes aos IDs
+    const bancos = await prisma.bancos.findMany({
+      where: {
+        id: { in: bankIds },
+      },
+      select: { id: true, nome: true },
+    });
+
+    // 3. Criar um mapa de ID para Nome para facilitar a busca
+    const bankIdToNameMap = new Map(bancos.map(b => [b.id, b.nome]));
+
+    // 4. Mapear o resultado final, substituindo o ID pelo nome do banco
+    return bankData.map(item => ({
+      banco: bankIdToNameMap.get(item.bancoId) || 'Banco Desconhecido',
+      valor: toNumber(item._sum.saldoBruto),
+    }));
   } catch (error) {
     console.error('Erro ao buscar diversificação por banco:', error);
     throw new Error('Erro ao buscar diversificação por banco.');

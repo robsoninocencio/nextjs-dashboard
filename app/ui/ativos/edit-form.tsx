@@ -8,11 +8,11 @@ import { TagIcon, FileText, Check, ChevronsUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { Ativo } from '@/lib/types/ativo';
+import { Ativo } from '@/modules/ativos/types/ativo';
 import { TipoField } from '@/lib/types/tipo';
 import { CategoriaField } from '@/lib/types/categoria';
 
-import { updateAtivo, AtivoFormState } from '@/lib/actions/ativo-actions';
+import { updateAtivo, AtivoFormState } from '@/modules/ativos/actions/ativo-actions';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';

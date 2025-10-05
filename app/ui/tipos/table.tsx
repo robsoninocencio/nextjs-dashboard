@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
+import { ButtonLinkUpdate } from '@/components/shared/buttonLinkUpdate';
 
 import { DeleteTipo, UpdateTipo } from '@/app/ui/tipos/buttons';
 import { fetchFilteredTipos } from '@/lib/data/tipos';

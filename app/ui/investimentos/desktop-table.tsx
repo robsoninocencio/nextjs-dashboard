@@ -9,7 +9,6 @@ import {
   TableRow,
   TableFooter,
 } from '@/components/ui/table';
-import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/24/solid';
 import { formatCurrency, formatToDecimals } from '@/lib/utils';
 import { InvestimentoCompleto } from '@/lib/types';
 import {
@@ -17,10 +16,19 @@ import {
   GrupoInvestimento,
   GrupoInvestimentoComTotais,
 } from '@/modules/investimentos/types/investimento';
-import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
+import { ButtonLinkUpdate } from '@/components/shared/buttonLinkUpdate';
 import { ButtonLinkDelete } from '@/app/ui/investimentos/buttonLinkDelete';
+import StyledValue from '@/components/table/StyledValue';
+import HeaderIndicator from '@/components/table/HeaderIndicator';
+import GroupHeaderRow from '@/components/table/GroupHeaderRow';
+import { Decimal } from '@prisma/client/runtime/library';
 
 import { Card, CardContent } from '@/components/ui/card';
+
+// Helper function to convert Decimal to number
+const toNumber = (value: number | Decimal): number => {
+  return typeof value === 'number' ? value : value.toNumber();
+};
 
 type HeaderConfig = {
   label: string;
@@ -59,89 +67,6 @@ const calculatePercentage = (value: number, total: number) => {
   return (value / total) * 100;
 };
 
-// Helper function para estilização condicional de valores
-const StyledValue = ({
-  value,
-  type = 'default',
-  isBold = false,
-  showAsPercentage = false,
-}: {
-  value: number;
-  type?:
-    | 'profit'
-    | 'loss'
-    | 'neutral'
-    | 'default'
-    | 'tax'
-    | 'balance'
-    | 'good'
-    | 'very-good'
-    | 'excellent';
-  isBold?: boolean;
-  showAsPercentage?: boolean;
-}) => {
-  const isNegative = value < 0;
-  const isZero = value === 0;
-
-  const getStyles = () => {
-    if (isZero) {
-      return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-
-    switch (type) {
-      case 'profit':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-emerald-600 bg-emerald-50 border-emerald-200';
-      case 'loss':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'tax':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-orange-600 bg-orange-50 border-orange-200';
-      case 'balance':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'neutral':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-gray-700 bg-yellow-100 border-gray-200';
-      case 'good':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-emerald-500 bg-emerald-50 border-emerald-200';
-      case 'very-good':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-emerald-700 bg-emerald-100 border-emerald-300';
-      case 'excellent':
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-emerald-900 bg-emerald-200 border-emerald-400';
-
-      default:
-        return isNegative
-          ? 'text-red-600 bg-red-50 border-red-200'
-          : 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-  };
-
-  const styles = getStyles();
-  const displayValue = showAsPercentage
-    ? `${formatToDecimals(Math.abs(value), 6)}%`
-    : formatCurrency(Math.abs(value));
-
-  return (
-    <span className={`font-medium py-1 rounded border ${styles} ${isBold ? 'font-bold' : ''}`}>
-      {isNegative && !isZero && '-'}
-      {displayValue}
-    </span>
-  );
-};
-
 const monthNames: { [key: string]: string } = {
   '01': 'Janeiro',
   '02': 'Fevereiro',
@@ -155,72 +80,6 @@ const monthNames: { [key: string]: string } = {
   '10': 'Outubro',
   '11': 'Novembro',
   '12': 'Dezembro',
-};
-
-const HeaderIndicator = ({ label, value }: { label: string; value: number }) => {
-  const isPositive = value >= 0;
-  const intensity = Math.min(Math.abs(value) / 10000, 1); // Normaliza a intensidade
-
-  return (
-    <div className='flex items-center gap-2 p-2 rounded-lg bg-white/50 border border-gray-100 shadow-sm'>
-      <span className='text-xs font-medium text-gray-600 uppercase tracking-wide'>{label}:</span>
-      <span
-        className={`font-bold flex items-center gap-1.5 px-2 py-1 rounded-md text-sm ${
-          isPositive
-            ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
-            : 'text-red-700 bg-red-50 border border-red-200'
-        }`}
-        style={{
-          backgroundColor: isPositive
-            ? `rgba(16, 185, 129, ${0.1 + intensity * 0.15})`
-            : `rgba(239, 68, 68, ${0.1 + intensity * 0.15})`,
-        }}
-      >
-        {isPositive ? <ArrowUpIcon className='h-4 w-4' /> : <ArrowDownIcon className='h-4 w-4' />}
-        {formatCurrency(Math.abs(value))}
-      </span>
-    </div>
-  );
-};
-
-const GroupHeaderRow = ({
-  group,
-  colSpan,
-}: {
-  group: GrupoInvestimentoComTotais;
-  colSpan: number;
-}) => {
-  const evolucao = group.totals.saldoBruto - group.totals.saldoAnterior;
-  const movimentacao = group.totals.valorAplicado - group.totals.valorResgatado;
-  const rendimento = evolucao - movimentacao;
-
-  return (
-    <TableRow className='border-y-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/15 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.001] transform'>
-      <TableCell colSpan={colSpan} className='p-3'>
-        <div className='flex items-center justify-between animate-in slide-in-from-left duration-500'>
-          <div className='flex items-center gap-4'>
-            <div className='flex items-center gap-3'>
-              <div className='w-1 h-8 bg-primary rounded-full animate-pulse'></div>
-              <span className='text-foreground font-bold text-lg hover:text-primary transition-colors duration-200'>
-                {group.cliente}
-              </span>
-            </div>
-            <span className='text-primary/60 text-xl animate-in zoom-in duration-300 delay-100'>
-              •
-            </span>
-            <span className='text-muted-foreground font-semibold text-base hover:text-foreground transition-colors duration-200'>
-              {monthNames[group.mes]} de {group.ano}
-            </span>
-          </div>
-          <div className='flex gap-8 animate-in slide-in-from-right duration-500 delay-200'>
-            <HeaderIndicator label='Rendimento' value={rendimento} />
-            <HeaderIndicator label='Evolução' value={evolucao} />
-            <HeaderIndicator label='Movimentação' value={movimentacao} />
-          </div>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
 };
 
 const TableHeaderRow = ({ visibleHeaders }: { visibleHeaders: HeaderConfig[] }) => (
@@ -271,63 +130,80 @@ const InvestmentRow = ({
   investimento,
   visibleHeaders,
   searchParams,
+  filters,
 }: {
   investimento: InvestimentoCompleto;
   visibleHeaders: HeaderConfig[];
   searchParams?: { [key: string]: string | string[] | undefined };
-}) => (
-  <TableRow
-    key={investimento.id}
-    className='border-b border-gray-100 text-sm hover:bg-gray-50/80 hover:shadow-sm transition-all group animate-in fade-in slide-in-from-bottom duration-300'
-  >
-    <TableCell className='whitespace-nowrap px-2 py-1 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
-      <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
-        {investimento.bancos.nome}
-      </span>
-    </TableCell>
-    <TableCell className='whitespace-nowrap px-2 py-1 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
-      <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
-        {investimento.ativos.nome}
-      </span>
-    </TableCell>
-    <TableCell className='whitespace-nowrap px-2 py-1 align-top text-gray-700 group-hover:text-gray-900 transition-colors duration-150'>
-      <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
-        {investimento.ativos.tipos?.nome}
-      </span>
-    </TableCell>
-    <TableCell className='whitespace-nowrap px-2 py-1 align-top'>
-      <div className='flex flex-wrap gap-2'>
-        {investimento.ativos.ativo_categorias.map(({ categoria }, index) => (
-          <Badge
-            key={categoria.id}
-            variant='secondary'
-            className='text-xs px-3 py-1 font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default animate-in zoom-in duration-300'
-            style={{ animationDelay: `${index * 50}ms` }}
-          >
-            {categoria.nome}
-          </Badge>
-        ))}
-      </div>
-    </TableCell>
-    <DynamicDataCells
-      data={investimento}
-      visibleHeaders={visibleHeaders}
-      type='investment'
-      cellClassName='whitespace-nowrap px-2 py-1 text-right align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'
-    />
-    <TableCell className='whitespace-nowrap py-1 pl-2 pr-3 align-top'>
-      <div className='flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-all duration-200'>
-        <ButtonLinkUpdate
-          href={{
-            pathname: `/dashboard/investimentos/${investimento.id}/edit`,
-            query: searchParams,
-          }}
-        />
-        <ButtonLinkDelete id={investimento.id} />
-      </div>
-    </TableCell>
-  </TableRow>
-);
+  filters?: { [key: string]: string | string[] | undefined };
+}) => {
+  // Normalize filters to Record<string, string> for ButtonLinkUpdate
+  const normalizedFilters: Record<string, string> = {};
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        normalizedFilters[key] = value;
+      } else if (Array.isArray(value) && value.length > 0) {
+        normalizedFilters[key] = value[0];
+      }
+    });
+  }
+
+  return (
+    <TableRow
+      key={investimento.id}
+      className='border-b border-gray-100 text-sm hover:bg-gray-50/80 hover:shadow-sm transition-all group animate-in fade-in slide-in-from-bottom duration-300'
+    >
+      <TableCell className='whitespace-nowrap px-2 py-1 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
+        <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
+          {investimento.bancos.nome}
+        </span>
+      </TableCell>
+      <TableCell className='whitespace-nowrap px-2 py-1 align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'>
+        <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
+          {investimento.ativos.nome}
+        </span>
+      </TableCell>
+      <TableCell className='whitespace-nowrap px-2 py-1 align-top text-gray-700 group-hover:text-gray-900 transition-colors duration-150'>
+        <span className='inline-block hover:translate-x-1 transition-transform duration-200'>
+          {investimento.ativos.tipos?.nome}
+        </span>
+      </TableCell>
+      <TableCell className='whitespace-nowrap px-2 py-1 align-top'>
+        <div className='flex flex-wrap gap-2'>
+          {investimento.ativos.ativo_categorias.map(({ categoria }, index) => (
+            <Badge
+              key={categoria.id}
+              variant='secondary'
+              className='text-xs px-3 py-1 font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default animate-in zoom-in duration-300'
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              {categoria.nome}
+            </Badge>
+          ))}
+        </div>
+      </TableCell>
+      <DynamicDataCells
+        data={investimento}
+        visibleHeaders={visibleHeaders}
+        type='investment'
+        cellClassName='whitespace-nowrap px-2 py-1 text-right align-top font-medium text-gray-900 group-hover:text-gray-950 transition-colors duration-150'
+      />
+      <TableCell className='whitespace-nowrap py-1 pl-2 pr-3 align-top'>
+        <div className='flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-all duration-200'>
+          <ButtonLinkUpdate
+            href={{
+              pathname: `/dashboard/investimentos/${investimento.id}/edit`,
+              query: filters,
+            }}
+            filters={normalizedFilters}
+          />
+          <ButtonLinkDelete id={investimento.id} />
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 const GroupTotalRow = ({
   groupTotals,
@@ -379,8 +255,8 @@ const GrandTotalRow = ({
   visibleHeaders: HeaderConfig[];
   colSpan: number;
 }) => {
-  const evolucao = totais.saldoBruto - totais.saldoAnterior;
-  const movimentacao = totais.valorAplicado - totais.valorResgatado;
+  const evolucao = toNumber(totais.saldoBruto) - toNumber(totais.saldoAnterior);
+  const movimentacao = toNumber(totais.valorAplicado) - toNumber(totais.valorResgatado);
   const rendimento = evolucao - movimentacao;
 
   return (
@@ -464,15 +340,15 @@ export default function DesktopInvestimentosTable({
       // Calcula os totais para cada grupo
       const groupTotals = group.investimentos.reduce(
         (acc: Totais, inv: InvestimentoCompleto) => {
-          acc.rendimentoDoMes += inv.rendimentoDoMes;
-          acc.dividendosDoMes += inv.dividendosDoMes;
-          acc.valorAplicado += inv.valorAplicado;
-          acc.saldoAnterior += inv.saldoAnterior;
-          acc.saldoBruto += inv.saldoBruto;
-          acc.valorResgatado += inv.valorResgatado;
-          acc.impostoIncorrido += inv.impostoIncorrido;
-          acc.impostoPrevisto += inv.impostoPrevisto;
-          acc.saldoLiquido += inv.saldoLiquido;
+          acc.rendimentoDoMes = toNumber(acc.rendimentoDoMes) + toNumber(inv.rendimentoDoMes);
+          acc.dividendosDoMes = toNumber(acc.dividendosDoMes) + toNumber(inv.dividendosDoMes);
+          acc.valorAplicado = toNumber(acc.valorAplicado) + toNumber(inv.valorAplicado);
+          acc.saldoAnterior = toNumber(acc.saldoAnterior) + toNumber(inv.saldoAnterior);
+          acc.saldoBruto = toNumber(acc.saldoBruto) + toNumber(inv.saldoBruto);
+          acc.valorResgatado = toNumber(acc.valorResgatado) + toNumber(inv.valorResgatado);
+          acc.impostoIncorrido = toNumber(acc.impostoIncorrido) + toNumber(inv.impostoIncorrido);
+          acc.impostoPrevisto = toNumber(acc.impostoPrevisto) + toNumber(inv.impostoPrevisto);
+          acc.saldoLiquido = toNumber(acc.saldoLiquido) + toNumber(inv.saldoLiquido);
           return acc;
         },
         {
@@ -517,8 +393,8 @@ export default function DesktopInvestimentosTable({
         key: 'percentualRendimentoDoMes',
         render: data => {
           const percentage = calculatePercentage(
-            data.rendimentoDoMes,
-            data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
+            toNumber(data.rendimentoDoMes),
+            toNumber(data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado)
           );
           let type: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
 
@@ -537,17 +413,17 @@ export default function DesktopInvestimentosTable({
       {
         label: 'Dividendo',
         key: 'dividendosDoMes',
-        condition: totais.dividendosDoMes > 0,
+        condition: toNumber(totais.dividendosDoMes) > 0,
         render: data => <StyledValue value={data.dividendosDoMes} type='profit' />,
       },
       {
         label: 'Dividendo (%)',
         key: 'percentualDividendosDoMes',
-        condition: totais.dividendosDoMes > 0,
+        condition: toNumber(totais.dividendosDoMes) > 0,
         render: data => {
           const percentage = calculatePercentage(
-            data.dividendosDoMes,
-            data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
+            toNumber(data.dividendosDoMes),
+            toNumber(data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado)
           );
           let type: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
 
@@ -566,11 +442,11 @@ export default function DesktopInvestimentosTable({
       {
         label: 'Rend + Div (%)',
         key: 'percentualRendMaisDivDoMes',
-        condition: totais.dividendosDoMes > 0,
+        condition: toNumber(totais.dividendosDoMes) > 0,
         render: data => {
           const percentage = calculatePercentage(
-            data.rendimentoDoMes + data.dividendosDoMes,
-            data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado
+            toNumber(data.rendimentoDoMes) + toNumber(data.dividendosDoMes),
+            toNumber(data.saldoAnterior !== 0 ? data.saldoAnterior : data.valorAplicado)
           );
           let type: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
 
@@ -589,19 +465,19 @@ export default function DesktopInvestimentosTable({
       {
         label: 'Aplicações',
         key: 'valorAplicado',
-        condition: totais.valorAplicado > 0,
+        condition: toNumber(totais.valorAplicado) > 0,
         render: data => <StyledValue value={data.valorAplicado} type='loss' />,
       },
       {
         label: 'Resgates',
         key: 'valorResgatado',
-        condition: totais.valorResgatado > 0,
+        condition: toNumber(totais.valorResgatado) > 0,
         render: data => <StyledValue value={data.valorResgatado} type='loss' />,
       },
       {
         label: 'Saldo Bruto',
         key: 'saldoBruto',
-        condition: totais.saldoBruto > 0,
+        condition: toNumber(totais.saldoBruto) > 0,
         render: (data, type) => {
           if (type === 'grand') return '';
           return <StyledValue value={data.saldoBruto} type='balance' />;
@@ -617,7 +493,10 @@ export default function DesktopInvestimentosTable({
               : data.saldoAnterior !== 0
                 ? data.saldoAnterior
                 : data.valorAplicado;
-          const percentage = calculatePercentage(data.saldoBruto - data.saldoAnterior, base);
+          const percentage = calculatePercentage(
+            toNumber(data.saldoBruto) - toNumber(data.saldoAnterior),
+            toNumber(base)
+          );
           let gradiente: 'profit' | 'neutral' | 'good' | 'very-good' | 'excellent' = 'profit';
 
           if (percentage >= 1) {
@@ -635,13 +514,13 @@ export default function DesktopInvestimentosTable({
       {
         label: 'Imposto Incorrido',
         key: 'impostoIncorrido',
-        condition: totais.impostoIncorrido > 0,
+        condition: toNumber(totais.impostoIncorrido) > 0,
         render: data => <StyledValue value={data.impostoIncorrido} type='tax' />,
       },
       {
         label: 'Imposto Previsto',
         key: 'impostoPrevisto',
-        condition: totais.impostoPrevisto > 0,
+        condition: toNumber(totais.impostoPrevisto) > 0,
         render: data => <StyledValue value={data.impostoPrevisto} type='tax' />,
       },
       {
@@ -717,6 +596,7 @@ export default function DesktopInvestimentosTable({
                       investimento={investimento}
                       visibleHeaders={visibleHeaders}
                       searchParams={searchParams}
+                      filters={searchParams}
                     />
                   ))}
                   <GroupTotalRow

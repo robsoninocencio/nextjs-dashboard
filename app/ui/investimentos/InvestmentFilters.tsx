@@ -1,10 +1,10 @@
-import SearchAno from '@/app/ui/shared/searchAno';
-import SearchMes from '@/app/ui/shared/searchMes';
-import SearchCliente from '@/app/ui/shared/searchCliente';
-import SearchBanco from '@/app/ui/shared/searchBanco';
-import SearchAtivo from '@/app/ui/shared/searchAtivo';
-import SearchTipo from '@/app/ui/shared/searchTipo';
-import CategoriaFilter from '@/app/ui/shared/categoria-filter';
+import SearchAno from '@/components/shared/searchAno';
+import SearchMes from '@/components/shared/searchMes';
+import SearchCliente from '@/components/shared/searchCliente';
+import SearchBanco from '@/components/shared/searchBanco';
+import SearchAtivo from '@/components/shared/searchAtivo';
+import SearchTipo from '@/components/shared/searchTipo';
+import CategoriaFilter from '@/components/shared/categoria-filter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Categoria } from '@/lib/types/categoria';
 

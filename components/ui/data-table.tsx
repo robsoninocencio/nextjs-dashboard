@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 export interface Column<T> {
-  key: keyof T;
+  key: string;
   title: string;
   sortable?: boolean;
   render?: (item: T) => React.ReactNode;

@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { deleteTipo } from '@/lib/actions/tipo-actions';
+import { deleteTipo } from '@/modules/tipos/actions/tipo-actions';
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const deleteTipoWithId = deleteTipo.bind(null, id);

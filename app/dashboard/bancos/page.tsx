@@ -1,15 +1,15 @@
 import { Suspense } from 'react';
 
-import Search from '@/app/ui/shared/search';
+import Search from '@/components/shared/search';
 
-import { lusitana } from '@/app/ui/shared/fonts';
-import Pagination from '@/app/ui/shared/pagination';
-import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
+import { lusitana } from '@/components/shared/fonts';
+import Pagination from '@/components/shared/pagination';
+import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
 
-import Table from '@/app/ui/bancos/table';
+import BancosTable from '@/app/ui/bancos/table';
 import { BancosTableSkeleton } from '@/app/ui/bancos/skeletons';
 
-import { fetchBancosPages } from '@/lib/data/bancos';
+import { fetchBancosPages, fetchFilteredBancos } from '@/modules/bancos/data/bancos';
 
 import { Metadata } from 'next';
 
@@ -44,7 +44,7 @@ export default async function Page({
         <ButtonLinkCreate href='/dashboard/bancos/create'>Cadastrar Banco</ButtonLinkCreate>
       </div>
       <Suspense key={query + currentPage} fallback={<BancosTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+        <BancosTable bancos={await fetchFilteredBancos(query, currentPage)} />
       </Suspense>
       <div className='mt-5 flex w-full justify-center'>
         <Pagination totalPages={totalPages} />

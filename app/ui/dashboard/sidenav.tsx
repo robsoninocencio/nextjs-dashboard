@@ -4,7 +4,7 @@ import { PowerIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
 
-import AcmeLogo from '@/app/ui/shared/acme-logo';
+import AcmeLogo from '@/components/shared/acme-logo';
 
 import NavLinks from './nav-links';
 import { useSidebar } from './sidebar-context';

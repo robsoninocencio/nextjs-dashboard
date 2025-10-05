@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { deleteBanco } from '@/lib/actions/banco-actions';
+import { deleteBanco } from '@/modules/bancos/actions/banco-actions';
 
 export function ButtonLinkDelete({ id }: { id: string }) {
   const deleteBancoWithId = deleteBanco.bind(null, id);

@@ -1,4 +1,4 @@
-import { lusitana } from '@/app/ui/shared/fonts';
+import { lusitana } from '@/components/shared/fonts';
 
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { generateYAxis } from '@/lib/utils';
@@ -13,7 +13,11 @@ import { Revenue } from '@/lib/types/dashboard';
 // https://airbnb.io/visx/
 
 export default async function RevenueChart() {
-  const revenue: Revenue[] = await fetchRevenue();
+  const revenueRaw = await fetchRevenue();
+  const revenue: Revenue[] = revenueRaw.map(item => ({
+    ...item,
+    revenue: typeof item.revenue === 'number' ? item.revenue : item.revenue.toNumber(),
+  }));
   const chartHeight = 350;
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue);

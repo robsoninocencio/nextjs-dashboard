@@ -9,10 +9,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
+import { ButtonLinkUpdate } from '@/components/shared/buttonLinkUpdate';
 
 import { DeleteCliente, UpdateCliente } from '@/app/ui/clientes/buttons';
-import { fetchFilteredClientes } from '@/lib/data/clientes';
+import { fetchFilteredClientes } from '@/modules/clientes/data/clientes';
 
 export default async function ClientesTable({
   query,

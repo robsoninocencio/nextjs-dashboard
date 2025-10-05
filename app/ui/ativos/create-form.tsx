@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 
-import { createAtivo, AtivoFormState } from '@/lib/actions/ativo-actions';
+import { createAtivo, AtivoFormState } from '@/modules/ativos/actions/ativo-actions';
 
 import { TipoField } from '@/lib/types/tipo';
 import type { CategoriaField } from '@/lib/types/categoria';

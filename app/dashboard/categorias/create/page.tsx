@@ -1,8 +1,8 @@
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
 import Form from '@/app/ui/categorias/create-form';
 
-import { fetchCategorias } from '@/lib/data/categorias';
+import { fetchCategorias } from '@/modules/categorias/data/categorias';
 
 import { Metadata } from 'next';
 

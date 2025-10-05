@@ -6,9 +6,9 @@ import { useFormStatus } from 'react-dom';
 
 import { UserCircleIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
-import { Button } from '@/app/ui/shared/button';
+import { Button } from '@/components/shared/button';
 
-import { createCliente, CreateClienteFormState } from '@/lib/actions/cliente-actions';
+import { createCliente, CreateClienteFormState } from '@/modules/clientes/actions/cliente-actions';
 
 function SubmitClienteButton() {
   const { pending } = useFormStatus();

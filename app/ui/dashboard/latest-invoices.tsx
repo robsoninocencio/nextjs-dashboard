@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { lusitana } from '@/app/ui/shared/fonts';
+import { lusitana } from '@/components/shared/fonts';
 
 import { fetchLatestInvoices } from '@/lib/data/dashboard';
 import InvoiceStatus from '../invoices/status';

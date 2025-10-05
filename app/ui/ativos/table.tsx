@@ -1,9 +1,9 @@
-import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
+import { ButtonLinkUpdate } from '@/components/shared/buttonLinkUpdate';
 import { ButtonLinkDelete } from '@/app/ui/ativos/buttonLinkDelete';
 import { Badge } from '@/components/ui/badge';
 
-import { fetchFilteredAtivos } from '@/lib/data/ativos';
-import type { AtivosTable } from '@/lib/types/ativo';
+import { fetchFilteredAtivos } from '@/modules/ativos/data/ativos';
+import type { AtivosTable } from '@/modules/ativos/types/ativo';
 
 export default async function AtivosTable({
   currentPage,
@@ -36,7 +36,7 @@ export default async function AtivosTable({
                       <p>{ativo.tipos?.nome}</p>
                     </div>
                     <div className='flex flex-wrap items-center gap-1 pt-2'>
-                      {ativo.ativo_categorias.map(({ categoria }) => (
+                      {ativo.ativo_categorias?.map(({ categoria }) => (
                         <Badge key={categoria.id} variant='secondary'>
                           {categoria.nome}
                         </Badge>
@@ -88,7 +88,7 @@ export default async function AtivosTable({
                   <td className='whitespace-nowrap px-3 py-3'>{ativo.tipos?.nome}</td>
                   <td className='whitespace-nowrap px-3 py-3'>
                     <div className='flex flex-wrap gap-1'>
-                      {ativo.ativo_categorias.map(({ categoria }) => (
+                      {ativo.ativo_categorias?.map(({ categoria }) => (
                         <Badge key={categoria.id} variant='secondary'>
                           {categoria.nome}
                         </Badge>

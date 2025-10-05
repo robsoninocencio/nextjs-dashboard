@@ -6,9 +6,9 @@ import { useFormStatus } from 'react-dom';
 
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { Button } from '@/app/ui/shared/button';
+import { Button } from '@/components/shared/button';
 
-import { createBanco, CreateBancoFormState } from '@/lib/actions/banco-actions';
+import { createBanco, CreateBancoFormState } from '@/modules/bancos/actions/banco-actions';
 
 function SubmitBancoButton() {
   const { pending } = useFormStatus();

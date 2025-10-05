@@ -13,15 +13,17 @@ import {
 } from 'recharts';
 import { formatCurrency } from '@/lib/utils';
 
+import { Decimal } from '@prisma/client/runtime/library';
+
 interface PerformanceData {
   periodo: string;
   ano: string;
   mes: string;
-  saldoBruto: number;
-  rendimentoDoMes: number;
-  dividendosDoMes: number;
-  valorAplicado: number;
-  valorResgatado: number;
+  saldoBruto: number | Decimal;
+  rendimentoDoMes: number | Decimal;
+  dividendosDoMes: number | Decimal;
+  valorAplicado: number | Decimal;
+  valorResgatado: number | Decimal;
 }
 
 interface PerformanceChartProps {

@@ -1,7 +1,7 @@
-import AcmeLogo from '@/app/ui/shared/acme-logo';
+import AcmeLogo from '@/components/shared/acme-logo';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { lusitana } from './ui/shared/fonts';
+import { lusitana } from '@/components/shared/fonts';
 import Image from 'next/image';
 import { Metadata } from 'next';
 

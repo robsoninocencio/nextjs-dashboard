@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
-import { fetchClientes } from '@/lib/data/clientes';
-import { fetchBancos } from '@/lib/data/bancos';
-import { fetchAtivos } from '@/lib/data/ativos';
+import { fetchClientes } from '@/modules/clientes/data/clientes';
+import { fetchBancos } from '@/modules/bancos/data/bancos';
+import { fetchAtivos } from '@/modules/ativos/data/ativos';
 
 import Form from '@/app/ui/investimentos/edit-form';
 

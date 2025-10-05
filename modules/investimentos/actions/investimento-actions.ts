@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 
 import { prisma } from '@/lib/prisma';
 import { fetchInvestimentoAnterior } from '@/modules/investimentos/data/investimentos';
-import { fetchAtivos } from '@/lib/data/ativos';
+import { fetchAtivos } from '@/modules/ativos/data/ativos';
 
 // ===================================================================
 // 1. ESQUEMA DE VALIDAÇÃO E TIPOS

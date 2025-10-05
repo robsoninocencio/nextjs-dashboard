@@ -1,15 +1,15 @@
 import { Suspense } from 'react';
 
-import Search from '@/app/ui/shared/search';
-import { lusitana } from '@/app/ui/shared/fonts';
-import Pagination from '@/app/ui/shared/pagination';
-import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
+import Search from '@/components/shared/search';
+import { lusitana } from '@/components/shared/fonts';
+import Pagination from '@/components/shared/pagination';
+import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
 
 import Table from '@/app/ui/clientes/table';
 
 import { ClientesTableSkeleton } from '@/app/ui/clientes/skeletons';
 
-import { fetchClientesPages } from '@/lib/data/clientes';
+import { fetchClientesPages } from '@/modules/clientes/data/clientes';
 
 import { Metadata } from 'next';
 

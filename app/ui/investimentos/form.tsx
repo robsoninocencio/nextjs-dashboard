@@ -11,14 +11,23 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { Button } from '@/components/ui/button';
-import { SelectField, CurrencyField } from '@/app/ui/shared/form-fields';
+import { SelectField, CurrencyField } from '@/components/shared/form-fields';
 
 import { InvestimentoForm } from '@/modules/investimentos/types/investimento';
 import { ClienteField } from '@/lib/types/cliente';
 import { BancoField } from '@/lib/types/banco';
-import { AtivoField } from '@/lib/types/ativo';
+import { AtivoField } from '@/modules/ativos/types/ativo';
 import { InvestimentoFormState } from '@/modules/investimentos/actions/investimento-actions';
 import { formatDateToMonth, formatDateToYear } from '@/lib/utils';
+import { Decimal } from '@prisma/client/runtime/library';
+
+// Helper function to convert Decimal to number
+const toNumber = (value: string | number | Decimal | undefined): number | undefined => {
+  if (value === undefined) return undefined;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') return parseFloat(value);
+  return value.toNumber();
+};
 
 type InvestmentFormProps = {
   clientes: ClienteField[];
@@ -161,7 +170,9 @@ export default function InvestmentForm({
               id='rendimentoDoMes'
               label='Rendimento do Mês'
               placeholder='Entre com o valor exemplo (99,99)'
-              defaultValue={state.submittedData?.rendimentoDoMes ?? investimento?.rendimentoDoMes}
+              defaultValue={toNumber(
+                state.submittedData?.rendimentoDoMes ?? investimento?.rendimentoDoMes
+              )}
               errors={state.errors?.rendimentoDoMes}
             />
           </div>
@@ -171,7 +182,9 @@ export default function InvestmentForm({
             id='saldoAnterior'
             label='Saldo Anterior'
             placeholder='Entre com o saldo anterior (99,99)'
-            defaultValue={state.submittedData?.['saldoAnterior'] ?? investimento?.saldoAnterior}
+            defaultValue={toNumber(
+              state.submittedData?.['saldoAnterior'] ?? investimento?.saldoAnterior
+            )}
             errors={state.errors?.['saldoAnterior']}
           />
         </div>
@@ -181,7 +194,9 @@ export default function InvestmentForm({
               id='dividendosDoMes'
               label='Dividendos do Mês'
               placeholder='Entre com o valor exemplo (99,99)'
-              defaultValue={state.submittedData?.dividendosDoMes ?? investimento?.dividendosDoMes}
+              defaultValue={toNumber(
+                state.submittedData?.dividendosDoMes ?? investimento?.dividendosDoMes
+              )}
               errors={state.errors?.dividendosDoMes}
             />
           </div>
@@ -194,7 +209,9 @@ export default function InvestmentForm({
             id='valorAplicado'
             label='Valores Aplicados'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={state.submittedData?.valorAplicado ?? investimento?.valorAplicado}
+            defaultValue={toNumber(
+              state.submittedData?.valorAplicado ?? investimento?.valorAplicado
+            )}
             errors={state.errors?.valorAplicado}
           />
         </div>
@@ -203,7 +220,9 @@ export default function InvestmentForm({
             id='valorResgatado'
             label='Valores Resgatados'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={state.submittedData?.valorResgatado ?? investimento?.valorResgatado}
+            defaultValue={toNumber(
+              state.submittedData?.valorResgatado ?? investimento?.valorResgatado
+            )}
             errors={state.errors?.valorResgatado}
           />
         </div>
@@ -215,7 +234,9 @@ export default function InvestmentForm({
             id='impostoIncorrido'
             label='Impostos Incorridos'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={state.submittedData?.impostoIncorrido ?? investimento?.impostoIncorrido}
+            defaultValue={toNumber(
+              state.submittedData?.impostoIncorrido ?? investimento?.impostoIncorrido
+            )}
             errors={state.errors?.impostoIncorrido}
           />
         </div>
@@ -224,7 +245,9 @@ export default function InvestmentForm({
             id='impostoPrevisto'
             label='Impostos Previstos'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto}
+            defaultValue={toNumber(
+              state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto
+            )}
             errors={state.errors?.impostoPrevisto}
           />
         </div>
@@ -236,7 +259,7 @@ export default function InvestmentForm({
             id='saldoBruto'
             label='Saldo Bruto'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={state.submittedData?.saldoBruto ?? investimento?.saldoBruto}
+            defaultValue={toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)}
             errors={state.errors?.saldoBruto}
           />
         </div>
@@ -245,7 +268,7 @@ export default function InvestmentForm({
             id='saldoLiquido'
             label='Saldo Líquido'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido}
+            defaultValue={toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)}
             errors={state.errors?.saldoLiquido}
           />
         </div>

@@ -7,8 +7,8 @@ import { EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { BancoForm } from '@/lib/types/banco';
 import { BancoField } from '@/lib/types/banco';
 
-import { Button } from '@/app/ui/shared/button';
-import { updateBanco, UpdateBancoFormState } from '@/lib/actions/banco-actions';
+import { Button } from '@/components/shared/button';
+import { updateBanco, UpdateBancoFormState } from '@/modules/bancos/actions/banco-actions';
 
 export default function EditBancoForm({
   banco,

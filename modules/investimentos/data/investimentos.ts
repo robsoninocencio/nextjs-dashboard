@@ -1,6 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { InvestimentoCompleto } from '@/lib/types'; // Importando o tipo gerado pelo Prisma
+import { Decimal } from '@prisma/client/runtime/library';
+
+// Helper function to convert Decimal to number
+const toNumber = (value: Decimal | number): number => {
+  return typeof value === 'number' ? value : value.toNumber();
+};
 
 export type InvestmentFiltersParams = {
   ano: string;
@@ -216,15 +222,15 @@ export async function fetchInvestimentoById(id: string) {
     return {
       ...investimento,
       data: investimento.data.toISOString(),
-      rendimentoDoMes: investimento.rendimentoDoMes / 100,
-      dividendosDoMes: investimento.dividendosDoMes / 100,
-      valorAplicado: investimento.valorAplicado / 100,
-      saldoBruto: investimento.saldoBruto / 100,
-      saldoAnterior: investimento.saldoAnterior / 100,
-      valorResgatado: investimento.valorResgatado / 100,
-      impostoIncorrido: investimento.impostoIncorrido / 100,
-      impostoPrevisto: investimento.impostoPrevisto / 100,
-      saldoLiquido: investimento.saldoLiquido / 100,
+      rendimentoDoMes: toNumber(investimento.rendimentoDoMes) / 100,
+      dividendosDoMes: toNumber(investimento.dividendosDoMes) / 100,
+      valorAplicado: toNumber(investimento.valorAplicado) / 100,
+      saldoBruto: toNumber(investimento.saldoBruto) / 100,
+      saldoAnterior: toNumber(investimento.saldoAnterior) / 100,
+      valorResgatado: toNumber(investimento.valorResgatado) / 100,
+      impostoIncorrido: toNumber(investimento.impostoIncorrido) / 100,
+      impostoPrevisto: toNumber(investimento.impostoPrevisto) / 100,
+      saldoLiquido: toNumber(investimento.saldoLiquido) / 100,
     };
   } catch (error) {
     console.error(`Erro ao buscar investimento com ID ${id}:`, error);
@@ -280,9 +286,9 @@ export async function fetchInvestimentoAnterior(
     return {
       ...registroAnterior,
 
-      saldoBruto: registroAnterior.saldoBruto / 100,
+      saldoBruto: toNumber(registroAnterior.saldoBruto) / 100,
 
-      saldoLiquido: registroAnterior.saldoLiquido / 100,
+      saldoLiquido: toNumber(registroAnterior.saldoLiquido) / 100,
     };
   } catch (error) {
     console.error('Erro ao buscar o investimento anterior:', error);

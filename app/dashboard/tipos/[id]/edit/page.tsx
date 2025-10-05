@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
 import { fetchTipos } from '@/lib/data/tipos';
 

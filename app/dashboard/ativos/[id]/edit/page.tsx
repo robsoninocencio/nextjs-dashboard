@@ -1,14 +1,14 @@
 import { notFound } from 'next/navigation';
 
-import Breadcrumbs from '@/app/ui/shared/breadcrumbs';
+import Breadcrumbs from '@/components/shared/breadcrumbs';
 
 import Form from '@/app/ui/ativos/edit-form';
 
 import { fetchTipos } from '@/lib/data/tipos';
-import { fetchAtivoById } from '@/lib/data/ativos';
-import { fetchCategorias } from '@/lib/data/categorias';
+import { fetchAtivoById } from '@/modules/ativos/data/ativos';
+import { fetchCategorias } from '@/modules/categorias/data/categorias';
 
-import type { Ativo } from '@/lib/types/ativo';
+import type { Ativo } from '@/modules/ativos/types/ativo';
 
 import { Metadata } from 'next';
 

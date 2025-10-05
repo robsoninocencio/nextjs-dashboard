@@ -3,21 +3,24 @@ import { Totais } from '@/modules/investimentos/types/investimento';
 import { InvestimentoCompleto } from '@/lib/types';
 import { formatCurrency, formatDateToMonth, formatDateToYear } from '@/lib/utils';
 import { ButtonLinkDelete } from '@/app/ui/investimentos/buttonLinkDelete';
-import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
+import { ButtonLinkUpdate } from '@/components/shared/buttonLinkUpdate';
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
 
 // Componente para indicadores visuais com sistema de cores dinâmico
+import { Decimal } from '@prisma/client/runtime/library';
+
 const MobileCardIndicator = ({
   label,
   value,
   type = 'default',
 }: {
   label: string;
-  value: number;
+  value: number | Decimal;
   type?: 'profit' | 'loss' | 'neutral' | 'default';
 }) => {
-  const isPositive = value >= 0;
-  const intensity = Math.min(Math.abs(value) / 10000, 1); // Normaliza a intensidade
+  const numericValue = typeof value === 'number' ? value : value.toNumber();
+  const isPositive = numericValue >= 0;
+  const intensity = Math.min(Math.abs(numericValue) / 10000, 1); // Normaliza a intensidade
 
   const getIndicatorStyles = () => {
     if (type === 'profit' || (type === 'default' && isPositive)) {
@@ -51,7 +54,7 @@ const MobileCardIndicator = ({
     >
       {Icon && <Icon className='h-3 w-3' />}
       <span>{label}</span>
-      <span>{formatCurrency(Math.abs(value))}</span>
+      <span>{formatCurrency(Math.abs(numericValue))}</span>
     </div>
   );
 };
@@ -110,12 +113,38 @@ const FinancialDataList = ({ investimento }: { investimento: InvestimentoComplet
 export function MobileInvestimentoRow({
   investimento,
   searchParams,
+  filters,
 }: {
   investimento: InvestimentoCompleto;
   searchParams?: { [key: string]: string | string[] | undefined };
+  filters?: { [key: string]: string | string[] | undefined };
 }) {
-  const rendimentoTotal = investimento.rendimentoDoMes + investimento.dividendosDoMes;
-  const movimentacao = investimento.valorAplicado - investimento.valorResgatado;
+  // Normalize filters to Record<string, string> for ButtonLinkUpdate
+  const normalizedFilters: Record<string, string> = {};
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        normalizedFilters[key] = value;
+      } else if (Array.isArray(value) && value.length > 0) {
+        normalizedFilters[key] = value[0];
+      }
+    });
+  }
+
+  const rendimentoTotal =
+    (typeof investimento.rendimentoDoMes === 'number'
+      ? investimento.rendimentoDoMes
+      : investimento.rendimentoDoMes.toNumber()) +
+    (typeof investimento.dividendosDoMes === 'number'
+      ? investimento.dividendosDoMes
+      : investimento.dividendosDoMes.toNumber());
+  const movimentacao =
+    (typeof investimento.valorAplicado === 'number'
+      ? investimento.valorAplicado
+      : investimento.valorAplicado.toNumber()) -
+    (typeof investimento.valorResgatado === 'number'
+      ? investimento.valorResgatado
+      : investimento.valorResgatado.toNumber());
 
   return (
     <div
@@ -130,7 +159,13 @@ export function MobileInvestimentoRow({
             <MobileCardIndicator
               label='Saldo'
               value={investimento.saldoLiquido}
-              type={investimento.saldoLiquido >= 0 ? 'profit' : 'loss'}
+              type={
+                (typeof investimento.saldoLiquido === 'number'
+                  ? investimento.saldoLiquido
+                  : investimento.saldoLiquido.toNumber()) >= 0
+                  ? 'profit'
+                  : 'loss'
+              }
             />
           </div>
           <p className='text-sm text-gray-600 font-medium'>{investimento.bancos.nome}</p>
@@ -164,7 +199,9 @@ export function MobileInvestimentoRow({
         {rendimentoTotal > 0 && (
           <MobileCardIndicator label='Rend' value={rendimentoTotal} type='profit' />
         )}
-        {investimento.dividendosDoMes > 0 && (
+        {(typeof investimento.dividendosDoMes === 'number'
+          ? investimento.dividendosDoMes
+          : investimento.dividendosDoMes.toNumber()) > 0 && (
           <MobileCardIndicator label='Div' value={investimento.dividendosDoMes} type='profit' />
         )}
         {movimentacao !== 0 && (
@@ -184,8 +221,9 @@ export function MobileInvestimentoRow({
         <ButtonLinkUpdate
           href={{
             pathname: `/dashboard/investimentos/${investimento.id}/edit`,
-            query: searchParams,
+            query: filters,
           }}
+          filters={normalizedFilters}
         />
         <ButtonLinkDelete id={investimento.id} />
       </div>
@@ -195,8 +233,18 @@ export function MobileInvestimentoRow({
 
 // Componente para exibir os totais no layout mobile
 export function MobileTotals({ totais }: { totais: Totais }) {
-  const evolucao = totais.saldoBruto - totais.saldoAnterior;
-  const movimentacao = totais.valorAplicado - totais.valorResgatado;
+  const evolucao =
+    (typeof totais.saldoBruto === 'number' ? totais.saldoBruto : totais.saldoBruto.toNumber()) -
+    (typeof totais.saldoAnterior === 'number'
+      ? totais.saldoAnterior
+      : totais.saldoAnterior.toNumber());
+  const movimentacao =
+    (typeof totais.valorAplicado === 'number'
+      ? totais.valorAplicado
+      : totais.valorAplicado.toNumber()) -
+    (typeof totais.valorResgatado === 'number'
+      ? totais.valorResgatado
+      : totais.valorResgatado.toNumber());
   const rendimento = evolucao - movimentacao;
 
   return (

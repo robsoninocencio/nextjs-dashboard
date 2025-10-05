@@ -29,15 +29,28 @@ const COLORS = [
   '#6b7280', // gray
 ];
 
+const renderCustomizedLabel = (entry: any) => {
+  // Use the percent property provided by Recharts, or calculate if not available
+  if (entry.percent !== undefined) {
+    return `${(entry.percent * 100).toFixed(1)}%`;
+  }
+  // Fallback calculation if percent is not available
+  return '0.0%';
+};
+
+const formatTooltipValue = (value: number, name: string, props: any) => {
+  const label = props.payload?.categoria || props.payload?.banco || 'Valor';
+  return [formatCurrency(value), label];
+};
+
+const renderLegendText = (value: string, entry: any) => {
+  // Show the category or bank name with color indicator
+  const color = entry?.color || '#000';
+  const name = entry?.payload?.categoria || entry?.payload?.banco || value;
+  return <span style={{ color }}>{name}</span>;
+};
+
 export function DiversificationCharts({ categoryData, bankData }: DiversificationChartsProps) {
-  const formatTooltipValue = (value: number) => {
-    return [formatCurrency(value), 'Valor'];
-  };
-
-  const renderCustomizedLabel = (entry: any) => {
-    return `${((entry.value / entry.total) * 100).toFixed(1)}%`;
-  };
-
   return (
     <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
       {/* Gráfico por Categoria */}
@@ -65,7 +78,7 @@ export function DiversificationCharts({ categoryData, bankData }: Diversificatio
                   ))}
                 </Pie>
                 <Tooltip formatter={formatTooltipValue} />
-                <Legend formatter={value => value} wrapperStyle={{ fontSize: '12px' }} />
+                <Legend formatter={renderLegendText} wrapperStyle={{ fontSize: '12px' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -97,7 +110,7 @@ export function DiversificationCharts({ categoryData, bankData }: Diversificatio
                   ))}
                 </Pie>
                 <Tooltip formatter={formatTooltipValue} />
-                <Legend formatter={value => value} wrapperStyle={{ fontSize: '12px' }} />
+                <Legend formatter={renderLegendText} wrapperStyle={{ fontSize: '12px' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>

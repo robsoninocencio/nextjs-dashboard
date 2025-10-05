@@ -6,9 +6,12 @@ import { useFormStatus } from 'react-dom';
 
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { Button } from '@/app/ui/shared/button';
+import { Button } from '@/components/shared/button';
 
-import { createCategoria, CategoriaFormState } from '@/lib/actions/categoria-actions';
+import {
+  createCategoria,
+  CategoriaFormState,
+} from '@/modules/categorias/actions/categoria-actions';
 
 import { CategoriaField } from '@/lib/types/categoria';
 

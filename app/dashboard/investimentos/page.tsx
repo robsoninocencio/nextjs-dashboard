@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 
-import { ButtonLinkCreate } from '@/app/ui/shared/buttonsLinkCreate';
-import { lusitana } from '@/app/ui/shared/fonts';
-import Pagination from '@/app/ui/shared/pagination';
+import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
+import { lusitana } from '@/components/shared/fonts';
+import Pagination from '@/components/shared/pagination';
 import { SidebarToggle } from '@/app/ui/dashboard/sidebar-toggle';
 
 import { InvestimentosTableSkeleton } from '@/app/ui/investimentos/skeletons';
@@ -14,13 +14,14 @@ import { ProfitabilityChart } from '@/app/ui/investimentos/profitability-chart';
 import { DiversificationCharts } from '@/app/ui/investimentos/diversification-charts';
 
 import { fetchInvestimentosPages } from '@/modules/investimentos/data/investimentos';
-import { fetchCategorias } from '@/lib/data/categorias';
+import { fetchCategorias } from '@/modules/categorias/data/categorias';
 import {
   fetchAggregatedMetrics,
   fetchPerformanceData,
   fetchDiversificationByCategory,
   fetchDiversificationByBank,
 } from '@/modules/investimentos/analytics/investimento-analytics';
+import { Decimal } from '@prisma/client/runtime/library';
 
 import { Metadata } from 'next';
 
@@ -58,11 +59,21 @@ export default async function Page({
     categoriaId: resolvedSearchParams?.categoriaId || '',
   };
 
+  const urlFilters = {
+    queryAno: filters.ano,
+    queryMes: filters.mes,
+    queryCliente: filters.cliente,
+    queryBanco: filters.banco,
+    queryAtivo: filters.ativo,
+    queryTipo: filters.tipo,
+    categoriaId: filters.categoriaId,
+  };
+
   const [
     { totalPages, totalItems },
     categorias,
     aggregatedMetrics,
-    performanceData,
+    performanceDataRaw,
     categoryData,
     bankData,
   ] = await Promise.all([
@@ -74,6 +85,22 @@ export default async function Page({
     fetchDiversificationByBank(filters),
   ]);
 
+  // Helper function to convert Decimal to number
+  const toNumber = (value: Decimal | number | null | undefined): number => {
+    if (value === null || value === undefined) return 0;
+    return typeof value === 'number' ? value : value.toNumber();
+  };
+
+  // Convert Decimal fields to number for performanceData
+  const performanceData = performanceDataRaw.map(item => ({
+    ...item,
+    saldoBruto: toNumber(item.saldoBruto),
+    rendimentoDoMes: toNumber(item.rendimentoDoMes),
+    dividendosDoMes: toNumber(item.dividendosDoMes),
+    valorAplicado: toNumber(item.valorAplicado),
+    valorResgatado: toNumber(item.valorResgatado),
+  }));
+
   // Gera uma chave estável para o Suspense, forçando-o a re-renderizar quando os filtros mudam.
   const suspenseKey = [currentPage, ...Object.values(filters)].join('-');
 
@@ -83,7 +110,7 @@ export default async function Page({
         <h1 className={`${lusitana.className} text-2xl`}>Investimentos</h1>
         <div className='flex items-center gap-2'>
           <SidebarToggle />
-          <ButtonLinkCreate href='/dashboard/investimentos/create'>
+          <ButtonLinkCreate href='/dashboard/investimentos/create' filters={urlFilters}>
             Cadastrar Investimento
           </ButtonLinkCreate>
         </div>

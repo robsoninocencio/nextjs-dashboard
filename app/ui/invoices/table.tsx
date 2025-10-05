@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { ButtonLinkUpdate } from '@/app/ui/shared/buttonLinkUpdate';
+import { ButtonLinkUpdate } from '@/components/shared/buttonLinkUpdate';
 
 import { formatDateToLocal, formatCurrency } from '@/lib/utils';
 
