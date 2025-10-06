@@ -4,13 +4,18 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { TipoForm } from '@/lib/types/tipo';
-import { TipoField } from '@/lib/types/tipo';
+import type { Tipo, TipoField } from '@/types';
 
 import { Button } from '@/components/shared/button';
 import { updateTipo, UpdateTipoFormState } from '@/lib/actions/tipo-actions';
 
-export default function EditTipoForm({ tipo, tipos }: { tipo: TipoForm; tipos: TipoField[] }) {
+export default function EditTipoForm({
+  tipo,
+  tipos,
+}: {
+  tipo: Pick<Tipo, 'id' | 'nome'>;
+  tipos: TipoField[];
+}) {
   const initialState: UpdateTipoFormState = { message: '', errors: {} };
   const updateTipoWithId = updateTipo.bind(null, tipo.id);
   const [state, formAction] = useActionState(updateTipoWithId, initialState);

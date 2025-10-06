@@ -9,8 +9,7 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 
-import { InvoiceForm } from '@/lib/types/invoice';
-import { ClienteField } from '@/lib/types/cliente';
+import type { Invoice, ClienteField } from '@/types';
 
 import { Button } from '@/components/shared/button';
 
@@ -21,7 +20,7 @@ export default function EditInvoiceForm({
   invoice,
   clientes,
 }: {
-  invoice: InvoiceForm;
+  invoice: Pick<Invoice, 'id' | 'amount' | 'status' | 'cliente_id'>;
   clientes: ClienteField[];
 }) {
   const initialState: InvoiceFormState = { message: '', errors: {} };

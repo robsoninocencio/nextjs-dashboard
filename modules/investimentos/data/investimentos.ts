@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import { InvestimentoCompleto } from '@/lib/definitions'; // Importando o tipo gerado pelo Prisma
+import type { InvestimentoCompleto } from '@/types';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // Helper function to convert Decimal to number

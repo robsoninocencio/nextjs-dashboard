@@ -7,7 +7,7 @@ import { fetchClientes } from '@/modules/clientes/data/clientes';
 import Form from '@/app/ui/clientes/edit-form';
 
 import { fetchClienteById } from '@/modules/clientes/data/clientes';
-import type { Cliente } from '@/lib/types/cliente';
+import type { Cliente } from '@/types';
 
 import { Metadata } from 'next';
 
@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  const [cliente, clientes] = await Promise.all([fetchClienteById(id), fetchClientes()]);
+  const [clienteRaw, clientes] = await Promise.all([fetchClienteById(id), fetchClientes()]);
 
+  // O tipo Cliente é inferido diretamente da função fetchClienteById
+  const cliente = clienteRaw;
   if (!cliente) {
     notFound();
   }

@@ -12,6 +12,7 @@ import { AtivosTableSkeleton } from '@/app/ui/ativos/skeletons';
 
 import { fetchAtivosPages } from '@/modules/ativos/data/ativos';
 import { fetchCategorias } from '@/modules/categorias/data/categorias';
+import type { CategoriaComPai } from '@/types';
 
 import { Metadata } from 'next';
 
@@ -37,10 +38,13 @@ export default async function Page({
   const query = resolvedSearchParams.query || '';
   const categoriaId = resolvedSearchParams.categoriaId || '';
 
-  const [{ totalPages, totalItems }, categorias] = await Promise.all([
+  const [{ totalPages, totalItems }, categoriasRaw] = await Promise.all([
     fetchAtivosPages(query, categoriaId),
     fetchCategorias(),
   ]);
+
+  // Cast to CategoriaComPai as the filter only uses id and nome
+  const categorias = categoriasRaw as CategoriaComPai[];
 
   return (
     <div className='w-full'>

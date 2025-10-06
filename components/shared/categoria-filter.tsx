@@ -4,9 +4,9 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { TagIcon } from '@heroicons/react/24/outline';
 import { Route } from 'next';
 
-import type { CategoriaField } from '@/lib/types/categoria';
+import type { CategoriaComPai } from '@/types';
 
-export default function CategoriaFilter({ categorias }: { categorias: CategoriaField[] }) {
+export default function CategoriaFilter({ categorias }: { categorias: CategoriaComPai[] }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();

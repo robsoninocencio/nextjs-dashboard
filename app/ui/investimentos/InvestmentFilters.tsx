@@ -6,10 +6,10 @@ import SearchAtivo from '@/components/shared/searchAtivo';
 import SearchTipo from '@/components/shared/searchTipo';
 import CategoriaFilter from '@/components/shared/categoria-filter';
 import { Card, CardContent } from '@/components/ui/card';
-import { Categoria } from '@/lib/types/categoria';
+import type { CategoriaComPai } from '@/types';
 
 type InvestmentFiltersProps = {
-  categorias: Categoria[];
+  categorias: CategoriaComPai[];
 };
 
 export function InvestmentFilters({ categorias }: InvestmentFiltersProps) {

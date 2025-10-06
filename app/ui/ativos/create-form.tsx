@@ -13,8 +13,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui
 
 import { createAtivo, AtivoFormState } from '@/modules/ativos/actions/ativo-actions';
 
-import { TipoField } from '@/lib/types/tipo';
-import type { CategoriaField } from '@/lib/types/categoria';
+import type { TipoField, CategoriaField } from '@/types';
 import { cn } from '@/lib/utils';
 
 // Botão com estado pendente (loading)

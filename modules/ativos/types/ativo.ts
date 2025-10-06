@@ -1,18 +1,16 @@
+import type { ativos, tipos } from '@prisma/client';
+
 export type Ativo = {
   id: string;
-  nome: string;
   tipoId: string | null;
-  ativo_categorias?: {
-    categoriaId: string;
-  }[];
+  nome: string;
+  ativo_categorias: { categoriaId: string }[];
 };
 
 export type AtivoField = {
   id: string;
   nome: string;
-  tipos: {
-    nome: string;
-  } | null;
+  tipos: { nome: string } | null;
 };
 
 export type AtivoForm = {

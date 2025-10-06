@@ -9,7 +9,7 @@ import { fetchAtivos } from '@/modules/ativos/data/ativos';
 import Form from '@/app/ui/investimentos/edit-form';
 
 import { fetchInvestimentoById } from '@/modules/investimentos/data/investimentos';
-import type { InvestimentoForm } from '@/lib/definitions';
+import type { InvestimentoForm } from '@/types';
 
 import { Metadata } from 'next';
 

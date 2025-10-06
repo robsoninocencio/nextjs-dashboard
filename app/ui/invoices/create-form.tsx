@@ -15,7 +15,7 @@ import { Button } from '@/components/shared/button';
 
 import { createInvoice, InvoiceFormState } from '@/lib/actions/invoice-actions';
 
-import { ClienteField } from '@/lib/types/cliente';
+import type { ClienteField } from '@/types';
 
 // Botão com estado pendente (loading)
 function SubmitInvoiceButton() {

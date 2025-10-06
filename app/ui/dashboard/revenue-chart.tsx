@@ -4,7 +4,8 @@ import { CalendarIcon } from '@heroicons/react/24/outline';
 import { generateYAxis } from '@/lib/utils';
 
 import { fetchRevenue } from '@/lib/data/dashboard';
-import { Revenue } from '@/lib/types/dashboard';
+import type { Revenue } from '@/types';
+import { Decimal } from '@prisma/client/runtime/library';
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -15,7 +16,7 @@ import { Revenue } from '@/lib/types/dashboard';
 export default async function RevenueChart() {
   const revenueRaw = await fetchRevenue();
   const revenue: Revenue[] = revenueRaw.map(item => ({
-    ...item,
+    month: item.month,
     revenue: typeof item.revenue === 'number' ? item.revenue : item.revenue.toNumber(),
   }));
   const chartHeight = 350;

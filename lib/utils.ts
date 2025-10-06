@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { Decimal } from '@prisma/client/runtime/library';
 
-import type { Revenue } from './types/dashboard';
+import type { Revenue } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

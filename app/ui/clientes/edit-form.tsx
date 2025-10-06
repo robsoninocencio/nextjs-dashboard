@@ -4,8 +4,7 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { CheckIcon, ClockIcon, EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { ClienteForm } from '@/lib/types/cliente';
-import { ClienteField } from '@/lib/types/cliente';
+import type { Cliente, ClienteField } from '@/types';
 
 import { Button } from '@/components/shared/button';
 import { updateCliente, UpdateClienteFormState } from '@/modules/clientes/actions/cliente-actions';
@@ -14,7 +13,7 @@ export default function EditClienteForm({
   cliente,
   clientes,
 }: {
-  cliente: ClienteForm;
+  cliente: Pick<Cliente, 'id' | 'name' | 'email'>;
   clientes: ClienteField[];
 }) {
   const initialState: UpdateClienteFormState = { message: '', errors: {} };

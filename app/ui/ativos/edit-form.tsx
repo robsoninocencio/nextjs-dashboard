@@ -9,8 +9,7 @@ import { TagIcon, FileText, Check, ChevronsUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import { Ativo } from '@/modules/ativos/types/ativo';
-import { TipoField } from '@/lib/types/tipo';
-import { CategoriaField } from '@/lib/types/categoria';
+import type { TipoField, CategoriaField } from '@/types';
 
 import { updateAtivo, AtivoFormState } from '@/modules/ativos/actions/ativo-actions';
 

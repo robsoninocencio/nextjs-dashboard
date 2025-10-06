@@ -7,7 +7,7 @@ import { fetchBancos } from '@/modules/bancos/data/bancos';
 import Form from '@/app/ui/bancos/edit-form';
 
 import { fetchBancoById } from '@/modules/bancos/data/bancos';
-import type { Banco } from '@/modules/bancos/types/banco';
+import type { Banco } from '@/types';
 
 import { Metadata } from 'next';
 
@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  const [banco, bancos] = await Promise.all([fetchBancoById(id), fetchBancos()]);
+  const [bancoRaw, bancos] = await Promise.all([fetchBancoById(id), fetchBancos()]);
 
+  // O tipo Banco é inferido diretamente da função fetchBancoById
+  const banco = bancoRaw;
   if (!banco) {
     notFound();
   }

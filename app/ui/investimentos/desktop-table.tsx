@@ -10,7 +10,7 @@ import {
   TableFooter,
 } from '@/components/ui/table';
 import { formatCurrency, formatToDecimals } from '@/lib/utils';
-import { InvestimentoCompleto } from '@/lib/definitions';
+import type { Categoria, InvestimentoCompleto } from '@/types';
 import {
   Totais,
   GrupoInvestimento,
@@ -171,16 +171,18 @@ const InvestmentRow = ({
       </TableCell>
       <TableCell className='whitespace-nowrap px-2 py-1 align-top'>
         <div className='flex flex-wrap gap-2'>
-          {investimento.ativos.ativo_categorias.map(({ categoria }, index) => (
-            <Badge
-              key={categoria.id}
-              variant='secondary'
-              className='text-xs px-3 py-1 font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default animate-in zoom-in duration-300'
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              {categoria.nome}
-            </Badge>
-          ))}
+          {investimento.ativos.ativo_categorias.map(
+            ({ categoria }: { categoria: Categoria }, index: number) => (
+              <Badge
+                key={categoria.id}
+                variant='secondary'
+                className='text-xs px-3 py-1 font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default animate-in zoom-in duration-300'
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                {categoria.nome}
+              </Badge>
+            )
+          )}
         </div>
       </TableCell>
       <DynamicDataCells

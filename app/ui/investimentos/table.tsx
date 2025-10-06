@@ -6,7 +6,7 @@ import {
   InvestmentFiltersParams,
 } from '@/modules/investimentos/data/investimentos';
 
-import { InvestimentoCompleto } from '@/lib/definitions';
+import type { InvestimentoCompleto } from '@/types';
 
 import DesktopInvestimentosTable from '@/app/ui/investimentos/desktop-table';
 import { MobileInvestimentoRow, MobileTotals } from '@/app/ui/investimentos/mobile-table';

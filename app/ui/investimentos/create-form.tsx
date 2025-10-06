@@ -5,7 +5,7 @@ import { createInvestimento, InvestimentoFormState } from '@/lib/actions/investi
 
 import InvestmentForm from './form';
 
-import { ClienteField, BancoField, AtivoField } from '@/lib/definitions';
+import type { ClienteField, BancoField, AtivoField } from '@/types';
 import { SelectField, CurrencyField } from '@/components/shared/form-fields';
 
 // Interface para props do componente

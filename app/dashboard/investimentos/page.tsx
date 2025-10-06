@@ -15,6 +15,7 @@ import { DiversificationCharts } from '@/app/ui/investimentos/diversification-ch
 
 import { fetchInvestimentosPages } from '@/modules/investimentos/data/investimentos';
 import { fetchCategorias } from '@/modules/categorias/data/categorias';
+import type { Categoria, CategoriaComPai } from '@/types';
 import {
   fetchAggregatedMetrics,
   fetchPerformanceData,
@@ -78,7 +79,7 @@ export default async function Page({
     bankData,
   ] = await Promise.all([
     fetchInvestimentosPages(filters),
-    fetchCategorias(),
+    fetchCategorias() as Promise<CategoriaComPai[]>,
     fetchAggregatedMetrics(filters),
     fetchPerformanceData(filters),
     fetchDiversificationByCategory(filters),

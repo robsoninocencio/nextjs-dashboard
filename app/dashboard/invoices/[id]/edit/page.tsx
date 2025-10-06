@@ -7,7 +7,7 @@ import { fetchClientes } from '@/modules/clientes/data/clientes';
 import Form from '@/app/ui/invoices/edit-form';
 
 import { fetchInvoiceById } from '@/lib/data/invoices';
-import type { Invoice } from '@/lib/types/invoice';
+import type { Invoice } from '@/types';
 
 import { Metadata } from 'next';
 
@@ -20,19 +20,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const id = resolvedParams.id;
   const [invoice, clientes] = await Promise.all([fetchInvoiceById(id), fetchClientes()]);
 
+  // A função fetchInvoiceById já deve retornar o tipo correto ou null.
+  // O casting para 'Invoice' não é mais necessário se a função de fetch estiver bem tipada.
   if (!invoice) {
     notFound();
   }
-
-  // Garantir que invoice.status tenha o tipo correto
-  const typedInvoice: Invoice = {
-    id: invoice.id,
-    cliente_id: invoice.cliente_id,
-    amount: invoice.amount,
-    date: invoice.date.toISOString(), // Converte a data para string ISO
-    status:
-      invoice.status === 'pendente' || invoice.status === 'pago' ? invoice.status : 'pendente',
-  };
 
   return (
     <main>
@@ -48,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           },
         ]}
       />
-      <Form invoice={typedInvoice} clientes={clientes} />
+      <Form invoice={invoice} clientes={clientes} />
     </main>
   );
 }

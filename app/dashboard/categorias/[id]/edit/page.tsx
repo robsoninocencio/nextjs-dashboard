@@ -7,7 +7,7 @@ import { fetchCategorias } from '@/modules/categorias/data/categorias';
 import Form from '@/app/ui/categorias/edit-form';
 
 import { fetchCategoriaById } from '@/modules/categorias/data/categorias';
-import type { Categoria } from '@/modules/categorias/types/categoria';
+import type { Categoria } from '@/types';
 
 import { Metadata } from 'next';
 
@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  const [categoria, categorias] = await Promise.all([fetchCategoriaById(id), fetchCategorias()]);
+  const [categoriaRaw, categorias] = await Promise.all([fetchCategoriaById(id), fetchCategorias()]);
 
+  // O tipo Categoria é inferido diretamente da função fetchCategoriaById
+  const categoria = categoriaRaw;
   if (!categoria) {
     notFound();
   }

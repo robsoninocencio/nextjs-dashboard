@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { InvestimentoForm, ClienteField, BancoField, AtivoField } from '@/lib/definitions';
+import type { InvestimentoForm, ClienteField, BancoField, AtivoField } from '@/types';
 
 import { updateInvestimento, InvestimentoFormState } from '@/lib/actions/investimentos';
 import { formatDateToMonth, formatDateToYear } from '@/lib/utils';

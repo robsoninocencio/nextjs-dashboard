@@ -4,8 +4,7 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
-import { BancoForm } from '@/lib/types/banco';
-import { BancoField } from '@/lib/types/banco';
+import type { Banco, BancoField } from '@/types';
 
 import { Button } from '@/components/shared/button';
 import { updateBanco, UpdateBancoFormState } from '@/modules/bancos/actions/banco-actions';
@@ -14,7 +13,7 @@ export default function EditBancoForm({
   banco,
   bancos,
 }: {
-  banco: BancoForm;
+  banco: Pick<Banco, 'id' | 'nome'>;
   bancos: BancoField[];
 }) {
   const initialState: UpdateBancoFormState = { message: '', errors: {} };

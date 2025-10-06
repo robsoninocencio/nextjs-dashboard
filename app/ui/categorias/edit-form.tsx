@@ -6,9 +6,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 import { Button } from '@/components/shared/button';
 
-import { CategoriaForm } from '@/lib/types/categoria';
-
-import { CategoriaField } from '@/lib/types/categoria';
+import type { Categoria, CategoriaField } from '@/types';
 
 // import { updateCategoria, State } from "@/app/lib/categorias/actions";
 import { updateCategoria, CategoriaFormState } from '@/lib/actions/categoria-actions';
@@ -17,7 +15,7 @@ export default function EditCategoriaForm({
   categoria,
   categorias,
 }: {
-  categoria: CategoriaForm;
+  categoria: Pick<Categoria, 'id' | 'nome' | 'parentId'>;
   categorias: CategoriaField[];
 }) {
   const initialState: CategoriaFormState = { message: '', errors: {} };

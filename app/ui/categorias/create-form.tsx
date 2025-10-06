@@ -13,7 +13,7 @@ import {
   CategoriaFormState,
 } from '@/modules/categorias/actions/categoria-actions';
 
-import { CategoriaField } from '@/lib/types/categoria';
+import type { CategoriaField } from '@/types';
 
 // Interface para props do componente
 interface FormProps {

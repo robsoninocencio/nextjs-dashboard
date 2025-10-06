@@ -7,7 +7,7 @@ import { fetchTipos } from '@/lib/data/tipos';
 import Form from '@/app/ui/tipos/edit-form';
 
 import { fetchTipoById } from '@/lib/data/tipos';
-import type { Tipo } from '@/lib/types/tipo';
+import type { Tipo } from '@/types';
 
 import { Metadata } from 'next';
 
@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  const [tipo, tipos] = await Promise.all([fetchTipoById(id), fetchTipos()]);
+  const [tipoRaw, tipos] = await Promise.all([fetchTipoById(id), fetchTipos()]);
 
+  // O tipo Tipo é inferido diretamente da função fetchTipoById
+  const tipo = tipoRaw;
   if (!tipo) {
     notFound();
   }

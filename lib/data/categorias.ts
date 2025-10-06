@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import { unstable_cache } from 'next/cache';
-import type { CategoriaComPai, CategoriaField } from '../types/categoria';
+import type { CategoriaComPai, CategoriaField } from '@/types';
 
 const ITEMS_PER_PAGE = 50;
 
