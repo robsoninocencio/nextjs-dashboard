@@ -10,7 +10,7 @@ import {
   TableFooter,
 } from '@/components/ui/table';
 import { formatCurrency, formatToDecimals } from '@/lib/utils';
-import { InvestimentoCompleto } from '@/lib/types';
+import { InvestimentoCompleto } from '@/lib/definitions';
 import {
   Totais,
   GrupoInvestimento,

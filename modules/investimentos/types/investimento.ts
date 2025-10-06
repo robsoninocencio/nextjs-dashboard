@@ -1,5 +1,5 @@
 import { fetchFilteredInvestimentos } from '@/modules/investimentos/data/investimentos';
-import { InvestimentoCompleto } from '@/lib/types';
+import { InvestimentoCompleto } from '@/lib/definitions';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // Tipagem inferida da função de busca para garantir consistência

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import { InvestimentoCompleto } from '@/lib/types'; // Importando o tipo gerado pelo Prisma
+import { InvestimentoCompleto } from '@/lib/definitions'; // Importando o tipo gerado pelo Prisma
 import { Decimal } from '@prisma/client/runtime/library';
 
 // Helper function to convert Decimal to number
@@ -138,32 +138,14 @@ export async function fetchFilteredInvestimentos(
     const investimentos = await prisma.investimentos.findMany({
       where,
       include: {
-        clientes: {
-          select: {
-            name: true,
-          },
-        },
-        bancos: {
-          select: {
-            nome: true,
-          },
-        },
+        clientes: true,
+        bancos: true,
         ativos: {
-          select: {
-            nome: true,
-            tipos: {
-              select: {
-                nome: true,
-              },
-            },
+          include: {
+            tipos: true,
             ativo_categorias: {
-              select: {
-                categoria: {
-                  select: {
-                    id: true,
-                    nome: true,
-                  },
-                },
+              include: {
+                categoria: true,
               },
             },
           },
