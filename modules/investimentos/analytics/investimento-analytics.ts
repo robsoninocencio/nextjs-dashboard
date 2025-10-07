@@ -69,7 +69,7 @@ function buildInvestimentosFilters(
   }
 
   if (categoriaIds && categoriaIds.length > 0) {
-    ativosFilter.ativo_categoria = {
+    ativosFilter.ativo_categorias = {
       some: { categoriaId: { in: categoriaIds } },
     };
   }

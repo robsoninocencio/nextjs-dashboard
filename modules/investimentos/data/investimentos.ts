@@ -18,7 +18,7 @@ export type InvestmentFiltersParams = {
   categoriaId?: string;
 };
 
-const ITEMS_PER_PAGE = 300;
+const ITEMS_PER_PAGE = 12;
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
@@ -105,8 +105,13 @@ export async function fetchInvestimentosPages(
 
     const where = buildInvestimentosFilters(filters, categoriaIds);
 
-    const totalItems = await prisma.investimentos.count({ where });
+    // Contar o número de grupos distintos
+    const groupedInvestimentos = await prisma.investimentos.groupBy({
+      by: ['clienteId', 'ano', 'mes'],
+      where,
+    });
 
+    const totalItems = groupedInvestimentos.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
 
     return { totalPages, totalItems };
@@ -124,8 +129,6 @@ export async function fetchFilteredInvestimentos(
   currentPage: number
 ): Promise<InvestimentoCompleto[]> {
   try {
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
     const { categoriaId } = filters;
 
     let categoriaIds: string[] = [];
@@ -135,8 +138,61 @@ export async function fetchFilteredInvestimentos(
 
     const where = buildInvestimentosFilters(filters, categoriaIds);
 
-    const investimentos = await prisma.investimentos.findMany({
+    // 1. Buscar TODOS os grupos que correspondem aos filtros
+    const allGroups = await prisma.investimentos.groupBy({
+      by: ['clienteId', 'ano', 'mes'],
       where,
+    });
+
+    if (allGroups.length === 0) {
+      return [];
+    }
+
+    // 2. Buscar os nomes dos clientes para ordenação
+    const clientIds = [...new Set(allGroups.map(group => group.clienteId))];
+    const clients = await prisma.clientes.findMany({
+      where: { id: { in: clientIds } },
+      select: { id: true, name: true },
+    });
+    const clientNameMap = new Map(clients.map(client => [client.id, client.name]));
+
+    // 3. Ordenar os grupos em memória
+    allGroups.sort((a, b) => {
+      const nameA = clientNameMap.get(a.clienteId) ?? '';
+      const nameB = clientNameMap.get(b.clienteId) ?? '';
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+
+      if (a.ano > b.ano) return -1; // desc
+      if (a.ano < b.ano) return 1;
+
+      if (a.mes > b.mes) return -1; // desc
+      if (a.mes < b.mes) return 1;
+
+      return 0;
+    });
+
+    // 4. Paginar os grupos ordenados
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const groupsForPage = allGroups.slice(offset, offset + ITEMS_PER_PAGE);
+
+    if (groupsForPage.length === 0) {
+      return [];
+    }
+
+    // 5. Construir a condição OR para buscar todos os investimentos desses grupos
+    const groupConditions = groupsForPage.map(group => ({
+      AND: [{ clienteId: group.clienteId }, { ano: group.ano }, { mes: group.mes }],
+    }));
+
+    // 6. Buscar todos os investimentos que correspondem aos grupos da página
+    const investimentos = await prisma.investimentos.findMany({
+      where: {
+        AND: [
+          where, // Aplica os filtros originais
+          { OR: groupConditions }, // E pertence a um dos grupos da página
+        ],
+      },
       include: {
         clientes: true,
         bancos: true,
@@ -158,14 +214,12 @@ export async function fetchFilteredInvestimentos(
         { bancos: { nome: 'asc' } },
         { ativos: { nome: 'asc' } },
       ],
-      skip: offset,
-      take: ITEMS_PER_PAGE,
     });
 
     return investimentos;
   } catch (error) {
-    console.error('Erro ao buscar investimentos filtradas:', error);
-    throw new Error('Erro ao buscar investimentos filtradas.');
+    console.error('Erro ao buscar investimentos filtrados:', error);
+    throw new Error('Erro ao buscar investimentos filtrados.');
   }
 }
 
