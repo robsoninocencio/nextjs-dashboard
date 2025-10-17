@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 
 import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
+import { copyInvestimentos } from '@/lib/actions/investimentos';
+import { Button } from '@/components/ui/button';
 import { lusitana } from '@/components/shared/fonts';
 import Pagination from '@/components/shared/pagination';
 import { SidebarToggle } from '@/app/ui/dashboard/sidebar-toggle';
@@ -114,6 +116,10 @@ export default async function Page({
           <ButtonLinkCreate href='/dashboard/investimentos/create' filters={urlFilters}>
             Cadastrar Investimento
           </ButtonLinkCreate>
+          <form action={copyInvestimentos}>
+            <input type='hidden' name='searchParams' value={JSON.stringify(urlFilters)} />
+            <Button type='submit'>Copiar Investimento</Button>
+          </form>
         </div>
       </div>
 

@@ -119,7 +119,7 @@ function toCents(value: number): number {
 }
 
 /**
- * Calcula o rendimento do mês para ativos do tipo "CDB Automático".
+ * Calcula o rendimento do mês para ativos do tipo "CDB AUTOMATICO".
  * Para outros ativos, retorna o valor já informado.
  */
 async function calculateRendimentoCDB(
@@ -128,7 +128,7 @@ async function calculateRendimentoCDB(
 ): Promise<number> {
   const ativos = await fetchAtivos();
   const isCDBAutomatico = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB Automático'
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB AUTOMATICO'
   );
 
   if (!isCDBAutomatico) {

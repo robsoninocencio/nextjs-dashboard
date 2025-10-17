@@ -249,7 +249,7 @@ const ativosData = [
   }, // Renda Fixa
   {
     id: 'ef902a9f-efe1-4739-98fb-65931e1bc785',
-    nome: 'CDB Automático',
+    nome: 'CDB AUTOMATICO',
     tipoId: '0b66393b-c796-48f9-b841-c1145afa9f4b',
   }, // Curto Prazo
   {
@@ -378,7 +378,7 @@ const investimentosData = [
     cliente_id: 'f6928b6d-2de6-4cfd-91f5-f017af8da2af',
     bancoId: 'e95a1482-ae01-4338-b228-00050be58cf0',
     ativoId: 'ef902a9f-efe1-4739-98fb-65931e1bc785',
-  }, // Robson Inocencio - Safra - CDB Automático
+  }, // Robson Inocencio - Safra - CDB AUTOMATICO
   {
     // id: uuidv4(),
     id: '7a6ca144-3e06-4e99-bf48-aec55b5c2867',

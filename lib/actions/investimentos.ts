@@ -119,7 +119,7 @@ function toCents(value: number): number {
 }
 
 /**
- * Calcula o rendimento do mês para ativos do tipo "CDB Automático".
+ * Calcula o rendimento do mês para ativos do tipo "CDB AUTOMATICO".
  * Para outros ativos, retorna o valor já informado.
  */
 async function calculateRendimentoCDB(
@@ -128,7 +128,7 @@ async function calculateRendimentoCDB(
 ): Promise<number> {
   const ativos = await fetchAtivos();
   const isCDBAutomatico = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB Automático'
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB AUTOMATICO'
   );
 
   if (!isCDBAutomatico) {
@@ -298,5 +298,135 @@ export async function deleteInvestimento(id: string) {
     // É uma boa prática lançar o erro para que possa ser tratado
     // por um Error Boundary, se necessário.
     throw new Error('Erro no banco de dados: Falha ao deletar o investimento.');
+  }
+}
+
+/**
+ * Server Action para copiar investimentos do mês mais atual para o próximo mês.
+ */
+export async function copyInvestimentos(formData: FormData): Promise<void> {
+  const rawFormData = Object.fromEntries(formData.entries());
+
+  console.log('rawFormData for copy:', rawFormData);
+
+  // Extrair filtros dos searchParams
+  const searchParamsString = formData.get('searchParams');
+  let filters: any = {};
+  if (typeof searchParamsString === 'string' && searchParamsString) {
+    try {
+      filters = JSON.parse(searchParamsString);
+    } catch (e) {
+      console.error('Failed to parse searchParams for copy', e);
+    }
+  }
+
+  // Mapear filtros para os parâmetros esperados
+  const investmentFilters = {
+    ano: filters.queryAno || '',
+    mes: filters.queryMes || '',
+    cliente: filters.queryCliente || '',
+    banco: filters.queryBanco || '',
+    ativo: filters.queryAtivo || '',
+    tipo: filters.queryTipo || '',
+    categoriaId: filters.categoriaId || '',
+  };
+
+  try {
+    // Buscar os investimentos mais atuais baseados nos filtros
+    const { fetchFilteredInvestimentos } = await import(
+      '@/modules/investimentos/data/investimentos'
+    );
+
+    // Para copiar, precisamos dos investimentos do mês mais atual
+    // Primeiro, encontrar o mês mais atual nos filtros ou buscar o mais recente
+    let anoAtual = investmentFilters.ano;
+    let mesAtual = investmentFilters.mes;
+
+    if (!anoAtual || !mesAtual) {
+      // Se não há filtros específicos, buscar o mês mais recente
+      const latestInvestimento = await prisma.investimentos.findFirst({
+        orderBy: [{ ano: 'desc' }, { mes: 'desc' }],
+        select: {
+          ano: true,
+          mes: true,
+        },
+      });
+
+      if (latestInvestimento) {
+        anoAtual = latestInvestimento.ano;
+        mesAtual = latestInvestimento.mes;
+      } else {
+        throw new Error('Nenhum investimento encontrado para copiar.');
+      }
+    }
+
+    // Aplicar filtros para buscar apenas os investimentos do mês atual
+    const currentFilters = {
+      ...investmentFilters,
+      ano: anoAtual,
+      mes: mesAtual,
+    };
+
+    const investimentosToCopy = await fetchFilteredInvestimentos(currentFilters, 1); // Página 1 para todos
+
+    if (investimentosToCopy.length === 0) {
+      throw new Error('Nenhum investimento encontrado para copiar com os filtros aplicados.');
+    }
+
+    // Calcular o próximo mês
+    let nextAno = parseInt(anoAtual);
+    let nextMes = parseInt(mesAtual) + 1;
+
+    if (nextMes > 12) {
+      nextMes = 1;
+      nextAno += 1;
+    }
+
+    const nextMesStr = nextMes.toString().padStart(2, '0');
+    const nextAnoStr = nextAno.toString();
+
+    // Copiar cada investimento
+    for (const investimento of investimentosToCopy) {
+      const payload = {
+        rendimentoDoMes: toCents(0), // Zerar rendimento do mês
+        dividendosDoMes: toCents(0), // Zerar dividendos do mês
+        valorAplicado: toCents(0), // Zerar valor aplicado
+        saldoBruto: toCents(0), // Zerar saldo bruto
+        saldoAnterior: investimento.saldoBruto, // Mover saldoBruto para saldoAnterior
+        valorResgatado: toCents(0), // Zerar valor resgatado
+        impostoIncorrido: toCents(0), // Zerar imposto incorrido
+        impostoPrevisto: toCents(0), // Zerar imposto previsto
+        saldoLiquido: toCents(0), // Zerar saldo líquido
+        clienteId: investimento.clienteId,
+        bancoId: investimento.bancoId,
+        ativoId: investimento.ativoId,
+        data: getInvestimentoDate(nextAno, nextMes),
+        ano: nextAnoStr,
+        mes: nextMesStr,
+      };
+
+      await prisma.investimentos.create({ data: payload });
+    }
+
+    // Build the redirect URL with filters
+    const queryString = new URLSearchParams({
+      queryAno: nextAnoStr,
+      queryMes: nextMesStr,
+      queryCliente: investmentFilters.cliente,
+      queryBanco: investmentFilters.banco,
+      queryAtivo: investmentFilters.ativo,
+      queryTipo: investmentFilters.tipo,
+      categoriaId: investmentFilters.categoriaId,
+    }).toString();
+
+    revalidatePath('/dashboard/investimentos');
+    redirect(`/dashboard/investimentos?${queryString}`);
+  } catch (error) {
+    // Se for um redirect do Next.js, relançar sem modificar
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
+    console.error('Database Error:', error);
+    throw new Error('Erro no banco de dados: Falha ao copiar os investimentos.');
   }
 }
