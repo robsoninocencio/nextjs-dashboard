@@ -26,6 +26,13 @@ const toNumber = (value: string | number | Decimal | undefined): number | undefi
   return value.toNumber();
 };
 
+// Helper function to format number to 2 decimal places
+const formatToTwoDecimals = (value: number | undefined): string | undefined => {
+  if (value === undefined) return undefined;
+  const roundedValue = Math.round(value * 100) / 100;
+  return roundedValue.toFixed(2);
+};
+
 type InvestmentFormProps = {
   clientes: ClienteField[];
   bancos: BancoField[];
@@ -179,8 +186,8 @@ export default function InvestmentForm({
             id='saldoAnterior'
             label='Saldo Anterior'
             placeholder='Entre com o saldo anterior (99,99)'
-            defaultValue={toNumber(
-              state.submittedData?.['saldoAnterior'] ?? investimento?.saldoAnterior
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.['saldoAnterior'] ?? investimento?.saldoAnterior)
             )}
             errors={state.errors?.['saldoAnterior']}
           />
@@ -191,8 +198,8 @@ export default function InvestmentForm({
               id='dividendosDoMes'
               label='Dividendos do Mês'
               placeholder='Entre com o valor exemplo (99,99)'
-              defaultValue={toNumber(
-                state.submittedData?.dividendosDoMes ?? investimento?.dividendosDoMes
+              defaultValue={formatToTwoDecimals(
+                toNumber(state.submittedData?.dividendosDoMes ?? investimento?.dividendosDoMes)
               )}
               errors={state.errors?.dividendosDoMes}
             />
@@ -206,8 +213,8 @@ export default function InvestmentForm({
             id='valorAplicado'
             label='Valores Aplicados'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={toNumber(
-              state.submittedData?.valorAplicado ?? investimento?.valorAplicado
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.valorAplicado ?? investimento?.valorAplicado)
             )}
             errors={state.errors?.valorAplicado}
           />
@@ -217,8 +224,8 @@ export default function InvestmentForm({
             id='valorResgatado'
             label='Valores Resgatados'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={toNumber(
-              state.submittedData?.valorResgatado ?? investimento?.valorResgatado
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.valorResgatado ?? investimento?.valorResgatado)
             )}
             errors={state.errors?.valorResgatado}
           />
@@ -231,8 +238,8 @@ export default function InvestmentForm({
             id='impostoIncorrido'
             label='Impostos Incorridos'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={toNumber(
-              state.submittedData?.impostoIncorrido ?? investimento?.impostoIncorrido
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.impostoIncorrido ?? investimento?.impostoIncorrido)
             )}
             errors={state.errors?.impostoIncorrido}
           />
@@ -242,8 +249,8 @@ export default function InvestmentForm({
             id='impostoPrevisto'
             label='Impostos Previstos'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={toNumber(
-              state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto)
             )}
             errors={state.errors?.impostoPrevisto}
           />
@@ -256,7 +263,9 @@ export default function InvestmentForm({
             id='saldoBruto'
             label='Saldo Bruto'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)}
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)
+            )}
             errors={state.errors?.saldoBruto}
           />
         </div>
@@ -265,7 +274,9 @@ export default function InvestmentForm({
             id='saldoLiquido'
             label='Saldo Líquido'
             placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)}
+            defaultValue={formatToTwoDecimals(
+              toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)
+            )}
             errors={state.errors?.saldoLiquido}
           />
         </div>

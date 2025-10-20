@@ -5,6 +5,11 @@
     "createdAt": "2025-09-18T18:21:00.151Z"
   },
   {
+    "ativoId": "6229b420-f771-4393-ab9f-af895af38fa8",
+    "categoriaId": "19c565ad-db53-409b-a5c7-750c6e16bae9",
+    "createdAt": "2025-10-04T21:02:55.348Z"
+  },
+  {
     "ativoId": "3ebeada4-e53b-406c-826a-9c59dbe9ad6e",
     "categoriaId": "19c565ad-db53-409b-a5c7-750c6e16bae9",
     "createdAt": "2025-09-18T18:21:00.151Z"
@@ -12,17 +17,12 @@
   {
     "ativoId": "6229b420-f771-4393-ab9f-af895af38fa8",
     "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
-    "createdAt": "2025-09-18T18:22:08.723Z"
+    "createdAt": "2025-10-04T21:02:55.348Z"
   },
   {
     "ativoId": "7acfcca0-897f-4398-a003-3a9f358a560e",
     "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
     "createdAt": "2025-09-03T17:57:30.952Z"
-  },
-  {
-    "ativoId": "6229b420-f771-4393-ab9f-af895af38fa8",
-    "categoriaId": "19c565ad-db53-409b-a5c7-750c6e16bae9",
-    "createdAt": "2025-09-18T18:22:08.723Z"
   },
   {
     "ativoId": "e3c1b314-f8ea-462d-90cc-076ce5b843f2",
@@ -83,6 +83,11 @@
     "ativoId": "ba502c80-80f0-485d-ad44-996ac27f8173",
     "categoriaId": "19c565ad-db53-409b-a5c7-750c6e16bae9",
     "createdAt": "2025-09-18T18:42:47.043Z"
+  },
+  {
+    "ativoId": "12144323-4251-46fd-a29a-9c75ad8dbe12",
+    "categoriaId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-10-07T06:28:14.453Z"
   },
   {
     "ativoId": "6ccbf909-482b-42b5-9ea9-77d337f1785d",

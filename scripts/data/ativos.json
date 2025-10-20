@@ -1,16 +1,16 @@
 [
   {
+    "id": "12144323-4251-46fd-a29a-9c75ad8dbe12",
+    "nome": "ACOES GLOBAIS REAIS BDR ETF FIC FIA",
+    "createdAt": "2025-10-07T06:28:14.453Z",
+    "updatedAt": "2025-10-07T06:28:14.453Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
     "id": "3ebeada4-e53b-406c-826a-9c59dbe9ad6e",
     "nome": "CRI FINAL 99,93% CDI",
     "createdAt": "2025-09-18T11:41:31.160Z",
     "updatedAt": "2025-09-18T18:21:00.151Z",
-    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
-  },
-  {
-    "id": "6229b420-f771-4393-ab9f-af895af38fa8",
-    "nome": "CRA Emissão Terceiros CDI",
-    "createdAt": "2025-08-19T23:11:10.362Z",
-    "updatedAt": "2025-09-18T18:22:08.723Z",
     "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   },
   {
@@ -187,5 +187,12 @@
     "createdAt": "2025-09-24T16:07:30.925Z",
     "updatedAt": "2025-09-24T16:07:30.925Z",
     "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
+  },
+  {
+    "id": "6229b420-f771-4393-ab9f-af895af38fa8",
+    "nome": "CRA EMISSAO TERCEIROS CDI",
+    "createdAt": "2025-08-19T23:11:10.362Z",
+    "updatedAt": "2025-10-04T21:02:55.348Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   }
 ]
