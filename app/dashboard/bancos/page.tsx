@@ -29,8 +29,8 @@ export default async function Page({
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
-  const query = resolvedSearchParams.query || '';
   const currentPage = Number(resolvedSearchParams.page) || 1;
+  const query = resolvedSearchParams.query || '';
 
   const totalPages = await fetchBancosPages(query);
 
@@ -38,11 +38,13 @@ export default async function Page({
     <div className='w-full'>
       <div className='flex w-full items-center justify-between'>
         <h1 className={`${lusitana.className} text-2xl`}>Bancos</h1>
-      </div>
-      <div className='mt-4 flex items-center justify-between gap-2 md:mt-8'>
-        <Search placeholder='Pesquisar bancos...' />
         <ButtonLinkCreate href='/dashboard/bancos/create'>Cadastrar Banco</ButtonLinkCreate>
       </div>
+
+      <div className='mt-4 flex items-center justify-between gap-2 md:mt-8'>
+        <Search placeholder='Pesquisar bancos...' />
+      </div>
+
       <Suspense key={query + currentPage} fallback={<BancosTableSkeleton />}>
         <BancosTable bancos={await fetchFilteredBancos(query, currentPage)} />
       </Suspense>

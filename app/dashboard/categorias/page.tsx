@@ -30,7 +30,6 @@ export default async function Page({
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
   const currentPage = Number(resolvedSearchParams.page) || 1;
-
   const queryCategoria = resolvedSearchParams.queryCategoria || '';
 
   const totalPages = await fetchCategoriasPages(queryCategoria);

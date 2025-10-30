@@ -35,13 +35,6 @@
     "updatedAt": "2025-09-17T22:30:00.956Z"
   },
   {
-    "id": "3e15c818-bd59-4ee7-86fd-307c8189c3a8",
-    "nome": "ACOES",
-    "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
-    "createdAt": "2025-09-18T17:34:46.642Z",
-    "updatedAt": "2025-09-18T17:34:46.642Z"
-  },
-  {
     "id": "f6247525-67a6-4a7c-acd8-2a9bb30dc5e9",
     "nome": "FUNDO IMOBILIARIO",
     "parentId": "04854073-f6dd-463a-8110-7bf990456712",
@@ -110,5 +103,12 @@
     "parentId": null,
     "createdAt": "2025-09-18T18:41:41.921Z",
     "updatedAt": "2025-09-18T18:41:41.921Z"
+  },
+  {
+    "id": "3e15c818-bd59-4ee7-86fd-307c8189c3a8",
+    "nome": "ACOES",
+    "parentId": "04854073-f6dd-463a-8110-7bf990456712",
+    "createdAt": "2025-09-18T17:34:46.642Z",
+    "updatedAt": "2025-10-29T21:51:00.804Z"
   }
 ]

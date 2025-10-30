@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
 import Search from '@/components/shared/search';
+
 import { lusitana } from '@/components/shared/fonts';
 import Pagination from '@/components/shared/pagination';
 import { ButtonLinkCreate } from '@/components/shared/buttonsLinkCreate';
@@ -28,8 +29,8 @@ export default async function Page({
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
-  const query = resolvedSearchParams.query || '';
   const currentPage = Number(resolvedSearchParams.page) || 1;
+  const query = resolvedSearchParams.query || '';
 
   const totalPages = await fetchInvoicesPages(query);
 
@@ -37,11 +38,13 @@ export default async function Page({
     <div className='w-full'>
       <div className='flex w-full items-center justify-between'>
         <h1 className={`${lusitana.className} text-2xl`}>Faturas</h1>
-      </div>
-      <div className='mt-4 flex items-center justify-between gap-2 md:mt-8'>
-        <Search placeholder='Pesquisar faturas...' />
         <ButtonLinkCreate href='/dashboard/invoices/create'>Cadastrar Fatura</ButtonLinkCreate>
       </div>
+
+      <div className='mt-4 flex items-center justify-between gap-2 md:mt-8'>
+        <Search placeholder='Pesquisar faturas...' />
+      </div>
+
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />
       </Suspense>

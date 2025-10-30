@@ -25,8 +25,8 @@ export default function Search({ placeholder }: { placeholder: string }) {
   }, 300);
 
   return (
-    <div className='flex flex-1 gap-2'>
-      <label htmlFor='search' className='flex items-center mb-1 text-sm font-medium text-gray-700'>
+    <div className='flex flex-1 flex-col'>
+      <label htmlFor='search' className='mb-1 text-sm font-medium text-gray-700'>
         Buscar
       </label>
       <div className='relative flex flex-1 flex-shrink-0'>

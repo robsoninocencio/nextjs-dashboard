@@ -305,6 +305,7 @@ export async function deleteInvestimento(id: string) {
  * Server Action para copiar investimentos do mês mais atual para o próximo mês.
  */
 export async function copyInvestimentos(formData: FormData): Promise<void> {
+  console.log('Entrei em copyInvestimentos');
   const rawFormData = Object.fromEntries(formData.entries());
 
   console.log('rawFormData for copy:', rawFormData);
@@ -331,6 +332,8 @@ export async function copyInvestimentos(formData: FormData): Promise<void> {
     categoriaId: filters.categoriaId || '',
   };
 
+  console.log('investmentFilters:', investmentFilters);
+
   try {
     // Buscar os investimentos mais atuais baseados nos filtros
     const { fetchFilteredInvestimentos } = await import(
@@ -343,8 +346,17 @@ export async function copyInvestimentos(formData: FormData): Promise<void> {
     let mesAtual = investmentFilters.mes;
 
     if (!anoAtual || !mesAtual) {
+      const { buildInvestimentosFilters, getCategoriaIds } = await import(
+        '@/modules/investimentos/data/investimentos'
+      );
+      let categoriaIds: string[] = [];
+      if (investmentFilters.categoriaId) {
+        categoriaIds = await getCategoriaIds(investmentFilters.categoriaId);
+      }
+      const where = buildInvestimentosFilters(investmentFilters, categoriaIds);
       // Se não há filtros específicos, buscar o mês mais recente
       const latestInvestimento = await prisma.investimentos.findFirst({
+        where,
         orderBy: [{ ano: 'desc' }, { mes: 'desc' }],
         select: {
           ano: true,
@@ -366,6 +378,8 @@ export async function copyInvestimentos(formData: FormData): Promise<void> {
       ano: anoAtual,
       mes: mesAtual,
     };
+
+    console.log('currentFilters:', currentFilters);
 
     const investimentosToCopy = await fetchFilteredInvestimentos(currentFilters, 1); // Página 1 para todos
 

@@ -23,7 +23,7 @@ const ITEMS_PER_PAGE = 12;
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
  */
-async function getCategoriaIds(categoriaId: string): Promise<string[]> {
+export async function getCategoriaIds(categoriaId: string): Promise<string[]> {
   if (!categoriaId) {
     return [];
   }
@@ -44,7 +44,7 @@ async function getCategoriaIds(categoriaId: string): Promise<string[]> {
   return result.map(r => r.id);
 }
 
-function buildInvestimentosFilters(
+export function buildInvestimentosFilters(
   filters: InvestmentFiltersParams,
   categoriaIds?: string[]
 ): Prisma.investimentosWhereInput {
@@ -128,6 +128,8 @@ export async function fetchFilteredInvestimentos(
   filters: InvestmentFiltersParams,
   currentPage: number
 ): Promise<InvestimentoCompleto[]> {
+  console.log('Entrei em fetchFilteredInvestimentos');
+
   try {
     const { categoriaId } = filters;
 
@@ -136,13 +138,18 @@ export async function fetchFilteredInvestimentos(
       categoriaIds = await getCategoriaIds(categoriaId);
     }
 
+    // console.log('categoriaIds', categoriaIds);
+    // console.log('filters', filters);
+
     const where = buildInvestimentosFilters(filters, categoriaIds);
+    // console.log('where', where);
 
     // 1. Buscar TODOS os grupos que correspondem aos filtros
     const allGroups = await prisma.investimentos.groupBy({
       by: ['clienteId', 'ano', 'mes'],
       where,
     });
+    // console.log('allGroups', allGroups);
 
     if (allGroups.length === 0) {
       return [];
