@@ -62,12 +62,20 @@ export default function InvestmentForm({
     initialAtivo?.tipos?.nome === 'RENDA VARIAVEL'
   );
   const [isCdbAutomatico, setCdbAutomatico] = useState(initialAtivo?.nome === 'CDB AUTOMATICO');
+  const [isContaCorrente, setContaCorrente] = useState(initialAtivo?.nome === 'CONTA CORRENTE');
+  const [isPoupanca, setPoupanca] = useState(initialAtivo?.nome === 'POUPANCA');
+  const [isLCI, setLCI] = useState(initialAtivo?.nome.startsWith('LCI'));
+  const [isLCA, setLCA] = useState(initialAtivo?.nome.startsWith('LCA'));
 
   const handleAtivoChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedAtivoId = e.target.value;
     const selectedAtivo = ativos.find(ativo => ativo.id === selectedAtivoId);
     setIsRendaVariavel(selectedAtivo?.tipos?.nome === 'RENDA VARIAVEL');
     setCdbAutomatico(selectedAtivo?.nome === 'CDB AUTOMATICO');
+    setContaCorrente(selectedAtivo?.nome === 'CONTA CORRENTE');
+    setPoupanca(selectedAtivo?.nome === 'POUPANCA');
+    setLCI(selectedAtivo?.nome.startsWith('LCI'));
+    setLCA(selectedAtivo?.nome.startsWith('LCA'));
   };
 
   const years = Array.from({ length: 15 }, (_, i) => ({
@@ -168,7 +176,7 @@ export default function InvestmentForm({
       </div>
 
       <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
-        {!isCdbAutomatico && (
+        {!isCdbAutomatico && !isContaCorrente && !isPoupanca && (
           <div className='md:w-1/2'>
             <CurrencyField
               id='rendimentoDoMes'
@@ -232,55 +240,62 @@ export default function InvestmentForm({
         </div>
       </div>
 
-      <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
-        <div className='md:w-1/2'>
-          <CurrencyField
-            id='impostoIncorrido'
-            label='Impostos Incorridos'
-            placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={formatToTwoDecimals(
-              toNumber(state.submittedData?.impostoIncorrido ?? investimento?.impostoIncorrido)
-            )}
-            errors={state.errors?.impostoIncorrido}
-          />
+      {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && !isRendaVariavel && (
+        <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
+          <div className='md:w-1/2'>
+            <CurrencyField
+              id='impostoIncorrido'
+              label='Impostos Incorridos'
+              placeholder='Entre com o valor exemplo (99,99)'
+              defaultValue={formatToTwoDecimals(
+                toNumber(state.submittedData?.impostoIncorrido ?? investimento?.impostoIncorrido)
+              )}
+              errors={state.errors?.impostoIncorrido}
+            />
+          </div>
+          <div className='md:w-1/2 sm:mt-4 md:mt-0'>
+            <CurrencyField
+              id='impostoPrevisto'
+              label='Impostos Previstos'
+              placeholder='Entre com o valor exemplo (99,99)'
+              defaultValue={formatToTwoDecimals(
+                toNumber(state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto)
+              )}
+              errors={state.errors?.impostoPrevisto}
+            />
+          </div>
         </div>
-        <div className='md:w-1/2 sm:mt-4 md:mt-0'>
-          <CurrencyField
-            id='impostoPrevisto'
-            label='Impostos Previstos'
-            placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={formatToTwoDecimals(
-              toNumber(state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto)
-            )}
-            errors={state.errors?.impostoPrevisto}
-          />
-        </div>
-      </div>
+      )}
 
-      <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
-        <div className='md:w-1/2'>
-          <CurrencyField
-            id='saldoBruto'
-            label='Saldo Bruto'
-            placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={formatToTwoDecimals(
-              toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)
-            )}
-            errors={state.errors?.saldoBruto}
-          />
+      {!isContaCorrente && !isPoupanca && !isRendaVariavel && (
+        <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
+          <div className='md:w-1/2'>
+            <CurrencyField
+              id='saldoBruto'
+              label='Saldo Bruto'
+              placeholder='Entre com o valor exemplo (99,99)'
+              defaultValue={formatToTwoDecimals(
+                toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)
+              )}
+              errors={state.errors?.saldoBruto}
+            />
+          </div>
+
+          {!isLCI && !isLCA && !isRendaVariavel && (
+            <div className='md:w-1/2 sm:mt-4 md:mt-0'>
+              <CurrencyField
+                id='saldoLiquido'
+                label='Saldo Líquido'
+                placeholder='Entre com o valor exemplo (99,99)'
+                defaultValue={formatToTwoDecimals(
+                  toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)
+                )}
+                errors={state.errors?.saldoLiquido}
+              />
+            </div>
+          )}
         </div>
-        <div className='md:w-1/2 sm:mt-4 md:mt-0'>
-          <CurrencyField
-            id='saldoLiquido'
-            label='Saldo Líquido'
-            placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={formatToTwoDecimals(
-              toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)
-            )}
-            errors={state.errors?.saldoLiquido}
-          />
-        </div>
-      </div>
+      )}
 
       <div aria-live='polite' aria-atomic='true'>
         {state.message ? <p className='my-6 text-sm text-red-700'>{state.message}</p> : null}

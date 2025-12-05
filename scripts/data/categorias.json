@@ -49,13 +49,6 @@
     "updatedAt": "2025-09-18T18:01:01.730Z"
   },
   {
-    "id": "5b1918ea-e8ed-4a75-bf99-d9f3649e5320",
-    "nome": "CDB",
-    "parentId": null,
-    "createdAt": "2025-09-18T18:23:41.469Z",
-    "updatedAt": "2025-09-18T18:25:29.284Z"
-  },
-  {
     "id": "c76f3964-91e3-4cd6-a07b-f5746f55066f",
     "nome": "CURTO PRAZO",
     "parentId": "dde360d9-bcef-4027-9431-bec14e6a96be",
@@ -91,24 +84,31 @@
     "updatedAt": "2025-09-18T18:40:59.637Z"
   },
   {
-    "id": "c7edcfe4-acbd-4781-9df5-c3fa8ef21610",
-    "nome": "LCI",
-    "parentId": null,
-    "createdAt": "2025-09-18T18:41:34.281Z",
-    "updatedAt": "2025-09-18T18:41:34.281Z"
-  },
-  {
-    "id": "f91e4ba2-25f2-4ab2-b4e3-7f096059c83a",
-    "nome": "LCA",
-    "parentId": null,
-    "createdAt": "2025-09-18T18:41:41.921Z",
-    "updatedAt": "2025-09-18T18:41:41.921Z"
-  },
-  {
     "id": "3e15c818-bd59-4ee7-86fd-307c8189c3a8",
     "nome": "ACOES",
     "parentId": "04854073-f6dd-463a-8110-7bf990456712",
     "createdAt": "2025-09-18T17:34:46.642Z",
     "updatedAt": "2025-10-29T21:51:00.804Z"
+  },
+  {
+    "id": "5b1918ea-e8ed-4a75-bf99-d9f3649e5320",
+    "nome": "CDB",
+    "parentId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-18T18:23:41.469Z",
+    "updatedAt": "2025-11-03T18:41:15.368Z"
+  },
+  {
+    "id": "f91e4ba2-25f2-4ab2-b4e3-7f096059c83a",
+    "nome": "LCA",
+    "parentId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-18T18:41:41.921Z",
+    "updatedAt": "2025-11-03T18:44:43.671Z"
+  },
+  {
+    "id": "c7edcfe4-acbd-4781-9df5-c3fa8ef21610",
+    "nome": "LCI",
+    "parentId": "6dfcc633-4629-4410-9e87-30fe162eea7b",
+    "createdAt": "2025-09-18T18:41:34.281Z",
+    "updatedAt": "2025-11-03T18:44:58.518Z"
   }
 ]

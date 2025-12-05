@@ -109,7 +109,7 @@ export default async function Page({
 
   return (
     <div className='w-full'>
-      <div className='flex w-full items-center justify-between gap-4'>
+      <div className='flex w-full items-center justify-between gap-4 mb-2'>
         <h1 className={`${lusitana.className} text-2xl`}>Investimentos</h1>
         <div className='flex items-center gap-2'>
           <SidebarToggle />

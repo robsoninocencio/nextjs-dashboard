@@ -21,6 +21,27 @@
     "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   },
   {
+    "id": "ba502c80-80f0-485d-ad44-996ac27f8173",
+    "nome": "LCA - SAFRA - PRE 11,97%",
+    "createdAt": "2025-09-08T15:06:55.197Z",
+    "updatedAt": "2025-11-03T19:51:41.204Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "6ccbf909-482b-42b5-9ea9-77d337f1785d",
+    "nome": "LCA - CAIXA - 98,92% CDI",
+    "createdAt": "2025-09-06T08:22:01.768Z",
+    "updatedAt": "2025-11-03T19:52:18.582Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "393b86fd-9f84-4287-b00c-fbc818ff8151",
+    "nome": "KNCR12",
+    "createdAt": "2025-11-10T22:08:23.153Z",
+    "updatedAt": "2025-11-10T22:08:23.153Z",
+    "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
+  },
+  {
     "id": "ed99f483-7375-4937-8aec-9151405a3a59",
     "nome": "NTN-B PRINC-TESOURO MAI/2045",
     "createdAt": "2025-10-26T15:36:03.220Z",
@@ -98,13 +119,6 @@
     "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   },
   {
-    "id": "ba502c80-80f0-485d-ad44-996ac27f8173",
-    "nome": "LCA - 11,97% PRE - SAFRA",
-    "createdAt": "2025-09-08T15:06:55.197Z",
-    "updatedAt": "2025-09-18T18:42:47.043Z",
-    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
-  },
-  {
     "id": "c1dc4711-41db-4e9a-9c64-8299355845fe",
     "nome": "HGLG11",
     "createdAt": "2025-10-29T21:38:44.674Z",
@@ -175,13 +189,6 @@
     "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
   },
   {
-    "id": "6ccbf909-482b-42b5-9ea9-77d337f1785d",
-    "nome": "LCA - 98,92% CDI - CAIXA",
-    "createdAt": "2025-09-06T08:22:01.768Z",
-    "updatedAt": "2025-09-18T18:46:23.239Z",
-    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
-  },
-  {
     "id": "76176f17-968c-46eb-bba7-6cc6df297fa9",
     "nome": "TRXF11",
     "createdAt": "2025-10-29T21:52:46.439Z",
@@ -189,11 +196,11 @@
     "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
   },
   {
-    "id": "2b059dea-d13e-46e3-b3c2-d4b71b6e5e4e",
-    "nome": "LCI - 95% CDI - SANTANDER",
-    "createdAt": "2025-09-06T08:26:15.229Z",
-    "updatedAt": "2025-09-18T18:47:19.991Z",
-    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+    "id": "d89a91ba-c21b-430c-a708-0c9779b87fb8",
+    "nome": "EQTL1",
+    "createdAt": "2025-11-20T20:52:32.415Z",
+    "updatedAt": "2025-11-20T20:52:32.415Z",
+    "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
   },
   {
     "id": "2860c008-b931-40e9-85f1-983e2ef01516",
@@ -210,18 +217,18 @@
     "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
   },
   {
-    "id": "fa4ec5db-f028-485c-bfd6-411eed527727",
-    "nome": "LCI - 98% CDI - CAIXA",
-    "createdAt": "2025-09-04T21:30:50.419Z",
-    "updatedAt": "2025-09-18T18:47:35.359Z",
+    "id": "5291b4ed-3c15-4d28-922d-17bace9d4c05",
+    "nome": "CRA EMISSAO TERCEIROS IPCA",
+    "createdAt": "2025-11-27T15:04:24.378Z",
+    "updatedAt": "2025-11-27T15:04:24.378Z",
     "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   },
   {
-    "id": "d19f0000-8906-404f-95f8-40faa67d78db",
-    "nome": "LCI - 98,32% CDI - CAIXA",
-    "createdAt": "2025-09-17T22:26:02.422Z",
-    "updatedAt": "2025-09-18T18:47:50.882Z",
-    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+    "id": "bf76e59b-779c-493e-a72f-65e32726ad37",
+    "nome": "BPAC11",
+    "createdAt": "2025-11-28T14:47:09.105Z",
+    "updatedAt": "2025-11-28T14:47:09.105Z",
+    "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
   },
   {
     "id": "8eb06c98-3d67-406b-9677-755bced18e54",
@@ -315,6 +322,20 @@
     "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
   },
   {
+    "id": "e640aae4-6956-4d75-845a-a3b083237a20",
+    "nome": "SAF CAPMKT INFRA PREM II RF IN",
+    "createdAt": "2025-10-31T16:48:38.432Z",
+    "updatedAt": "2025-10-31T16:48:38.432Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "24d98881-391a-4a30-8d9c-460ef859df92",
+    "nome": "BRXPMLD03M11",
+    "createdAt": "2025-11-02T16:43:21.430Z",
+    "updatedAt": "2025-11-02T16:43:21.430Z",
+    "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
+  },
+  {
     "id": "db78c891-706a-472c-9b21-2970f1e2e897",
     "nome": "NTN-F TESOURO JAN/2031",
     "createdAt": "2025-09-18T17:48:03.093Z",
@@ -333,13 +354,6 @@
     "nome": "SAF SOB SPECIAL FICFI RF SIMPL",
     "createdAt": "2025-08-19T23:11:12.645Z",
     "updatedAt": "2025-09-18T18:58:03.510Z",
-    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
-  },
-  {
-    "id": "d94b4c4f-03f6-4d10-8b78-8e574d198aeb",
-    "nome": "TCM LCIPR - 10,71% PRE IE",
-    "createdAt": "2025-09-18T11:49:29.181Z",
-    "updatedAt": "2025-09-18T18:58:19.650Z",
     "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   },
   {
@@ -369,6 +383,34 @@
     "createdAt": "2025-09-24T16:07:30.925Z",
     "updatedAt": "2025-09-24T16:07:30.925Z",
     "tipoId": "057909d7-7901-4a0a-99b1-732c97aa4086"
+  },
+  {
+    "id": "2b059dea-d13e-46e3-b3c2-d4b71b6e5e4e",
+    "nome": "LCI - SANTANDER - 95,00% CDI",
+    "createdAt": "2025-09-06T08:26:15.229Z",
+    "updatedAt": "2025-11-03T19:36:32.237Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "d19f0000-8906-404f-95f8-40faa67d78db",
+    "nome": "LCI - CAIXA - 98,32% CDI",
+    "createdAt": "2025-09-17T22:26:02.422Z",
+    "updatedAt": "2025-11-03T19:38:42.595Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "fa4ec5db-f028-485c-bfd6-411eed527727",
+    "nome": "LCI - CAIXA - 98,00% CDI",
+    "createdAt": "2025-09-04T21:30:50.419Z",
+    "updatedAt": "2025-11-03T19:39:09.487Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
+  },
+  {
+    "id": "d94b4c4f-03f6-4d10-8b78-8e574d198aeb",
+    "nome": "LCI - SAFRA - PRE 10,71% - TCM",
+    "createdAt": "2025-09-18T11:49:29.181Z",
+    "updatedAt": "2025-11-03T19:41:01.448Z",
+    "tipoId": "0348832b-8e22-4413-a503-dd518883b401"
   },
   {
     "id": "6229b420-f771-4393-ab9f-af895af38fa8",

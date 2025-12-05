@@ -122,18 +122,19 @@ function toCents(value: number): number {
  * Calcula o rendimento do mês para ativos do tipo "CDB AUTOMATICO".
  * Para outros ativos, retorna o valor já informado.
  */
-async function calculateRendimentoCDB(
-  data: InvestimentoData,
-  investimentoAnterior: { saldoBruto: number } | null
-): Promise<number> {
-  const ativos = await fetchAtivos();
-  const isCDBAutomatico = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB AUTOMATICO'
+async function calculateRendimentoCDB(data: InvestimentoData): Promise<number> {
+  const buscaInvestimentoAnterior = await fetchInvestimentoAnterior(
+    data.ano.toString(),
+    data.mes.toString(),
+    data.clienteId,
+    data.bancoId,
+    data.ativoId
   );
 
-  if (!isCDBAutomatico) {
-    return data.rendimentoDoMes;
-  }
+  const investimentoAnterior = {
+    saldoBruto: data.saldoAnterior,
+    saldoLiquido: buscaInvestimentoAnterior?.saldoLiquido ?? 0,
+  };
 
   const saldoBrutoAnterior = investimentoAnterior?.saldoBruto ?? 0;
   return (
@@ -154,31 +155,59 @@ async function calculateRendimentoCDB(
  * Cria um novo registro se o `id` não for fornecido, ou atualiza um existente.
  */
 async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
-  const investimentoAnterior = await fetchInvestimentoAnterior(
-    data.ano.toString(),
-    data.mes.toString(),
-    data.clienteId,
-    data.bancoId,
-    data.ativoId
+  let saldoBruto = data.saldoBruto;
+  let saldoLiquido = data.saldoLiquido;
+  let rendimentoDoMes = data.rendimentoDoMes;
+
+  const ativos = await fetchAtivos();
+
+  const isContaCorrente = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CONTA CORRENTE'
+  );
+  const isCDBAutomatico = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CDB AUTOMATICO'
+  );
+  const isPoupanca = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome === 'POUPANCA');
+  const isLCI = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCI'));
+  const isLCA = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCA'));
+
+  const isRendaVariavel = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.tipos?.nome === 'RENDA VARIAVEL'
   );
 
-  const dadosAnterioresParaCalculo = {
-    saldoBruto: data.saldoAnterior,
-    saldoLiquido: investimentoAnterior?.saldoLiquido ?? 0,
-  };
+  if (isCDBAutomatico) {
+    rendimentoDoMes = await calculateRendimentoCDB(data);
+  }
 
-  const rendimentoDoMes = await calculateRendimentoCDB(data, dadosAnterioresParaCalculo);
+  if (isContaCorrente || isPoupanca || isRendaVariavel) {
+    saldoBruto = data.saldoAnterior;
+    if (data.valorResgatado > 0) {
+      saldoBruto = saldoBruto - data.valorResgatado;
+    }
+    if (data.valorAplicado > 0) {
+      saldoBruto = saldoBruto + data.valorAplicado;
+    }
+    if (isRendaVariavel) {
+      saldoBruto = saldoBruto + data.rendimentoDoMes;
+    }
+
+    saldoLiquido = saldoBruto;
+  }
+
+  if (isLCI || isLCA) {
+    saldoLiquido = saldoBruto;
+  }
 
   const payload = {
     rendimentoDoMes: toCents(rendimentoDoMes),
     dividendosDoMes: toCents(data.dividendosDoMes),
     valorAplicado: toCents(data.valorAplicado),
-    saldoBruto: toCents(data.saldoBruto),
+    saldoBruto: toCents(saldoBruto),
     saldoAnterior: toCents(data.saldoAnterior),
     valorResgatado: toCents(data.valorResgatado),
     impostoIncorrido: toCents(data.impostoIncorrido),
     impostoPrevisto: toCents(data.impostoPrevisto),
-    saldoLiquido: toCents(data.saldoLiquido),
+    saldoLiquido: toCents(saldoLiquido),
     clienteId: data.clienteId,
     bancoId: data.bancoId,
     ativoId: data.ativoId,
