@@ -35,7 +35,7 @@ export default function CustomCurrencyInput({
         allowDecimals
         allowNegativeValue={true}
         decimalScale={2}
-        onFocus={(e) => e.target.select()}
+        onFocus={e => e.target.select()}
         {...props}
       />
       <CurrencyDollarIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
