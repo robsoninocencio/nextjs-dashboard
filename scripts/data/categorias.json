@@ -1,5 +1,12 @@
 [
   {
+    "id": "4270b5a3-429e-4efb-a63e-0db5bea164f2",
+    "nome": "ETF",
+    "parentId": "04854073-f6dd-463a-8110-7bf990456712",
+    "createdAt": "2025-12-20T21:40:25.012Z",
+    "updatedAt": "2025-12-20T21:40:25.012Z"
+  },
+  {
     "id": "dde360d9-bcef-4027-9431-bec14e6a96be",
     "nome": "INVESTIMENTO",
     "parentId": null,

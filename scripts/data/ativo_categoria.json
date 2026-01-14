@@ -428,5 +428,15 @@
     "ativoId": "e8fcfa59-8629-4929-bf17-b52b6cda2e44",
     "categoriaId": "3e15c818-bd59-4ee7-86fd-307c8189c3a8",
     "createdAt": "2025-12-11T02:12:34.931Z"
+  },
+  {
+    "ativoId": "e8d0c94e-a938-4dbd-b91d-73ce3190ddf0",
+    "categoriaId": "802e78f0-5b01-4658-af65-a3615b092c87",
+    "createdAt": "2025-12-20T21:09:02.284Z"
+  },
+  {
+    "ativoId": "fec14421-d424-482d-9b5a-cdb1c4e374ae",
+    "categoriaId": "4270b5a3-429e-4efb-a63e-0db5bea164f2",
+    "createdAt": "2025-12-20T21:49:49.983Z"
   }
 ]

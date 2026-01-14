@@ -18,8 +18,8 @@ export type InvestmentFiltersParams = {
   categoriaId?: string;
 };
 
-const ITEMS_PER_PAGE = 12;
-// const ITEMS_PER_PAGE = 1000;
+// const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 1000;
 
 /**
  * Busca todas as categorias filhas (recursivamente) de uma categoria pai.
