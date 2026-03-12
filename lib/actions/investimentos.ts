@@ -180,16 +180,23 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
   }
 
   if (isContaCorrente || isPoupanca || isRendaVariavel) {
-    saldoBruto = data.saldoAnterior;
-    if (data.valorResgatado > 0) {
-      saldoBruto = saldoBruto - data.valorResgatado;
-    }
-    if (data.valorAplicado > 0) {
-      saldoBruto = saldoBruto + data.valorAplicado;
-    }
-    if (isRendaVariavel) {
-      saldoBruto = saldoBruto + data.rendimentoDoMes;
-    }
+    saldoBruto =
+      data.saldoAnterior +
+      data.rendimentoDoMes +
+      data.dividendosDoMes +
+      data.valorAplicado -
+      data.valorResgatado -
+      data.impostoIncorrido;
+    // saldoBruto = data.saldoAnterior;
+    // if (data.valorResgatado > 0) {
+    //   saldoBruto = saldoBruto - data.valorResgatado;
+    // }
+    // if (data.valorAplicado > 0) {
+    //   saldoBruto = saldoBruto + data.valorAplicado;
+    // }
+    // if (isRendaVariavel) {
+    //   saldoBruto = saldoBruto + data.rendimentoDoMes - data.impostoIncorrido;
+    // }
 
     saldoLiquido = saldoBruto;
   }

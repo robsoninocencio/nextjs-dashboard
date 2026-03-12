@@ -240,7 +240,8 @@ export default function InvestmentForm({
         </div>
       </div>
 
-      {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && !isRendaVariavel && (
+      {/* {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && !isRendaVariavel && ( */}
+      {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && (
         <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
           <div className='md:w-1/2'>
             <CurrencyField
@@ -253,17 +254,20 @@ export default function InvestmentForm({
               errors={state.errors?.impostoIncorrido}
             />
           </div>
-          <div className='md:w-1/2 sm:mt-4 md:mt-0'>
-            <CurrencyField
-              id='impostoPrevisto'
-              label='Impostos Previstos'
-              placeholder='Entre com o valor exemplo (99,99)'
-              defaultValue={formatToTwoDecimals(
-                toNumber(state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto)
-              )}
-              errors={state.errors?.impostoPrevisto}
-            />
-          </div>
+
+          {!isRendaVariavel && (
+            <div className='md:w-1/2 sm:mt-4 md:mt-0'>
+              <CurrencyField
+                id='impostoPrevisto'
+                label='Impostos Previstos'
+                placeholder='Entre com o valor exemplo (99,99)'
+                defaultValue={formatToTwoDecimals(
+                  toNumber(state.submittedData?.impostoPrevisto ?? investimento?.impostoPrevisto)
+                )}
+                errors={state.errors?.impostoPrevisto}
+              />
+            </div>
+          )}
         </div>
       )}
 
