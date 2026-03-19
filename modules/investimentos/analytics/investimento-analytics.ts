@@ -151,14 +151,13 @@ export async function fetchAggregatedMetrics(filters: InvestmentFiltersParams) {
         impostoIncorrido: true,
         impostoPrevisto: true,
       },
-      _count: {
-        id: true,
-      },
     });
 
     // Get saldoBruto and saldoLiquido for max date
     let saldoBrutoAtual = 0;
     let saldoLiquidoAtual = 0;
+    let totalAtivosAtual = 0;
+
     if (maxDate) {
       const saldoAgg = await prisma.investimentos.aggregate({
         where: {
@@ -170,6 +169,9 @@ export async function fetchAggregatedMetrics(filters: InvestmentFiltersParams) {
           saldoBruto: true,
           saldoLiquido: true,
         },
+        _count: {
+          id: true,
+        },
       });
       saldoBrutoAtual =
         typeof saldoAgg._sum.saldoBruto === 'number'
@@ -179,6 +181,7 @@ export async function fetchAggregatedMetrics(filters: InvestmentFiltersParams) {
         typeof saldoAgg._sum.saldoLiquido === 'number'
           ? saldoAgg._sum.saldoLiquido
           : saldoAgg._sum.saldoLiquido?.toNumber() || 0;
+      totalAtivosAtual = saldoAgg._count.id;
     }
 
     return {
@@ -190,7 +193,7 @@ export async function fetchAggregatedMetrics(filters: InvestmentFiltersParams) {
       saldoLiquidoAtual,
       totalImpostos:
         toNumber(metrics._sum.impostoIncorrido) + toNumber(metrics._sum.impostoPrevisto),
-      totalAtivos: metrics._count.id,
+      totalAtivos: totalAtivosAtual,
     };
   } catch (error) {
     console.error('Erro ao buscar métricas agregadas:', error);

@@ -132,14 +132,15 @@ export default async function Page({
         <ProfitabilityChart data={performanceData} />
       </div>
 
-      {/* Gráficos de diversificação */}
-      <DiversificationCharts categoryData={categoryData} bankData={bankData} />
-
       <InvestmentFilters categorias={categorias} />
 
       <Suspense key={suspenseKey} fallback={<InvestimentosTableSkeleton />}>
         <Table currentPage={currentPage} filters={filters} />
       </Suspense>
+
+      {/* Gráficos de diversificação */}
+      <DiversificationCharts categoryData={categoryData} bankData={bankData} />
+
       <div className='mt-5 flex w-full justify-center'>
         <Pagination totalPages={totalPages} />
       </div>

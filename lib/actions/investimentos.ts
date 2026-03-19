@@ -161,25 +161,71 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
 
   const ativos = await fetchAtivos();
 
+  const isPoupanca = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome === 'POUPANCA');
   const isContaCorrente = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'CONTA CORRENTE'
   );
   const isCDBAutomatico = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'CDB AUTOMATICO'
   );
-  const isPoupanca = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome === 'POUPANCA');
-  const isLCI = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCI'));
-  const isLCA = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCA'));
-
   const isRendaVariavel = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.tipos?.nome === 'RENDA VARIAVEL'
+  );
+  const isLetraCredAGNG = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'LETRA CRED.AGNG'
+  );
+  const isCraEmissTercCDI = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS CDI'
+  );
+  const isCraEmissTercIPCA = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS IPCA'
+  );
+  const isNTNF_TESOURO_JAN_2031 = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-F TESOURO JAN/2031'
+  );
+  const isLTN_PRE_TESOURO_JAN_2026 = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'LTN PRE-TESOURO JAN/2026'
+  );
+  const isTesouroDireto = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'Tesouro Direto'
+  );
+  const isNTNB_PRINC_TESOURO_MAI_2029 = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-B PRINC-TESOURO MAI/2029'
+  );
+  const isNTNB_PRINC_TESOURO_MAI_2045 = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-B PRINC-TESOURO MAI/2045'
+  );
+
+  const isLCI = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCI'));
+  const isLCA = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCA'));
+  const isSAF = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('SAF '));
+
+  const isFundo = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome.startsWith('FUNDO DE GIRO - CAIXA')
   );
 
   if (isCDBAutomatico) {
     rendimentoDoMes = await calculateRendimentoCDB(data);
+    saldoLiquido = saldoBruto - data.impostoPrevisto;
   }
 
-  if (isContaCorrente || isPoupanca || isRendaVariavel) {
+  if (isRendaVariavel) {
+    rendimentoDoMes = saldoBruto - data.saldoAnterior - data.valorAplicado + data.valorResgatado;
+    saldoLiquido = saldoBruto - data.impostoPrevisto;
+  }
+
+  if (
+    isSAF ||
+    isFundo ||
+    isLetraCredAGNG ||
+    isTesouroDireto ||
+    isCraEmissTercCDI ||
+    isCraEmissTercIPCA ||
+    isNTNF_TESOURO_JAN_2031 ||
+    isLTN_PRE_TESOURO_JAN_2026 ||
+    isNTNB_PRINC_TESOURO_MAI_2029 ||
+    isNTNB_PRINC_TESOURO_MAI_2045
+  ) {
     saldoBruto =
       data.saldoAnterior +
       data.rendimentoDoMes +
@@ -198,10 +244,21 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     //   saldoBruto = saldoBruto + data.rendimentoDoMes - data.impostoIncorrido;
     // }
 
+    saldoLiquido = saldoBruto - data.impostoPrevisto;
+  }
+
+  if (isContaCorrente || isPoupanca) {
+    let saldo = saldoBruto - data.saldoAnterior;
+    if (saldo > 0) {
+      data.valorAplicado = saldo;
+    } else {
+      data.valorResgatado = saldo * -1;
+    }
     saldoLiquido = saldoBruto;
   }
 
   if (isLCI || isLCA) {
+    rendimentoDoMes = data.saldoBruto - data.saldoAnterior;
     saldoLiquido = saldoBruto;
   }
 

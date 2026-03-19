@@ -61,21 +61,58 @@ export default function InvestmentForm({
   const [isRendaVariavel, setIsRendaVariavel] = useState(
     initialAtivo?.tipos?.nome === 'RENDA VARIAVEL'
   );
+  const [isPoupanca, setPoupanca] = useState(initialAtivo?.nome === 'POUPANCA');
   const [isCdbAutomatico, setCdbAutomatico] = useState(initialAtivo?.nome === 'CDB AUTOMATICO');
   const [isContaCorrente, setContaCorrente] = useState(initialAtivo?.nome === 'CONTA CORRENTE');
-  const [isPoupanca, setPoupanca] = useState(initialAtivo?.nome === 'POUPANCA');
+
+  const [isLetraCredAGNG, setLetraCredAGNG] = useState(initialAtivo?.nome === 'LETRA CRED.AGNG');
+  const [isCraEmissTercCDI, setCraEmissTercCDI] = useState(
+    initialAtivo?.nome === 'CRA EMISSAO TERCEIROS CDI'
+  );
+  const [isCraEmissTercIPCA, setCraEmissTercIPCA] = useState(
+    initialAtivo?.nome === 'CRA EMISSAO TERCEIROS IPCA'
+  );
+  const [isNTNF_TESOURO_JAN_2031, setNTNF_TESOURO_JAN_2031] = useState(
+    initialAtivo?.nome === 'NTN-F TESOURO JAN/2031'
+  );
+  const [isLTN_PRE_TESOURO_JAN_2026, setLTN_PRE_TESOURO_JAN_2026] = useState(
+    initialAtivo?.nome === 'LTN PRE-TESOURO JAN/2026'
+  );
+
+  const [isTesouroDireto, setTesouroDireto] = useState(initialAtivo?.nome === 'Tesouro Direto');
+  const [isNTNB_PRINC_TESOURO_MAI_2029, setNTNB_PRINC_TESOURO_MAI_2029] = useState(
+    initialAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2029'
+  );
+  const [isNTNB_PRINC_TESOURO_MAI_2045, setNTNB_PRINC_TESOURO_MAI_2045] = useState(
+    initialAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2045'
+  );
+
   const [isLCI, setLCI] = useState(initialAtivo?.nome.startsWith('LCI'));
   const [isLCA, setLCA] = useState(initialAtivo?.nome.startsWith('LCA'));
+  const [isSAF, setSAF] = useState(initialAtivo?.nome.startsWith('SAF '));
+  const [isFundo, setFundo] = useState(initialAtivo?.nome.startsWith('FUNDO DE GIRO - CAIXA'));
 
   const handleAtivoChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedAtivoId = e.target.value;
     const selectedAtivo = ativos.find(ativo => ativo.id === selectedAtivoId);
-    setIsRendaVariavel(selectedAtivo?.tipos?.nome === 'RENDA VARIAVEL');
+
+    setPoupanca(selectedAtivo?.nome === 'POUPANCA');
     setCdbAutomatico(selectedAtivo?.nome === 'CDB AUTOMATICO');
     setContaCorrente(selectedAtivo?.nome === 'CONTA CORRENTE');
-    setPoupanca(selectedAtivo?.nome === 'POUPANCA');
+    setLetraCredAGNG(selectedAtivo?.nome === 'LETRA CRED.AGNG');
+    setCraEmissTercCDI(selectedAtivo?.nome === 'CRA EMISSAO TERCEIROS CDI');
+    setCraEmissTercIPCA(selectedAtivo?.nome === 'CRA EMISSAO TERCEIROS IPCA');
+    setNTNF_TESOURO_JAN_2031(selectedAtivo?.nome === 'NTN-F TESOURO JAN/2031');
+    setLTN_PRE_TESOURO_JAN_2026(selectedAtivo?.nome === 'LTN PRE-TESOURO JAN/2026');
+
+    setTesouroDireto(selectedAtivo?.nome === 'Tesouro Direto');
+    setNTNB_PRINC_TESOURO_MAI_2029(selectedAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2029');
+    setNTNB_PRINC_TESOURO_MAI_2045(selectedAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2045');
+
     setLCI(selectedAtivo?.nome.startsWith('LCI'));
     setLCA(selectedAtivo?.nome.startsWith('LCA'));
+    setSAF(selectedAtivo?.nome.startsWith('SAF '));
+    setFundo(selectedAtivo?.nome.startsWith('FUNDO DE GIRO - CAIXA'));
   };
 
   const years = Array.from({ length: 15 }, (_, i) => ({
@@ -176,19 +213,6 @@ export default function InvestmentForm({
       </div>
 
       <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
-        {!isCdbAutomatico && !isContaCorrente && !isPoupanca && (
-          <div className='md:w-1/2'>
-            <CurrencyField
-              id='rendimentoDoMes'
-              label='Rendimento do Mês'
-              placeholder='Entre com o valor exemplo (99,99)'
-              defaultValue={toNumber(
-                state.submittedData?.rendimentoDoMes ?? investimento?.rendimentoDoMes
-              )}
-              errors={state.errors?.rendimentoDoMes}
-            />
-          </div>
-        )}
         <div className='md:w-1/2'>
           <CurrencyField
             id='saldoAnterior'
@@ -200,6 +224,25 @@ export default function InvestmentForm({
             errors={state.errors?.['saldoAnterior']}
           />
         </div>
+        {!isCdbAutomatico &&
+          !isContaCorrente &&
+          !isPoupanca &&
+          !isLCI &&
+          !isLCA &&
+          !isRendaVariavel && (
+            <div className='md:w-1/2'>
+              <CurrencyField
+                id='rendimentoDoMes'
+                label='Rendimento do Mês'
+                placeholder='Entre com o valor exemplo (99,99)'
+                defaultValue={toNumber(
+                  state.submittedData?.rendimentoDoMes ?? investimento?.rendimentoDoMes
+                )}
+                errors={state.errors?.rendimentoDoMes}
+              />
+            </div>
+          )}
+
         {isRendaVariavel && (
           <div className='md:w-1/2 sm:mt-4 md:mt-0'>
             <CurrencyField
@@ -215,32 +258,33 @@ export default function InvestmentForm({
         )}
       </div>
 
-      <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
-        <div className='md:w-1/2'>
-          <CurrencyField
-            id='valorAplicado'
-            label='Valores Aplicados'
-            placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={formatToTwoDecimals(
-              toNumber(state.submittedData?.valorAplicado ?? investimento?.valorAplicado)
-            )}
-            errors={state.errors?.valorAplicado}
-          />
+      {!isContaCorrente && !isPoupanca && (
+        <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
+          <div className='md:w-1/2'>
+            <CurrencyField
+              id='valorAplicado'
+              label='Valores Aplicados'
+              placeholder='Entre com o valor exemplo (99,99)'
+              defaultValue={formatToTwoDecimals(
+                toNumber(state.submittedData?.valorAplicado ?? investimento?.valorAplicado)
+              )}
+              errors={state.errors?.valorAplicado}
+            />
+          </div>
+          <div className='md:w-1/2 sm:mt-4 md:mt-0'>
+            <CurrencyField
+              id='valorResgatado'
+              label='Valores Resgatados'
+              placeholder='Entre com o valor exemplo (99,99)'
+              defaultValue={formatToTwoDecimals(
+                toNumber(state.submittedData?.valorResgatado ?? investimento?.valorResgatado)
+              )}
+              errors={state.errors?.valorResgatado}
+            />
+          </div>
         </div>
-        <div className='md:w-1/2 sm:mt-4 md:mt-0'>
-          <CurrencyField
-            id='valorResgatado'
-            label='Valores Resgatados'
-            placeholder='Entre com o valor exemplo (99,99)'
-            defaultValue={formatToTwoDecimals(
-              toNumber(state.submittedData?.valorResgatado ?? investimento?.valorResgatado)
-            )}
-            errors={state.errors?.valorResgatado}
-          />
-        </div>
-      </div>
+      )}
 
-      {/* {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && !isRendaVariavel && ( */}
       {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && (
         <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
           <div className='md:w-1/2'>
@@ -255,7 +299,7 @@ export default function InvestmentForm({
             />
           </div>
 
-          {!isRendaVariavel && (
+          {!isRendaVariavel && !isFundo && (
             <div className='md:w-1/2 sm:mt-4 md:mt-0'>
               <CurrencyField
                 id='impostoPrevisto'
@@ -271,35 +315,49 @@ export default function InvestmentForm({
         </div>
       )}
 
-      {!isContaCorrente && !isPoupanca && !isRendaVariavel && (
-        <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
-          <div className='md:w-1/2'>
-            <CurrencyField
-              id='saldoBruto'
-              label='Saldo Bruto'
-              placeholder='Entre com o valor exemplo (99,99)'
-              defaultValue={formatToTwoDecimals(
-                toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)
-              )}
-              errors={state.errors?.saldoBruto}
-            />
-          </div>
-
-          {!isLCI && !isLCA && !isRendaVariavel && (
-            <div className='md:w-1/2 sm:mt-4 md:mt-0'>
+      {!isSAF &&
+        !isFundo &&
+        !isLetraCredAGNG &&
+        !isCraEmissTercCDI &&
+        !isTesouroDireto &&
+        !isCraEmissTercIPCA &&
+        !isNTNF_TESOURO_JAN_2031 &&
+        !isLTN_PRE_TESOURO_JAN_2026 &&
+        !isNTNB_PRINC_TESOURO_MAI_2029 &&
+        !isNTNB_PRINC_TESOURO_MAI_2045 && (
+          <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
+            <div className='md:w-1/2'>
               <CurrencyField
-                id='saldoLiquido'
-                label='Saldo Líquido'
+                id='saldoBruto'
+                label='Saldo Bruto'
                 placeholder='Entre com o valor exemplo (99,99)'
                 defaultValue={formatToTwoDecimals(
-                  toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)
+                  toNumber(state.submittedData?.saldoBruto ?? investimento?.saldoBruto)
                 )}
-                errors={state.errors?.saldoLiquido}
+                errors={state.errors?.saldoBruto}
               />
             </div>
-          )}
-        </div>
-      )}
+
+            {!isContaCorrente &&
+              !isPoupanca &&
+              !isLCI &&
+              !isLCA &&
+              !isRendaVariavel &&
+              !isCdbAutomatico && (
+                <div className='md:w-1/2 sm:mt-4 md:mt-0'>
+                  <CurrencyField
+                    id='saldoLiquido'
+                    label='Saldo Líquido'
+                    placeholder='Entre com o valor exemplo (99,99)'
+                    defaultValue={formatToTwoDecimals(
+                      toNumber(state.submittedData?.saldoLiquido ?? investimento?.saldoLiquido)
+                    )}
+                    errors={state.errors?.saldoLiquido}
+                  />
+                </div>
+              )}
+          </div>
+        )}
 
       <div aria-live='polite' aria-atomic='true'>
         {state.message ? <p className='my-6 text-sm text-red-700'>{state.message}</p> : null}
