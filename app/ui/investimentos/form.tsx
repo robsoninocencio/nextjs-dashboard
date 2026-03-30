@@ -90,7 +90,12 @@ export default function InvestmentForm({
   const [isLCI, setLCI] = useState(initialAtivo?.nome.startsWith('LCI'));
   const [isLCA, setLCA] = useState(initialAtivo?.nome.startsWith('LCA'));
   const [isSAF, setSAF] = useState(initialAtivo?.nome.startsWith('SAF '));
-  const [isFundo, setFundo] = useState(initialAtivo?.nome.startsWith('FUNDO DE GIRO - CAIXA'));
+  const [isFundoGiroCaixa, setFundoGiroCaixa] = useState(
+    initialAtivo?.nome.startsWith('FUNDO DE GIRO - CAIXA')
+  );
+  const [isFundoDiAdvancedSantander, setFundoDiAdvancedSantander] = useState(
+    initialAtivo?.nome.startsWith('FUNDO DI ADVANCED - SANTANDER')
+  );
 
   const handleAtivoChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedAtivoId = e.target.value;
@@ -100,10 +105,12 @@ export default function InvestmentForm({
     setCdbAutomatico(selectedAtivo?.nome === 'CDB AUTOMATICO');
     setContaCorrente(selectedAtivo?.nome === 'CONTA CORRENTE');
     setLetraCredAGNG(selectedAtivo?.nome === 'LETRA CRED.AGNG');
+    setFundoGiroCaixa(selectedAtivo?.nome === 'FUNDO DE GIRO - CAIXA');
     setCraEmissTercCDI(selectedAtivo?.nome === 'CRA EMISSAO TERCEIROS CDI');
     setCraEmissTercIPCA(selectedAtivo?.nome === 'CRA EMISSAO TERCEIROS IPCA');
     setNTNF_TESOURO_JAN_2031(selectedAtivo?.nome === 'NTN-F TESOURO JAN/2031');
     setLTN_PRE_TESOURO_JAN_2026(selectedAtivo?.nome === 'LTN PRE-TESOURO JAN/2026');
+    setFundoDiAdvancedSantander(selectedAtivo?.nome === 'FUNDO DI ADVANCED - SANTANDER');
 
     setTesouroDireto(selectedAtivo?.nome === 'Tesouro Direto');
     setNTNB_PRINC_TESOURO_MAI_2029(selectedAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2029');
@@ -112,7 +119,6 @@ export default function InvestmentForm({
     setLCI(selectedAtivo?.nome.startsWith('LCI'));
     setLCA(selectedAtivo?.nome.startsWith('LCA'));
     setSAF(selectedAtivo?.nome.startsWith('SAF '));
-    setFundo(selectedAtivo?.nome.startsWith('FUNDO DE GIRO - CAIXA'));
   };
 
   const years = Array.from({ length: 15 }, (_, i) => ({
@@ -299,7 +305,7 @@ export default function InvestmentForm({
             />
           </div>
 
-          {!isRendaVariavel && !isFundo && (
+          {!isRendaVariavel && !isFundoGiroCaixa && (
             <div className='md:w-1/2 sm:mt-4 md:mt-0'>
               <CurrencyField
                 id='impostoPrevisto'
@@ -316,7 +322,7 @@ export default function InvestmentForm({
       )}
 
       {!isSAF &&
-        !isFundo &&
+        !isFundoGiroCaixa &&
         !isLetraCredAGNG &&
         !isCraEmissTercCDI &&
         !isTesouroDireto &&
@@ -324,7 +330,8 @@ export default function InvestmentForm({
         !isNTNF_TESOURO_JAN_2031 &&
         !isLTN_PRE_TESOURO_JAN_2026 &&
         !isNTNB_PRINC_TESOURO_MAI_2029 &&
-        !isNTNB_PRINC_TESOURO_MAI_2045 && (
+        !isNTNB_PRINC_TESOURO_MAI_2045 &&
+        !isFundoDiAdvancedSantander && (
           <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
             <div className='md:w-1/2'>
               <CurrencyField

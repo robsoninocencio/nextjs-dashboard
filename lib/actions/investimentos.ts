@@ -161,24 +161,20 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
 
   const ativos = await fetchAtivos();
 
-  const isPoupanca = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome === 'POUPANCA');
   const isContaCorrente = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'CONTA CORRENTE'
   );
   const isCDBAutomatico = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'CDB AUTOMATICO'
   );
-  const isRendaVariavel = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.tipos?.nome === 'RENDA VARIAVEL'
+  const isTesouroDireto = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'Tesouro Direto'
   );
   const isLetraCredAGNG = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'LETRA CRED.AGNG'
   );
-  const isCraEmissTercCDI = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS CDI'
-  );
-  const isCraEmissTercIPCA = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS IPCA'
+  const isRendaVariavel = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.tipos?.nome === 'RENDA VARIAVEL'
   );
   const isNTNF_TESOURO_JAN_2031 = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-F TESOURO JAN/2031'
@@ -186,8 +182,11 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
   const isLTN_PRE_TESOURO_JAN_2026 = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'LTN PRE-TESOURO JAN/2026'
   );
-  const isTesouroDireto = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'Tesouro Direto'
+  const isCraEmissTercCDI = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS CDI'
+  );
+  const isCraEmissTercIPCA = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS IPCA'
   );
   const isNTNB_PRINC_TESOURO_MAI_2029 = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-B PRINC-TESOURO MAI/2029'
@@ -195,12 +194,16 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
   const isNTNB_PRINC_TESOURO_MAI_2045 = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-B PRINC-TESOURO MAI/2045'
   );
+  const isFundoDiAdvancedSantander = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'FUNDO DI ADVANCED - SANTANDER'
+  );
+  const isPoupanca = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome === 'POUPANCA');
 
   const isLCI = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCI'));
   const isLCA = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('LCA'));
   const isSAF = ativos.some(ativo => ativo.id === data.ativoId && ativo.nome.startsWith('SAF '));
 
-  const isFundo = ativos.some(
+  const isFundoGiroCaixa = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome.startsWith('FUNDO DE GIRO - CAIXA')
   );
 
@@ -216,7 +219,7 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
 
   if (
     isSAF ||
-    isFundo ||
+    isFundoGiroCaixa ||
     isLetraCredAGNG ||
     isTesouroDireto ||
     isCraEmissTercCDI ||
@@ -224,7 +227,8 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     isNTNF_TESOURO_JAN_2031 ||
     isLTN_PRE_TESOURO_JAN_2026 ||
     isNTNB_PRINC_TESOURO_MAI_2029 ||
-    isNTNB_PRINC_TESOURO_MAI_2045
+    isNTNB_PRINC_TESOURO_MAI_2045 ||
+    isFundoDiAdvancedSantander
   ) {
     saldoBruto =
       data.saldoAnterior +
