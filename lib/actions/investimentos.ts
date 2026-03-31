@@ -176,6 +176,9 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
   const isRendaVariavel = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.tipos?.nome === 'RENDA VARIAVEL'
   );
+  const isConsolidadeRico = ativos.some(
+    ativo => ativo.id === data.ativoId && ativo.nome === 'CONSOLIDADO - RICO'
+  );
   const isNTNF_TESOURO_JAN_2031 = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-F TESOURO JAN/2031'
   );
@@ -189,7 +192,7 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     ativo => ativo.id === data.ativoId && ativo.nome === 'CRA EMISSAO TERCEIROS IPCA'
   );
   const isNTNB_PRINC_TESOURO_MAI_2029 = ativos.some(
-    ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-B PRINC-TESOURO MAI/2029'
+    ativo => ativo.id === data.ativoId && ativo.nome === 'NTNB PRINC-TESOURO MAI/2029'
   );
   const isNTNB_PRINC_TESOURO_MAI_2045 = ativos.some(
     ativo => ativo.id === data.ativoId && ativo.nome === 'NTN-B PRINC-TESOURO MAI/2045'
@@ -212,7 +215,7 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     saldoLiquido = saldoBruto - data.impostoPrevisto;
   }
 
-  if (isRendaVariavel) {
+  if (isRendaVariavel && !isConsolidadeRico) {
     rendimentoDoMes = saldoBruto - data.saldoAnterior - data.valorAplicado + data.valorResgatado;
     saldoLiquido = saldoBruto - data.impostoPrevisto;
   }
@@ -228,7 +231,8 @@ async function saveInvestimentoToDatabase(data: InvestimentoData, id?: string) {
     isLTN_PRE_TESOURO_JAN_2026 ||
     isNTNB_PRINC_TESOURO_MAI_2029 ||
     isNTNB_PRINC_TESOURO_MAI_2045 ||
-    isFundoDiAdvancedSantander
+    isFundoDiAdvancedSantander ||
+    isConsolidadeRico
   ) {
     saldoBruto =
       data.saldoAnterior +

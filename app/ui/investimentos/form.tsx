@@ -61,6 +61,11 @@ export default function InvestmentForm({
   const [isRendaVariavel, setIsRendaVariavel] = useState(
     initialAtivo?.tipos?.nome === 'RENDA VARIAVEL'
   );
+
+  const [isConsolidadeRico, setIsConsolidadeRico] = useState(
+    initialAtivo?.nome === 'CONSOLIDADO - RICO'
+  );
+
   const [isPoupanca, setPoupanca] = useState(initialAtivo?.nome === 'POUPANCA');
   const [isCdbAutomatico, setCdbAutomatico] = useState(initialAtivo?.nome === 'CDB AUTOMATICO');
   const [isContaCorrente, setContaCorrente] = useState(initialAtivo?.nome === 'CONTA CORRENTE');
@@ -81,7 +86,7 @@ export default function InvestmentForm({
 
   const [isTesouroDireto, setTesouroDireto] = useState(initialAtivo?.nome === 'Tesouro Direto');
   const [isNTNB_PRINC_TESOURO_MAI_2029, setNTNB_PRINC_TESOURO_MAI_2029] = useState(
-    initialAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2029'
+    initialAtivo?.nome === 'NTNB PRINC-TESOURO MAI/2029'
   );
   const [isNTNB_PRINC_TESOURO_MAI_2045, setNTNB_PRINC_TESOURO_MAI_2045] = useState(
     initialAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2045'
@@ -106,6 +111,7 @@ export default function InvestmentForm({
     setContaCorrente(selectedAtivo?.nome === 'CONTA CORRENTE');
     setLetraCredAGNG(selectedAtivo?.nome === 'LETRA CRED.AGNG');
     setFundoGiroCaixa(selectedAtivo?.nome === 'FUNDO DE GIRO - CAIXA');
+    setIsConsolidadeRico(selectedAtivo?.nome === 'CONSOLIDADO - RICO');
     setCraEmissTercCDI(selectedAtivo?.nome === 'CRA EMISSAO TERCEIROS CDI');
     setCraEmissTercIPCA(selectedAtivo?.nome === 'CRA EMISSAO TERCEIROS IPCA');
     setNTNF_TESOURO_JAN_2031(selectedAtivo?.nome === 'NTN-F TESOURO JAN/2031');
@@ -113,7 +119,7 @@ export default function InvestmentForm({
     setFundoDiAdvancedSantander(selectedAtivo?.nome === 'FUNDO DI ADVANCED - SANTANDER');
 
     setTesouroDireto(selectedAtivo?.nome === 'Tesouro Direto');
-    setNTNB_PRINC_TESOURO_MAI_2029(selectedAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2029');
+    setNTNB_PRINC_TESOURO_MAI_2029(selectedAtivo?.nome === 'NTNB PRINC-TESOURO MAI/2029');
     setNTNB_PRINC_TESOURO_MAI_2045(selectedAtivo?.nome === 'NTN-B PRINC-TESOURO MAI/2045');
 
     setLCI(selectedAtivo?.nome.startsWith('LCI'));
@@ -187,7 +193,6 @@ export default function InvestmentForm({
           />
         </div>
       </div>
-
       <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
         <div className='md:w-1/2'>
           <SelectField
@@ -217,7 +222,6 @@ export default function InvestmentForm({
           />
         </div>
       </div>
-
       <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
         <div className='md:w-1/2'>
           <CurrencyField
@@ -235,7 +239,7 @@ export default function InvestmentForm({
           !isPoupanca &&
           !isLCI &&
           !isLCA &&
-          !isRendaVariavel && (
+          (!isRendaVariavel || isConsolidadeRico) && (
             <div className='md:w-1/2'>
               <CurrencyField
                 id='rendimentoDoMes'
@@ -249,7 +253,9 @@ export default function InvestmentForm({
             </div>
           )}
 
-        {isRendaVariavel && (
+        {/* (!isRendaVariavel || isConsolidadeRico) */}
+
+        {isRendaVariavel && !isConsolidadeRico && (
           <div className='md:w-1/2 sm:mt-4 md:mt-0'>
             <CurrencyField
               id='dividendosDoMes'
@@ -263,7 +269,6 @@ export default function InvestmentForm({
           </div>
         )}
       </div>
-
       {!isContaCorrente && !isPoupanca && (
         <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
           <div className='md:w-1/2'>
@@ -290,7 +295,6 @@ export default function InvestmentForm({
           </div>
         </div>
       )}
-
       {!isContaCorrente && !isPoupanca && !isLCI && !isLCA && (
         <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
           <div className='md:w-1/2'>
@@ -331,7 +335,8 @@ export default function InvestmentForm({
         !isLTN_PRE_TESOURO_JAN_2026 &&
         !isNTNB_PRINC_TESOURO_MAI_2029 &&
         !isNTNB_PRINC_TESOURO_MAI_2045 &&
-        !isFundoDiAdvancedSantander && (
+        !isFundoDiAdvancedSantander &&
+        !isConsolidadeRico && (
           <div className='flex flex-col md:flex-row md:space-x-4 p-2 md:p-4'>
             <div className='md:w-1/2'>
               <CurrencyField
@@ -365,7 +370,6 @@ export default function InvestmentForm({
               )}
           </div>
         )}
-
       <div aria-live='polite' aria-atomic='true'>
         {state.message ? <p className='my-6 text-sm text-red-700'>{state.message}</p> : null}
       </div>
